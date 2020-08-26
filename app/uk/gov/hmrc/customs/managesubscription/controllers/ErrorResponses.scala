@@ -24,7 +24,7 @@ import play.mvc.Http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_ACCEPTABLE,
 
 import scala.xml.NodeSeq
 
-// We can remove
+// TODO Some of the errors are used, but there is a lot of not used
 trait HttpStatusCodeShortDescriptions {
   // 2XX
   val OkCode = "OK"
@@ -97,18 +97,18 @@ object ErrorResponse extends HttpStatusCodeShortDescriptions {
 
   val ErrorInvalidPayload: ErrorResponse = errorBadRequest("Invalid payload")
 
-  // NOT USED - NOT SURE IF WE WANT TO KEEP IT
+  // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   val ErrorNotFound = ErrorResponse(NOT_FOUND, NotFoundCode, "Resource was not found")
 
   val ErrorAcceptHeaderInvalid = ErrorResponse(NOT_ACCEPTABLE, NotAcceptableCode, "The accept header is missing or invalid")
 
   val ErrorContentTypeHeaderInvalid = ErrorResponse(UNSUPPORTED_MEDIA_TYPE, UnsupportedMediaTypeCode, "The content type header is missing or invalid")
 
-  // NOT USED - NOT SURE IF WE WANT TO KEEP IT
+  // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   def errorInternalServerError(errorMessage: String): ErrorResponse =
     ErrorResponse(INTERNAL_SERVER_ERROR, InternalServerErrorCode, errorMessage)
 
-  // NOT USED - NOT SURE IF WE WANT TO KEEP IT
+  // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   val ErrorInternalServerError: ErrorResponse = errorInternalServerError("Internal server error")
 }
 
