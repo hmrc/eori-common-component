@@ -89,8 +89,8 @@ class SubscriptionCompleteBusinessService @Inject()(
 
   private def auditStatus(status: SubscriptionCompleteStatus, formBundleId: String)(implicit hc: HeaderCarrier): Unit =
     audit.sendDataEvent(
-      transactionName = "customs-manage-subscription-update-status",
-      path = s"/customs-manage-subscription/$formBundleId",
+      transactionName = "eori-common-component-update-status",
+      path = s"/eori-common-component/$formBundleId",
       detail = Map("state" -> status.toString, "formBundleId" -> formBundleId),
       auditType = "taxEnrolmentStatus"
     )

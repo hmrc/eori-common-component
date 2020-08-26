@@ -2,7 +2,7 @@
 <configuration>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/customs-manage-subscription.log</file>
+        <file>logs/eori-common-component.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
         </encoder>
@@ -53,7 +53,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="customs-manage-subscription" level="${logger.customs-manage-subscription:-DEBUG}"/>
+    <logger name="eori-common-component" level="${logger.eori-common-component:-DEBUG}"/>
 
     <root level="ERROR">
         <appender-ref ref="FILE"/>

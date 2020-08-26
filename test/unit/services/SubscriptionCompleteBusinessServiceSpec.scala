@@ -44,8 +44,8 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
   private val mockSubDisplayConnector= mock[SubscriptionDisplayConnector]
   private val service = new SubscriptionCompleteBusinessService(mockContactDetailsStore, mockEmailService, mockAuditable, mockDataStoreConnector, mockSubDisplayConnector)
   private val recipientDetails: RecipientDetails = RecipientDetails("Migrate", "john.doe@example.com", "John Doe", Some("Test Company Name"), Some("5 May 2017"))
-  private val transactionName = "customs-manage-subscription-update-status"
-  private val path = s"/customs-manage-subscription/$formBundleId"
+  private val transactionName = "eori-common-component-update-status"
+  private val path = s"/eori-common-component/$formBundleId"
   private val tagsGoodState = Map("state" -> "SUCCEEDED", "formBundleId" -> formBundleId)
   private val tagsBadState = Map("state" -> "EnrolmentError", "formBundleId" -> formBundleId)
   private val auditType = "taxEnrolmentStatus"
