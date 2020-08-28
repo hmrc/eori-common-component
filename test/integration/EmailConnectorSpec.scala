@@ -45,7 +45,7 @@ class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailServic
   private def emailConnector = app.injector.instanceOf[EmailConnector]
 
   private val testEmail = Email(
-    to = List("test@test.com", "test2@test2.com"),
+    to = List("john.doe@digital.hmrc.gov.uk", "john.doe2@digital.hmrc.gov.uk"),
     templateId = "test-template-id",
     parameters = Map("param_key" -> "param_value"),
     force = true)
@@ -58,7 +58,7 @@ class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailServic
       Json.parse(requestMadeToMDTPEmailService()) shouldBe Json.parse(
         """
           |{
-          |"to": ["test@test.com", "test2@test2.com"],
+          |"to": ["john.doe@digital.hmrc.gov.uk", "john.doe2@digital.hmrc.gov.uk"],
           |"templateId": "test-template-id",
           |"parameters": {"param_key": "param_value"},
           |"force": true

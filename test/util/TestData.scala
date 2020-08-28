@@ -44,7 +44,7 @@ object TestData {
 
   val Journey = "GetYourEORI"
   val FullName = "Full Name"
-  val Email = "a@b.com"
+  val Email = "john.doe@digital.hmrc.gov.uk"
   val OrgName = "Test Company Name"
   val CompletionDate = "5 May 2017"
 

@@ -43,7 +43,7 @@ class Save4LaterRepositoryIntegrationSpec extends IntegrationTestsWithDbSpec wit
   val reactiveMongoComponent = new ReactiveMongoComponentForTests(app, Environment.simple())
   val mockServiceConfig = mock[ServicesConfig]
 
-  val email = Email("test@test.com")
+  val email = Email("john.doe@digital.hmrc.gov.uk")
   val eori = Eori("GB0123456789")
 
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
