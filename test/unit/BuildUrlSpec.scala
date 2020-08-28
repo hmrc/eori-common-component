@@ -27,7 +27,7 @@ class BuildUrlSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
   "BuildUrl" should {
 
     "provide a url for a existing service name" in {
-      buildUrl("tax-enrolments") shouldBe "http://localhost:9477/tax-enrolments/subscriptions"
+      buildUrl("tax-enrolments") shouldBe "http://localhost:6754/tax-enrolments/subscriptions"
     }
 
     "throw an exception for a non-existing service" in {

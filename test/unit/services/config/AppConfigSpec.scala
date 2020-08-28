@@ -26,7 +26,7 @@ class AppConfigSpec extends BaseSpec {
     }
 
     "have subscriptionDisplayUrl defined" in {
-      appConfig.subscriptionDisplayUrl shouldBe "http://localhost:9477/subscriptions/subscriptiondisplay/v1"
+      appConfig.subscriptionDisplayUrl shouldBe "http://localhost:6754/subscriptions/subscriptiondisplay/v1"
     }
 
     "have subscriptionDisplayBearerToken defined" in {
@@ -74,7 +74,7 @@ class AppConfigSpec extends BaseSpec {
     }
 
     "have taxEnrolmentsUrl defined" in {
-      appConfig.taxEnrolmentsUrl shouldBe "http://localhost:9477/tax-enrolments/subscriptions"
+      appConfig.taxEnrolmentsUrl shouldBe "http://localhost:6754/tax-enrolments/subscriptions"
     }
 
     "have taxEnrolmentsCallbackUrl defined" in {
