@@ -16,7 +16,7 @@ mappings in Universal ++= directory(baseDirectory.value / "public")
 
 name := "eori-common-component"
 
-PlayKeys.devSettings := Seq("play.server.http.port" -> "9829")
+PlayKeys.devSettings := Seq("play.server.http.port" -> "6752")
 
 majorVersion := 0
 
