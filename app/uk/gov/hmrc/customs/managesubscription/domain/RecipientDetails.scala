@@ -20,13 +20,14 @@ import play.api.libs.json.Json
 
 case class RecipientDetails(
   journey: String,
+  service: String,
   recipientEmailAddress: String,
   recipientFullName: String,
   orgName: Option[String],
   completionDate: Option[String]
 ) {
   // TODO Change this to apply method with more clearer implementation
-  require(Set("GetYourEORI", "Migrate") contains journey, "Invalid Journey parameter")
+  require(Set("Register", "Subscribe") contains journey, "Invalid Journey parameter")
 }
 
 object RecipientDetails {
