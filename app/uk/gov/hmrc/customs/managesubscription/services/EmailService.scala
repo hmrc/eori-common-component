@@ -29,16 +29,16 @@ import scala.concurrent.Future
 
 @Singleton
 class EmailService @Inject()(appConfig: AppConfig, emailConnector: EmailConnector) {
-  private val GetYourEori = "GetYourEORI"
-  private val Migrate = "Migrate"
+  private val Register = "Register"
+  private val Subscribe = "Subscribe"
 
   // TODO match may not be exhaustive - add default case just to clear compilation warning
   def sendEmail(recipient: RecipientDetails, status: SubscriptionCompleteStatus)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     (recipient.journey, status) match {
-      case (GetYourEori, SUCCEEDED) => sendEmail(appConfig.emailGyeSuccessTemplateId, recipient)
-      case (GetYourEori, ERROR) => sendEmail(appConfig.emailGyeNotSuccessTemplateId, recipient)
-      case (Migrate, SUCCEEDED) => sendEmail(appConfig.emailMigrateSuccessTemplateId, recipient)
-      case (Migrate, ERROR) => sendEmail(appConfig.emailMigrateNotSuccessTemplateId, recipient)
+      case (Register, SUCCEEDED) => sendEmail(appConfig.emailGyeSuccessTemplateId, recipient)
+      case (Register, ERROR) => sendEmail(appConfig.emailGyeNotSuccessTemplateId, recipient)
+      case (Subscribe, SUCCEEDED) => sendEmail(appConfig.emailMigrateSuccessTemplateId, recipient)
+      case (Subscribe, ERROR) => sendEmail(appConfig.emailMigrateNotSuccessTemplateId, recipient)
     }
 
   private def sendEmail(templateId: String, recipient: RecipientDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
