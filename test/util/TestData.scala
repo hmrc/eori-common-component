@@ -43,7 +43,7 @@ object TestData {
   val AcceptHmrcJson: String = "application/vnd.hmrc.1.0+xml"
 
   val Journey = "Register"
-  val Service = "ATar"
+  val Service = "ATaR"
   val FullName = "Full Name"
   val Email = "john.doe@digital.hmrc.gov.uk"
   val OrgName = "Test Company Name"

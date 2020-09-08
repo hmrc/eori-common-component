@@ -45,13 +45,13 @@ class EmailServiceSpec extends BaseSpec {
   private val gyeRecipientFullName = "John Doe"
   private val gyeOrgName = "Test Company Name"
   private val gyeCompletionDate = "5 May 2017"
-  private val gyeRecipientDetails = RecipientDetails("Register", "ATar", gyeRecipientEmailAddress, gyeRecipientFullName, Some(gyeOrgName), Some(gyeCompletionDate))
+  private val gyeRecipientDetails = RecipientDetails("Register", "ATaR", gyeRecipientEmailAddress, gyeRecipientFullName, Some(gyeOrgName), Some(gyeCompletionDate))
 
   private val migrateRecipientEmailAddress = "jane.doe@example.com"
   private val migrateRecipientFullName = "Jane Doe"
   private val migrateOrgName = "Test Company Name 2"
   private val migrateCompletionDate = "23 June 2004"
-  private val migrateRecipientDetails = RecipientDetails("Subscribe", "ATar", migrateRecipientEmailAddress, migrateRecipientFullName, Some(migrateOrgName), Some(migrateCompletionDate))
+  private val migrateRecipientDetails = RecipientDetails("Subscribe", "ATaR", migrateRecipientEmailAddress, migrateRecipientFullName, Some(migrateOrgName), Some(migrateCompletionDate))
 
   private val getYourEORISuccessEmail = Email(
     to = List(gyeRecipientEmailAddress),
