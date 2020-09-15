@@ -31,16 +31,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockRecipientDetailsCacheRepo = mock[RecipientDetailsCacheRepository]
-  private implicit val hc = HeaderCarrier()
+  private implicit val hc                   = HeaderCarrier()
 
   private val recipientDetailsCache = new RecipientDetailsRepository(mockRecipientDetailsCacheRepo)
 
   private val idAsString = "some-id"
-  private val id = Id(idAsString)
+  private val id         = Id(idAsString)
 
   private val invalidCacheDataJson =
-    Json.parse(
-      """
+    Json.parse("""
         |{
         |  "recipientDetailsWithEori": {
         |    "invalid": "invalid"
@@ -51,7 +50,9 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
 
     "return JsError when invalid Json for recipientDetailsWithEori found" in {
       val invalidCache = Cache(mock[Id], Some(invalidCacheDataJson))
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(Future.successful(Some(invalidCache)))
+      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
+        Future.successful(Some(invalidCache))
+      )
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
@@ -60,7 +61,9 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
 
     "return JsError when no data found" in {
       val invalidCache = Cache(mock[Id], None)
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(Future.successful(Some(invalidCache)))
+      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
+        Future.successful(Some(invalidCache))
+      )
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
@@ -68,17 +71,17 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
     }
 
     "return error when data not found for recipientDetailsWithEori" in {
-      val previousJson = {
-        Json.parse(
-          """
+      val previousJson =
+        Json.parse("""
             |{
             |  "recipientDetails": {
             |    "invalid": "invalid"
             |  }
             |}""".stripMargin)
-      }
       val invalidCache = Cache(mock[Id], Some(previousJson))
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(Future.successful(Some(invalidCache)))
+      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
+        Future.successful(Some(invalidCache))
+      )
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
@@ -86,7 +89,7 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
     }
   }
 
-  override protected def beforeEach(): Unit = {
+  override protected def beforeEach(): Unit =
     reset(mockRecipientDetailsCacheRepo)
-  }
+
 }

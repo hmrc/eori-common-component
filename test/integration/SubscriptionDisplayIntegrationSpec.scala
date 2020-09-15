@@ -25,22 +25,26 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.RequestHeaders.{ACCEPT_HEADER, AUTHORISATION_HEADER, CONTENT_TYPE_HEADER}
 import util.SubscriptionDisplayService
 
-class SubscriptionDisplayIntegrationSpec extends IntegrationTestsWithDbSpec with SubscriptionDisplayService with ScalaFutures {
+class SubscriptionDisplayIntegrationSpec
+    extends IntegrationTestsWithDbSpec with SubscriptionDisplayService with ScalaFutures {
 
   val validHeaders: Seq[(String, String)] = Seq(AUTHORISATION_HEADER, CONTENT_TYPE_HEADER, ACCEPT_HEADER)
-  private implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders(validHeaders: _*)
-  private val expectedUrl = "/subscriptions/subscriptiondisplay/v1"
-  private lazy val queryParams = ("taxPayerID" -> "SAFEID") :: List("regime" -> "CDS", "acknowledgementReference" -> "UUID")
-  private lazy val expectedUrlWithQueryString = expectedUrl + "?taxPayerID=SAFEID&regime=CDS&acknowledgementReference=UUID"
+  private implicit val hc: HeaderCarrier  = HeaderCarrier().withExtraHeaders(validHeaders: _*)
+  private val expectedUrl                 = "/subscriptions/subscriptiondisplay/v1"
+
+  private lazy val queryParams =
+    ("taxPayerID" -> "SAFEID") :: List("regime" -> "CDS", "acknowledgementReference" -> "UUID")
+
+  private lazy val expectedUrlWithQueryString =
+    expectedUrl + "?taxPayerID=SAFEID&regime=CDS&acknowledgementReference=UUID"
+
   private lazy val subscriptionDisplayConnector = app.injector.instanceOf[SubscriptionDisplayConnector]
 
-  override def beforeAll: Unit = {
+  override def beforeAll: Unit =
     startMockServer()
-  }
 
-  override def afterAll: Unit = {
+  override def afterAll: Unit =
     stopMockServer()
-  }
 
   "SubscriptionDisplayConnector" should {
     "call subscription display api with correct url and query string" in {

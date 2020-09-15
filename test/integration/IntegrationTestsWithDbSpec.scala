@@ -33,18 +33,18 @@ trait IntegrationTestsWithDbSpec extends UnitSpec with BeforeAndAfter with Befor
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
       Map(
-        "microservice.services.tax-enrolments.host" -> Host,
-        "microservice.services.tax-enrolments.port" -> Port,
-        "microservice.services.tax-enrolments.context" -> "/tax-enrolments/subscriptions",
-        "microservice.services.customs-data-store.host" -> Host,
-        "microservice.services.customs-data-store.port" -> Port,
-        "microservice.services.customs-data-store.context" -> "/customs-data-store/graphql",
-        "microservice.services.subscription-display.host" -> Host,
-        "microservice.services.subscription-display.port" -> Port,
+        "microservice.services.tax-enrolments.host"          -> Host,
+        "microservice.services.tax-enrolments.port"          -> Port,
+        "microservice.services.tax-enrolments.context"       -> "/tax-enrolments/subscriptions",
+        "microservice.services.customs-data-store.host"      -> Host,
+        "microservice.services.customs-data-store.port"      -> Port,
+        "microservice.services.customs-data-store.context"   -> "/customs-data-store/graphql",
+        "microservice.services.subscription-display.host"    -> Host,
+        "microservice.services.subscription-display.port"    -> Port,
         "microservice.services.subscription-display.context" -> "/subscriptions/subscriptiondisplay/v1",
-        "auditing.enabled" -> false,
-        "auditing.consumer.baseUri.host" -> Host,
-        "auditing.consumer.baseUri.port" -> Port
+        "auditing.enabled"                                   -> false,
+        "auditing.consumer.baseUri.host"                     -> Host,
+        "auditing.consumer.baseUri.port"                     -> Port
       )
     )
     .overrides(bind[ReactiveMongoComponent].to[ReactiveMongoComponentForTests])
@@ -52,7 +52,7 @@ trait IntegrationTestsWithDbSpec extends UnitSpec with BeforeAndAfter with Befor
 
   lazy val database = new ReactiveMongoComponentForTests(app, Environment.simple()).mongoConnector.db
 
-  override def beforeAll: Unit = {
+  override def beforeAll: Unit =
     await(database().drop())
-  }
+
 }

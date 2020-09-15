@@ -35,14 +35,15 @@ import util.mongo.ReactiveMongoComponentForTests
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-class RecipientDetailsRepositoryIntegrationSpec extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSpecSupport with ScalaFutures {
+class RecipientDetailsRepositoryIntegrationSpec
+    extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSpecSupport with ScalaFutures {
 
   val reactiveMongoComponent = new ReactiveMongoComponentForTests(app, Environment.simple())
 
   val mockServiceConfig = mock[ServicesConfig]
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
 
-  val repository = new RecipientDetailsCacheRepository(mockServiceConfig, reactiveMongoComponent)
+  val repository                                             = new RecipientDetailsCacheRepository(mockServiceConfig, reactiveMongoComponent)
   val recipientDetailsRepository: RecipientDetailsRepository = new RecipientDetailsRepository(repository)
 
   "recipient details repository" should {
@@ -50,23 +51,51 @@ class RecipientDetailsRepositoryIntegrationSpec extends IntegrationTestsWithDbSp
     "store, fetch and update Recipient Details correctly" in {
       val formBundleId = UUID.randomUUID().toString
 
-      await(recipientDetailsRepository.saveRecipientDetailsForBundleId(formBundleId, Some(eori), recipientDetails, emailVerificationTimestamp, safeId))
+      await(
+        recipientDetailsRepository.saveRecipientDetailsForBundleId(
+          formBundleId,
+          Some(eori),
+          recipientDetails,
+          emailVerificationTimestamp,
+          safeId
+        )
+      )
 
       val Some(cache) = repository.findById(Id(formBundleId)).futureValue
 
       val Some(cacheValue) = cache.data
-      (cacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId)
+      (cacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
+        Some(eori.value),
+        recipientDetails,
+        emailVerificationTimestamp,
+        safeId
+      )
 
-      recipientDetailsRepository.recipientDetailsForBundleId(formBundleId).futureValue shouldBe Right(RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId))
+      recipientDetailsRepository.recipientDetailsForBundleId(formBundleId).futureValue shouldBe Right(
+        RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId)
+      )
 
       val updatedRecipientDetails = recipientDetails.copy(recipientFullName = "new name")
 
-      await(recipientDetailsRepository.saveRecipientDetailsForBundleId(formBundleId, Some(eori), updatedRecipientDetails, emailVerificationTimestamp, safeId))
+      await(
+        recipientDetailsRepository.saveRecipientDetailsForBundleId(
+          formBundleId,
+          Some(eori),
+          updatedRecipientDetails,
+          emailVerificationTimestamp,
+          safeId
+        )
+      )
 
-      val Some(updatedCache) = repository.findById(Id(formBundleId)).futureValue
+      val Some(updatedCache)      = repository.findById(Id(formBundleId)).futureValue
       val Some(updatedCacheValue) = updatedCache.data
 
-      (updatedCacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(Some(eori.value), updatedRecipientDetails, emailVerificationTimestamp, safeId)
+      (updatedCacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
+        Some(eori.value),
+        updatedRecipientDetails,
+        emailVerificationTimestamp,
+        safeId
+      )
     }
 
     "expect no data when Recipient Details not available in cache" in {

@@ -26,15 +26,24 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class RecipientDetailsStore @Inject()(repository: RecipientDetailsRepository) {
+class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository) {
 
-  def saveRecipientDetailsForBundleId(formBundleId: String, eori: Option[Eori], recipientDetails: RecipientDetails, emailVerificationTimestamp: String, safeId: String): Future[Unit] =
+  def saveRecipientDetailsForBundleId(
+    formBundleId: String,
+    eori: Option[Eori],
+    recipientDetails: RecipientDetails,
+    emailVerificationTimestamp: String,
+    safeId: String
+  ): Future[Unit] =
     repository.saveRecipientDetailsForBundleId(formBundleId, eori, recipientDetails, emailVerificationTimestamp, safeId)
 
   def recipientDetailsForBundleId(formBundleId: String): Future[RecipientDetailsWithEori] = getCached(formBundleId)
 
-  private def getCached(formBundleId: Id): Future[RecipientDetailsWithEori] = repository.recipientDetailsForBundleId(formBundleId.id).map {
-    case Right(recipientDetailsWithEori) => recipientDetailsWithEori
-    case Left(_) => throw new IllegalStateException("Unable to process the recipientDetails, recipientDetailsWithEori expected")
-  }
+  private def getCached(formBundleId: Id): Future[RecipientDetailsWithEori] =
+    repository.recipientDetailsForBundleId(formBundleId.id).map {
+      case Right(recipientDetailsWithEori) => recipientDetailsWithEori
+      case Left(_) =>
+        throw new IllegalStateException("Unable to process the recipientDetails, recipientDetailsWithEori expected")
+    }
+
 }

@@ -27,8 +27,8 @@ import util.BaseSpec
 import scala.concurrent.Future
 
 class EmailConnectorSpec extends BaseSpec {
-  val mockHttp = mock[HttpClient]
-  implicit val hc = HeaderCarrier()
+  val mockHttp      = mock[HttpClient]
+  implicit val hc   = HeaderCarrier()
   val testConnector = new EmailConnector(appConfig, mockHttp)
 
   "EmailConnector" should {

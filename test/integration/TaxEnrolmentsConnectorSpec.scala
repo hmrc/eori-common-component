@@ -29,25 +29,25 @@ import util.TestData.TaxEnrolment.validRequestJson
 
 class TaxEnrolmentsConnectorSpec extends IntegrationTestsWithDbSpec with TaxEnrolmentService with ScalaFutures {
 
-  private implicit val hc = HeaderCarrier()
-  private val formBundleId = "bundle-id"
-  private val expectedPutUrl = s"/tax-enrolments/subscriptions/$formBundleId/subscriber"
+  private implicit val hc                 = HeaderCarrier()
+  private val formBundleId                = "bundle-id"
+  private val expectedPutUrl              = s"/tax-enrolments/subscriptions/$formBundleId/subscriber"
   private lazy val taxEnrolmentsConnector = app.injector.instanceOf[TaxEnrolmentsConnector]
 
   private val taxEnrolmentsRequest = validRequestJson.as[TaxEnrolmentsRequest]
 
-  override def beforeAll: Unit = {
+  override def beforeAll: Unit =
     startMockServer()
-  }
 
-  override def afterAll: Unit = {
+  override def afterAll: Unit =
     stopMockServer()
-  }
 
   "TaxEnrolmentConnector" should {
     "call tax enrolment service with correct url and payload" in {
       scala.concurrent.Await.ready(taxEnrolmentsConnector.enrol(taxEnrolmentsRequest, formBundleId), defaultTimeout)
-      WireMock.verify(putRequestedFor(urlEqualTo(expectedPutUrl)).withRequestBody(equalToJson(validRequestJson.toString)))
+      WireMock.verify(
+        putRequestedFor(urlEqualTo(expectedPutUrl)).withRequestBody(equalToJson(validRequestJson.toString))
+      )
     }
 
     "return successful future with correct status when enrolment status service returns good status(204)" in {

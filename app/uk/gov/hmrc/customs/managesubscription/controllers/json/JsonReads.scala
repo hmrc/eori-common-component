@@ -27,8 +27,9 @@ object JsonReads {
 
   private implicit val subscriptionCompleteStatusReads: Reads[SubscriptionCompleteStatus] =
     Reads[SubscriptionCompleteStatus] {
-      case JsString(s) => Try(SubscriptionCompleteStatus.withName(s)).toOption
-        .fold[JsResult[SubscriptionCompleteStatus]](ifEmpty = JsError())(JsSuccess(_))
+      case JsString(s) =>
+        Try(SubscriptionCompleteStatus.withName(s)).toOption
+          .fold[JsResult[SubscriptionCompleteStatus]](ifEmpty = JsError())(JsSuccess(_))
       case _ => JsError()
     }
 
@@ -36,5 +37,6 @@ object JsonReads {
     (__ \ "url").read[String] and
       (__ \ "state").read[SubscriptionCompleteStatus] and
       (__ \ "errorResponse").readNullable[String]
-    ) (SubscriptionComplete.apply _)
+  )(SubscriptionComplete.apply _)
+
 }

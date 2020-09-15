@@ -42,20 +42,20 @@ import util.TestData._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Save4LaterControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
+class Save4LaterControllerSpec
+    extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  lazy val mongoComponent = app.injector.instanceOf(classOf[ReactiveMongoComponent])
-  val id = "id-1"
-  val key1 = "key-1"
-  val data = Json.toJson(recipientDetails)
+  lazy val mongoComponent      = app.injector.instanceOf(classOf[ReactiveMongoComponent])
+  val id                       = "id-1"
+  val key1                     = "key-1"
+  val data                     = Json.toJson(recipientDetails)
   val validPutRequestWithCache = FakeRequest("PUT", "/save4later/id-1/key-1").withJsonBody(data)
-  val validGetRequest = FakeRequest("GET", "/save4later/id-1/key-1")
-  val validDeleteRequest = FakeRequest("DELETE", "/save4later/id-1")
-  val validDeleteKeyRequest = FakeRequest("DELETE", "/save4later/id-1/key-1")
+  val validGetRequest          = FakeRequest("GET", "/save4later/id-1/key-1")
+  val validDeleteRequest       = FakeRequest("DELETE", "/save4later/id-1")
+  val validDeleteKeyRequest    = FakeRequest("DELETE", "/save4later/id-1/key-1")
 
   private val mockSave4LaterRepository = mock[Save4LaterRepository]
-  private val mockAuthConnector = mock[MicroserviceAuthConnector]
-
+  private val mockAuthConnector        = mock[MicroserviceAuthConnector]
 
   override def fakeApplication() = new GuiceApplicationBuilder()
     .configure("mongodb.uri" -> ("mongodb://localhost:27017/cds" + UUID.randomUUID().toString))
@@ -64,11 +64,13 @@ class Save4LaterControllerSpec extends PlaySpec with MockitoSugar with BeforeAnd
     .build()
 
   override protected def beforeEach(): Unit = {
-    reset(mockAuthConnector,mockSave4LaterRepository)
-    when(mockAuthConnector.authorise(
-      meq(AuthProviders(GovernmentGateway)),
-      meq(EmptyRetrieval))(any[HeaderCarrier],
-      any[ExecutionContext]))
+    reset(mockAuthConnector, mockSave4LaterRepository)
+    when(
+      mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(
+        any[HeaderCarrier],
+        any[ExecutionContext]
+      )
+    )
       .thenReturn(Future.successful(()))
   }
 
@@ -85,7 +87,7 @@ class Save4LaterControllerSpec extends PlaySpec with MockitoSugar with BeforeAnd
       when(mockSave4LaterRepository.save(any(), any(), any()))
         .thenReturn(Future.successful(()))
       val invalidRequest = FakeRequest("PUT", "/save4later/id").withJsonBody(Json.toJson(""))
-      val result = await(route(app, invalidRequest).get)
+      val result         = await(route(app, invalidRequest).get)
       result.header.status mustBe Status.NOT_FOUND
     }
 
@@ -93,7 +95,7 @@ class Save4LaterControllerSpec extends PlaySpec with MockitoSugar with BeforeAnd
       when(mockSave4LaterRepository.save(any(), any(), any()))
         .thenReturn(Future.successful(()))
       val invalidRequestWithNoBody = FakeRequest("PUT", "/save4later/id/key")
-      val result = await(route(app, invalidRequestWithNoBody).get)
+      val result                   = await(route(app, invalidRequestWithNoBody).get)
       result.header.status mustBe Status.BAD_REQUEST
     }
 

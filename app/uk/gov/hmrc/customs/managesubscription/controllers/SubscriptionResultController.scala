@@ -28,20 +28,22 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionResultController @Inject()(
+class SubscriptionResultController @Inject() (
   subscriptionCompleteBusinessService: SubscriptionCompleteBusinessService,
   cc: ControllerComponents,
   messagingHeaderValidator: MessagingHeaderValidator
 ) extends BackendController(cc) {
 
-def updateStatus(formBundleId: String): Action[AnyContent] = messagingHeaderValidator.async { implicit request =>
+  def updateStatus(formBundleId: String): Action[AnyContent] = messagingHeaderValidator.async { implicit request =>
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
       js.validate[SubscriptionComplete] match {
         case JsSuccess(subscriptionComplete, _) =>
-          subscriptionCompleteBusinessService.onSubscriptionStatus(subscriptionComplete, formBundleId).map(_ => NoContent)
+          subscriptionCompleteBusinessService.onSubscriptionStatus(subscriptionComplete, formBundleId).map(
+            _ => NoContent
+          )
         case _ => Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
       }
     }
   }
-}
 
+}

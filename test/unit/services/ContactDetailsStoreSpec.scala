@@ -30,23 +30,42 @@ import scala.concurrent.Future
 
 class ContactDetailsStoreSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockContactDetailsRepository = mock[RecipientDetailsRepository]
-  private val contactDetailsStore = new RecipientDetailsStore(mockContactDetailsRepository)
-  private val idAsString = "some-id"
+  private val contactDetailsStore          = new RecipientDetailsStore(mockContactDetailsRepository)
+  private val idAsString                   = "some-id"
 
   "recipient details store" should {
 
     "return true on saveRecipientDetailsForBundleId when repository has saved" in {
-      when(mockContactDetailsRepository.saveRecipientDetailsForBundleId(idAsString, Some(eori), recipientDetails, emailVerificationTimestamp, safeId))
+      when(
+        mockContactDetailsRepository.saveRecipientDetailsForBundleId(
+          idAsString,
+          Some(eori),
+          recipientDetails,
+          emailVerificationTimestamp,
+          safeId
+        )
+      )
         .thenReturn(Future.successful(()))
 
-      val actual = await(contactDetailsStore.saveRecipientDetailsForBundleId(idAsString, Some(eori), recipientDetails, emailVerificationTimestamp, safeId))
+      val actual = await(
+        contactDetailsStore.saveRecipientDetailsForBundleId(
+          idAsString,
+          Some(eori),
+          recipientDetails,
+          emailVerificationTimestamp,
+          safeId
+        )
+      )
 
       actual shouldBe ((): Unit)
     }
 
-
     "recipientDetailsForBundleId should return RecipientDetailsWithEori when found by repo" in {
-      when(mockContactDetailsRepository.recipientDetailsForBundleId(idAsString)).thenReturn(Future.successful(Right(RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId))))
+      when(mockContactDetailsRepository.recipientDetailsForBundleId(idAsString)).thenReturn(
+        Future.successful(
+          Right(RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId))
+        )
+      )
 
       val actual = await(contactDetailsStore.recipientDetailsForBundleId(idAsString))
 
@@ -54,7 +73,9 @@ class ContactDetailsStoreSpec extends UnitSpec with MockitoSugar with BeforeAndA
     }
 
     "recipientDetailsForBundleId should throw exception when recipient details not found in repository" in {
-      when(mockContactDetailsRepository.recipientDetailsForBundleId(idAsString)).thenReturn(Future.successful(Left(JsError("invalid-json"))))
+      when(mockContactDetailsRepository.recipientDetailsForBundleId(idAsString)).thenReturn(
+        Future.successful(Left(JsError("invalid-json")))
+      )
 
       val caught = intercept[IllegalStateException](await(contactDetailsStore.recipientDetailsForBundleId(idAsString)))
 
@@ -62,7 +83,7 @@ class ContactDetailsStoreSpec extends UnitSpec with MockitoSugar with BeforeAndA
     }
   }
 
-  override protected def beforeEach(): Unit = {
+  override protected def beforeEach(): Unit =
     reset(mockContactDetailsRepository)
-  }
+
 }

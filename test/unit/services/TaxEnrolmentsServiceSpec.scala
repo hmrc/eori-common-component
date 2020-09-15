@@ -32,7 +32,7 @@ import scala.concurrent.Future
 
 class TaxEnrolmentsServiceSpec extends BaseSpec {
 
-  private val mockContactDetailsStore = mock[RecipientDetailsStore]
+  private val mockContactDetailsStore   = mock[RecipientDetailsStore]
   private val mockTaxEnrolmentConnector = mock[TaxEnrolmentsConnector]
 
   private val service = new TaxEnrolmentsService(appConfig, mockTaxEnrolmentConnector, mockContactDetailsStore)
@@ -40,9 +40,15 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
   private implicit val headerCarrier = HeaderCarrier()
 
   private val formBundleId: String = "Form-Bundle-Id-123"
-  private val taxPayerId = TaxPayerId("sap-number")
-  private val eori = Eori("GB0123456789")
-  private val taxEnrolmentRequest = TaxEnrolmentsRequest(appConfig.taxEnrolmentsServiceName, appConfig.taxEnrolmentsCallbackUrl + "/" + formBundleId, etmpId = taxPayerId.id)
+  private val taxPayerId           = TaxPayerId("sap-number")
+  private val eori                 = Eori("GB0123456789")
+
+  private val taxEnrolmentRequest = TaxEnrolmentsRequest(
+    appConfig.taxEnrolmentsServiceName,
+    appConfig.taxEnrolmentsCallbackUrl + "/" + formBundleId,
+    etmpId = taxPayerId.id
+  )
+
   private val emulatedFailure = new UnsupportedOperationException("Emulated service call failure.")
 
   override protected def beforeEach() {
@@ -52,41 +58,127 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
   "SubscriptionTaxEnrolmentIntegrationService" should {
 
     "store recipient details in store and call tax-enrolments connector" in {
-      when(mockContactDetailsStore.saveRecipientDetailsForBundleId(anyString, any[Option[Eori]], any[RecipientDetails], anyString, anyString)).thenReturn(())
-      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(NO_CONTENT)
+      when(
+        mockContactDetailsStore.saveRecipientDetailsForBundleId(
+          anyString,
+          any[Option[Eori]],
+          any[RecipientDetails],
+          anyString,
+          anyString
+        )
+      ).thenReturn(())
+      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
+        NO_CONTENT
+      )
 
-      await(service.saveRecipientDetailsAndCallTaxEnrolment(formBundleId, recipientDetails, sapNumber = taxPayerId, Some(eori), emailVerificationTimestamp, safeId))
+      await(
+        service.saveRecipientDetailsAndCallTaxEnrolment(
+          formBundleId,
+          recipientDetails,
+          sapNumber = taxPayerId,
+          Some(eori),
+          emailVerificationTimestamp,
+          safeId
+        )
+      )
 
-      verify(mockContactDetailsStore).saveRecipientDetailsForBundleId(meq(formBundleId), meq(Some(eori)), meq(recipientDetails), meq(emailVerificationTimestamp), meq(safeId))
+      verify(mockContactDetailsStore).saveRecipientDetailsForBundleId(
+        meq(formBundleId),
+        meq(Some(eori)),
+        meq(recipientDetails),
+        meq(emailVerificationTimestamp),
+        meq(safeId)
+      )
       verify(mockTaxEnrolmentConnector).enrol(meq(taxEnrolmentRequest), meq(formBundleId))(meq(headerCarrier))
     }
 
     "save recipient details in store and call tax-enrolments connector when pending request from frontend" in {
-      when(mockContactDetailsStore.saveRecipientDetailsForBundleId(anyString, any[Option[Eori]], any[RecipientDetails], anyString, anyString)).thenReturn(())
-      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(NO_CONTENT)
+      when(
+        mockContactDetailsStore.saveRecipientDetailsForBundleId(
+          anyString,
+          any[Option[Eori]],
+          any[RecipientDetails],
+          anyString,
+          anyString
+        )
+      ).thenReturn(())
+      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
+        NO_CONTENT
+      )
 
-      await(service.saveRecipientDetailsAndCallTaxEnrolment(formBundleId, recipientDetails, sapNumber = taxPayerId, None, emailVerificationTimestamp, safeId)) shouldBe NO_CONTENT
+      await(
+        service.saveRecipientDetailsAndCallTaxEnrolment(
+          formBundleId,
+          recipientDetails,
+          sapNumber = taxPayerId,
+          None,
+          emailVerificationTimestamp,
+          safeId
+        )
+      ) shouldBe NO_CONTENT
 
-      verify(mockContactDetailsStore).saveRecipientDetailsForBundleId(meq(formBundleId), meq(None), meq(recipientDetails), meq(emailVerificationTimestamp), meq(safeId))
+      verify(mockContactDetailsStore).saveRecipientDetailsForBundleId(
+        meq(formBundleId),
+        meq(None),
+        meq(recipientDetails),
+        meq(emailVerificationTimestamp),
+        meq(safeId)
+      )
       verify(mockTaxEnrolmentConnector).enrol(meq(taxEnrolmentRequest), meq(formBundleId))(meq(headerCarrier))
     }
 
     "fail when storing recipient details fails" in {
-      when(mockContactDetailsStore.saveRecipientDetailsForBundleId(anyString, any[Option[Eori]], any[RecipientDetails], anyString, anyString)).thenReturn(Future.failed(emulatedFailure))
+      when(
+        mockContactDetailsStore.saveRecipientDetailsForBundleId(
+          anyString,
+          any[Option[Eori]],
+          any[RecipientDetails],
+          anyString,
+          anyString
+        )
+      ).thenReturn(Future.failed(emulatedFailure))
 
       the[UnsupportedOperationException] thrownBy {
-        await(service.saveRecipientDetailsAndCallTaxEnrolment(formBundleId, recipientDetails, sapNumber = taxPayerId, Some(eori), emailVerificationTimestamp, safeId))
+        await(
+          service.saveRecipientDetailsAndCallTaxEnrolment(
+            formBundleId,
+            recipientDetails,
+            sapNumber = taxPayerId,
+            Some(eori),
+            emailVerificationTimestamp,
+            safeId
+          )
+        )
       } shouldBe emulatedFailure
       verifyZeroInteractions(mockTaxEnrolmentConnector)
     }
 
     "fail when calling tax-enrolments fails" in {
-      when(mockContactDetailsStore.saveRecipientDetailsForBundleId(anyString, any[Option[Eori]], any[RecipientDetails], anyString, anyString)).thenReturn(())
+      when(
+        mockContactDetailsStore.saveRecipientDetailsForBundleId(
+          anyString,
+          any[Option[Eori]],
+          any[RecipientDetails],
+          anyString,
+          anyString
+        )
+      ).thenReturn(())
 
-      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(Future.failed(emulatedFailure))
+      when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
+        Future.failed(emulatedFailure)
+      )
 
       the[UnsupportedOperationException] thrownBy {
-        await(service.saveRecipientDetailsAndCallTaxEnrolment(formBundleId, recipientDetails, sapNumber = taxPayerId, Some(eori), emailVerificationTimestamp, safeId))
+        await(
+          service.saveRecipientDetailsAndCallTaxEnrolment(
+            formBundleId,
+            recipientDetails,
+            sapNumber = taxPayerId,
+            Some(eori),
+            emailVerificationTimestamp,
+            safeId
+          )
+        )
       } shouldBe emulatedFailure
     }
   }

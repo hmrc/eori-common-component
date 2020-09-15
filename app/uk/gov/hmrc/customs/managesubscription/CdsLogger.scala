@@ -18,5 +18,5 @@ package uk.gov.hmrc.customs.managesubscription
 
 @deprecated("Use logger created specifically for some class", "2020-08-21")
 object CdsLogger {
-   lazy val logger = play.api.Logger("eori-common-component")
+  lazy val logger = play.api.Logger("eori-common-component")
 }

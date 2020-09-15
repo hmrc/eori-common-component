@@ -23,17 +23,22 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.{Audit, DataEvent}
 
 @Singleton
-class Auditable @Inject()(auditConnector: AuditConnector, @Named("appName") appName: String) {
+class Auditable @Inject() (auditConnector: AuditConnector, @Named("appName") appName: String) {
 
   private val auditSource: String = appName
 
   private val audit: Audit = Audit(auditSource, auditConnector)
 
-  def sendDataEvent(transactionName: String, path: String = "N/A", detail: Map[String, String], auditType: String)(implicit hc: HeaderCarrier): Unit =
-    audit.sendDataEvent(DataEvent(
-      auditSource,
-      auditType,
-      tags = hc.toAuditTags(transactionName, path),
-      detail = hc.toAuditDetails(detail.toSeq: _*))
+  def sendDataEvent(transactionName: String, path: String = "N/A", detail: Map[String, String], auditType: String)(
+    implicit hc: HeaderCarrier
+  ): Unit =
+    audit.sendDataEvent(
+      DataEvent(
+        auditSource,
+        auditType,
+        tags = hc.toAuditTags(transactionName, path),
+        detail = hc.toAuditDetails(detail.toSeq: _*)
+      )
     )
+
 }

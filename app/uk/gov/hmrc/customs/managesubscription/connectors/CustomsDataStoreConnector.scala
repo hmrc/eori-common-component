@@ -30,15 +30,22 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CustomsDataStoreConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit ec: ExecutionContext){
+class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+  ec: ExecutionContext
+) {
 
   def storeEmailAddress(dataStoreRequest: DataStoreRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    val query = s"""{"query" : "mutation {byEori(eoriHistory:{eori:\\"${dataStoreRequest.eori}\\"}, notificationEmail:{address:\\"${dataStoreRequest.email}\\", timestamp:\\"${dataStoreRequest.emailVerificationTimestamp}\\"})}"}"""
+    val query =
+      s"""{"query" : "mutation {byEori(eoriHistory:{eori:\\"${dataStoreRequest.eori}\\"}, notificationEmail:{address:\\"${dataStoreRequest.email}\\", timestamp:\\"${dataStoreRequest.emailVerificationTimestamp}\\"})}"}"""
     val header = hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.customDataStoreToken}")))
 
     auditRequest(dataStoreRequest, appConfig.customDataStoreUrl)
 
-    httpClient.doPost[JsValue](appConfig.customDataStoreUrl, Json.parse(query), Seq("Content-Type" -> "application/json"))(implicitly, header, ec)
+    httpClient.doPost[JsValue](
+      appConfig.customDataStoreUrl,
+      Json.parse(query),
+      Seq("Content-Type" -> "application/json")
+    )(implicitly, header, ec)
       .map { response =>
         auditResponse(response, appConfig.customDataStoreUrl)
         logResponse(response.status)
@@ -47,7 +54,7 @@ class CustomsDataStoreConnector @Inject()(appConfig: AppConfig, httpClient: Http
   }
 
   private val logResponse: Int => Unit = {
-    case OK => logger.info("CustomsDataStore: data store request is successful")
+    case OK     => logger.info("CustomsDataStore: data store request is successful")
     case status => logger.warn(s"CustomsDataStore: data store request is failed with status $status")
   }
 
@@ -66,4 +73,5 @@ class CustomsDataStoreConnector @Inject()(appConfig: AppConfig, httpClient: Http
       detail = Map("status" -> s"${response.status}", "message" -> s"${response.body}"),
       auditType = "DataStoreResponse"
     )
+
 }

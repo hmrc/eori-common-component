@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RecipientDetailsRepository @Inject()(cacheRepo: RecipientDetailsCacheRepository) {
+class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepository) {
 
   private val recipientDetailsKey = "recipientDetailsWithEori"
 
@@ -44,36 +44,36 @@ class RecipientDetailsRepository @Inject()(cacheRepo: RecipientDetailsCacheRepos
     cacheRepo.createOrUpdate(
       Id(formBundleId),
       recipientDetailsKey,
-      Json.toJson(
-        RecipientDetailsWithEori(
-          eori.map(_.value),
-          recipientDetails,
-          emailVerificationTimestamp,
-          safeId
-        )
-      )
+      Json.toJson(RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId))
     ).map(_ => (): Unit)
 
-  def recipientDetailsForBundleId(formBundleId: String)(
-    implicit reads: Reads[RecipientDetailsWithEori]
+  def recipientDetailsForBundleId(formBundleId: String)(implicit
+    reads: Reads[RecipientDetailsWithEori]
   ): Future[Either[JsError, RecipientDetailsWithEori]] = getCached(formBundleId)
 
-  private def getCached(formBundleId: Id)(implicit reads: Reads[RecipientDetailsWithEori]): Future[Either[JsError, RecipientDetailsWithEori]] =
+  private def getCached(
+    formBundleId: Id
+  )(implicit reads: Reads[RecipientDetailsWithEori]): Future[Either[JsError, RecipientDetailsWithEori]] =
     cacheRepo.findById(formBundleId.id).map {
-      case Some(Cache(_, Some(data), _, _)) => (data \ recipientDetailsKey).validate[RecipientDetailsWithEori] match {
-        case d: JsSuccess[RecipientDetailsWithEori] =>
-          Right(d.value)
-        case _: JsError =>
-          logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}")
-          Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}"))
-      }
-      case _ => {
+      case Some(Cache(_, Some(data), _, _)) =>
+        (data \ recipientDetailsKey).validate[RecipientDetailsWithEori] match {
+          case d: JsSuccess[RecipientDetailsWithEori] =>
+            Right(d.value)
+          case _: JsError =>
+            logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}")
+            Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}"))
+        }
+      case _ =>
         logger.error(s"No data is saved for the formBundleId: ${formBundleId.id}")
         Left(JsError(s"No data is saved for the formBundleId: ${formBundleId.id}"))
-      }
     }
+
 }
 
 @Singleton
-class RecipientDetailsCacheRepository @Inject()(sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit ec: ExecutionContext)
-  extends CacheMongoRepository("recipient-details", sc.getDuration("cache.expiryInMinutes").toSeconds)(mongo.mongoConnector.db, ec)
+class RecipientDetailsCacheRepository @Inject() (sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit
+  ec: ExecutionContext
+) extends CacheMongoRepository("recipient-details", sc.getDuration("cache.expiryInMinutes").toSeconds)(
+      mongo.mongoConnector.db,
+      ec
+    )

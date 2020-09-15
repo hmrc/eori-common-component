@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext.global
 
 class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyChecks {
 
-  private val validator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
+  private val validator      = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
   private val expectedResult = Ok("as expected")
 
   val action: Action[AnyContent] = validator async {
@@ -43,12 +43,36 @@ class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyCheck
   val headersTable = Table(
     ("description", "Headers", "Expected response"),
     ("return OK result for valid headers", validHeaders, expectedResult),
-    ("return ErrorContentTypeHeaderInvalid result for content type header missing", validHeaders - CONTENT_TYPE, ErrorContentTypeHeaderInvalid.JsonResult),
-    ("return ErrorContentTypeHeaderInvalid result for content type header invalid", validHeaders + CONTENT_TYPE_HEADER_INVALID, ErrorContentTypeHeaderInvalid.JsonResult),
-    ("return ErrorAcceptHeaderInvalid result for accept header missing", validHeaders - ACCEPT, ErrorAcceptHeaderInvalid.JsonResult),
-    ("return ErrorAcceptHeaderInvalid result for accept header invalid", validHeaders + ACCEPT_HEADER_INVALID, ErrorAcceptHeaderInvalid.JsonResult),
-    ("return ErrorUnauthorized result when bearer token is missing", validHeaders - AUTHORIZATION, ErrorUnauthorized.JsonResult),
-    ("return ErrorUnauthorized result when bearer token is invalid", validHeaders + AUTHORISATION_HEADER_INVALID, ErrorUnauthorized.JsonResult),
+    (
+      "return ErrorContentTypeHeaderInvalid result for content type header missing",
+      validHeaders - CONTENT_TYPE,
+      ErrorContentTypeHeaderInvalid.JsonResult
+    ),
+    (
+      "return ErrorContentTypeHeaderInvalid result for content type header invalid",
+      validHeaders + CONTENT_TYPE_HEADER_INVALID,
+      ErrorContentTypeHeaderInvalid.JsonResult
+    ),
+    (
+      "return ErrorAcceptHeaderInvalid result for accept header missing",
+      validHeaders - ACCEPT,
+      ErrorAcceptHeaderInvalid.JsonResult
+    ),
+    (
+      "return ErrorAcceptHeaderInvalid result for accept header invalid",
+      validHeaders + ACCEPT_HEADER_INVALID,
+      ErrorAcceptHeaderInvalid.JsonResult
+    ),
+    (
+      "return ErrorUnauthorized result when bearer token is missing",
+      validHeaders - AUTHORIZATION,
+      ErrorUnauthorized.JsonResult
+    ),
+    (
+      "return ErrorUnauthorized result when bearer token is invalid",
+      validHeaders + AUTHORISATION_HEADER_INVALID,
+      ErrorUnauthorized.JsonResult
+    ),
     ("return ErrorAcceptHeaderInvalid result for all headers missing", NoHeaders, ErrorAcceptHeaderInvalid.JsonResult)
   )
 

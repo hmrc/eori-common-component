@@ -18,7 +18,12 @@ package uk.gov.hmrc.customs.managesubscription.domain.protocol
 
 import play.api.libs.json.{Json, OFormat}
 
-case class TaxEnrolmentsRequest(serviceName: String, callback: String, etmpId: String, confidenceLevel: Option[String] = None)
+case class TaxEnrolmentsRequest(
+  serviceName: String,
+  callback: String,
+  etmpId: String,
+  confidenceLevel: Option[String] = None
+)
 
 object TaxEnrolmentsRequest {
   implicit val jsonFormat: OFormat[TaxEnrolmentsRequest] = Json.format[TaxEnrolmentsRequest]

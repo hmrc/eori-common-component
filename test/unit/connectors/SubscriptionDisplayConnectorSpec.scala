@@ -32,29 +32,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class SubscriptionDisplayConnectorSpec extends BaseSpec {
 
   private val validHeaders: Seq[(String, String)] = Seq(AUTHORISATION_HEADER, CONTENT_TYPE_HEADER, ACCEPT_HEADER)
-  private val mockHttp = mock[HttpClient]
-  private val mockAuditable = mock[Auditable]
-  implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders(validHeaders: _*)
+  private val mockHttp                            = mock[HttpClient]
+  private val mockAuditable                       = mock[Auditable]
+  implicit val hc: HeaderCarrier                  = HeaderCarrier().withExtraHeaders(validHeaders: _*)
 
   private val testConnector = new SubscriptionDisplayConnector(appConfig, mockHttp, mockAuditable)
 
   "SubscriptionDisplayConnector" should {
     "return EORINo when a request to subscription display is successful" in {
       val responseBody = Json.parse("""{"subscriptionDisplayResponse": {"responseDetail": {"EORINo": "123456789"}}}""")
-      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(200, Some(responseBody))))
+      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(
+        Future.successful(HttpResponse(200, Some(responseBody)))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Seq(("queryparam", "value")))) shouldBe Some("123456789")
     }
 
     "return None when no EORINo received from subscription display" in {
       val responseBody = Json.parse("""{"subscriptionDisplayResponse": {}}""")
-      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(200, Some(responseBody))))
+      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(
+        Future.successful(HttpResponse(200, Some(responseBody)))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Seq(("queryparam", "value")))) shouldBe None
     }
 
     "return None when a request to subscription display is failed" in {
-      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(400, Some(JsString("error message")))))
+      when(mockHttp.doGet(any(), any())(any(), any())).thenReturn(
+        Future.successful(HttpResponse(400, Some(JsString("error message"))))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Nil)) shouldBe None
     }

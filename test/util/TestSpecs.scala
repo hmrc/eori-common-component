@@ -22,11 +22,11 @@ import scala.concurrent.Future
 
 trait AsyncTest extends ScalaFutures with Eventually {
 
-  def eventuallyTest[A, B](result: Future[A])(func: A => B): B = {
+  def eventuallyTest[A, B](result: Future[A])(func: A => B): B =
     eventually {
       whenReady(result) {
         func
       }
     }
-  }
+
 }

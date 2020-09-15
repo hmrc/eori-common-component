@@ -27,11 +27,9 @@ import util.MDTPEmailService
 
 class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailService {
 
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().configure(Map(
-    "microservice.services.email.host" -> Host,
-    "microservice.services.email.port" -> Port
-  )).build()
-
+  implicit override lazy val app: Application = new GuiceApplicationBuilder().configure(
+    Map("microservice.services.email.host" -> Host, "microservice.services.email.port" -> Port)
+  ).build()
 
   override def beforeAll {
     startMockServer()
@@ -48,7 +46,8 @@ class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailServic
     to = List("john.doe@digital.hmrc.gov.uk", "john.doe2@digital.hmrc.gov.uk"),
     templateId = "test-template-id",
     parameters = Map("param_key" -> "param_value"),
-    force = true)
+    force = true
+  )
 
   "EmailConnector" should {
 
@@ -63,7 +62,8 @@ class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailServic
           |"parameters": {"param_key": "param_value"},
           |"force": true
           |}
-        """.stripMargin)
+        """.stripMargin
+      )
     }
   }
 }

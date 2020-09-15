@@ -23,14 +23,19 @@ import uk.gov.hmrc.customs.managesubscription.CdsLogger.logger
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
-import uk.gov.hmrc.customs.managesubscription.domain.{DataStoreRequest, RecipientDetailsWithEori, SubscriptionComplete, SubscriptionCompleteStatus}
+import uk.gov.hmrc.customs.managesubscription.domain.{
+  DataStoreRequest,
+  RecipientDetailsWithEori,
+  SubscriptionComplete,
+  SubscriptionCompleteStatus
+}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionCompleteBusinessService @Inject()(
+class SubscriptionCompleteBusinessService @Inject() (
   recipientDetailsStore: RecipientDetailsStore,
   emailService: EmailService,
   audit: Auditable,
@@ -38,12 +43,14 @@ class SubscriptionCompleteBusinessService @Inject()(
   subscriptionDisplayConnector: SubscriptionDisplayConnector
 ) {
 
-  def onSubscriptionStatus(subscriptionComplete: SubscriptionComplete, formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
+  def onSubscriptionStatus(subscriptionComplete: SubscriptionComplete, formBundleId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[Unit] =
     subscriptionComplete.state match {
-      case status@SubscriptionCompleteStatus.SUCCEEDED =>
+      case status @ SubscriptionCompleteStatus.SUCCEEDED =>
         auditStatus(status, formBundleId)
         sendAndStoreEmail(status, formBundleId)
-      case status@SubscriptionCompleteStatus.ERROR =>
+      case status @ SubscriptionCompleteStatus.ERROR =>
         auditStatus(status, formBundleId)
         sendEmail(status, formBundleId)
       case badState =>
@@ -56,21 +63,27 @@ class SubscriptionCompleteBusinessService @Inject()(
     Future.successful(logger.error(MessageThatTriggersPagerDutyAlert))
   }
 
-  private def sendAndStoreEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
+  private def sendAndStoreEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[Unit] =
     for {
-      recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _ <- emailService.sendEmail(recipient.recipientDetails, status)
+      recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
+      _          <- emailService.sendEmail(recipient.recipientDetails, status)
       eoriNumber <- retrieveEori(recipient)
-      _ <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
+      _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
     } yield (): Unit
 
-  private def sendEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
+  private def sendEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[Unit] =
     for {
       recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _ <- emailService.sendEmail(recipient.recipientDetails, status)
+      _         <- emailService.sendEmail(recipient.recipientDetails, status)
     } yield (): Unit
 
-  private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): String => Future[HttpResponse] = eori =>
+  private def dataStoreEmailRequest(
+    recipient: RecipientDetailsWithEori
+  )(implicit hc: HeaderCarrier): String => Future[HttpResponse] = eori =>
     dataStoreConnector.storeEmailAddress(
       DataStoreRequest(eori, recipient.recipientDetails.recipientEmailAddress, recipient.emailVerificationTimestamp)
     )
@@ -94,4 +107,5 @@ class SubscriptionCompleteBusinessService @Inject()(
       detail = Map("state" -> status.toString, "formBundleId" -> formBundleId),
       auditType = "taxEnrolmentStatus"
     )
+
 }
