@@ -38,27 +38,55 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
 
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
   private val mockControllerComponents = mock[ControllerComponents]
-  private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(ExecutionContext.global)
 
-  private val controller = new HandleSubscriptionController(mockTaxEnrolmentsService, mockControllerComponents, mockDigitalHeaderValidator)
+  private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
+    ExecutionContext.global
+  )
 
-  override def beforeEach(): Unit = {
+  private val controller =
+    new HandleSubscriptionController(mockTaxEnrolmentsService, mockControllerComponents, mockDigitalHeaderValidator)
+
+  override def beforeEach(): Unit =
     reset(mockTaxEnrolmentsService)
-  }
 
   "HandleSubscriptionController" should {
     "respond with status 204 if the request is valid and status SUCCEEDED" in {
-      when(mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(meq(formBundleId), meq(recipientDetails), meq(taxPayerId), meq(Option(eori)), meq(emailVerificationTimestamp), meq(safeId))(any[HeaderCarrier], any[ExecutionContext])).thenReturn(Future.successful(200))
+      when(
+        mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
+          meq(formBundleId),
+          meq(recipientDetails),
+          meq(taxPayerId),
+          meq(Option(eori)),
+          meq(emailVerificationTimestamp),
+          meq(safeId)
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(Future.successful(200))
       testSubmitResult(validRequest) { result =>
         status(result) shouldBe NO_CONTENT
 
-        verify(mockTaxEnrolmentsService).saveRecipientDetailsAndCallTaxEnrolment(meq(formBundleId), meq(recipientDetails), meq(taxPayerId), meq(Option(eori)), meq(emailVerificationTimestamp), meq(safeId))(any[HeaderCarrier], any[ExecutionContext])
+        verify(mockTaxEnrolmentsService).saveRecipientDetailsAndCallTaxEnrolment(
+          meq(formBundleId),
+          meq(recipientDetails),
+          meq(taxPayerId),
+          meq(Option(eori)),
+          meq(emailVerificationTimestamp),
+          meq(safeId)
+        )(any[HeaderCarrier], any[ExecutionContext])
       }
     }
 
     //    can not simulate/ should not simulare especialy RuntimeExceptions
     "respond with status 500 if the request processing fails" in {
-      when(mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(meq(formBundleId), meq(recipientDetails), meq(taxPayerId), meq(Option(eori)), meq(emailVerificationTimestamp), meq(safeId))(any[HeaderCarrier], any[ExecutionContext])).thenReturn(Future.failed(emulatedServiceFailure))
+      when(
+        mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
+          meq(formBundleId),
+          meq(recipientDetails),
+          meq(taxPayerId),
+          meq(Option(eori)),
+          meq(emailVerificationTimestamp),
+          meq(safeId)
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(Future.failed(emulatedServiceFailure))
       testSubmitResult(validRequest) { result =>
         val thrown = the[RuntimeException] thrownBy await(result)
         thrown shouldBe emulatedServiceFailure
@@ -82,4 +110,5 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) {
     test(controller.handle().apply(request))
   }
+
 }

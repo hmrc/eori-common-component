@@ -20,11 +20,12 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class BuildUrl @Inject()(config: ServicesConfig) {
+class BuildUrl @Inject() (config: ServicesConfig) {
 
   def apply(serviceName: String): String = {
     val baseUrl = config.baseUrl(serviceName)
     val context = config.getConfString(s"$serviceName.context", "")
     baseUrl + context
   }
+
 }

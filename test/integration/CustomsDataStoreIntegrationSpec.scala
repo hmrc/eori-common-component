@@ -26,22 +26,24 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.CustomsDataStoreService
 import util.TestData.{emailVerificationTimestamp, eori, recipientDetails}
 
-class CustomsDataStoreIntegrationSpec extends IntegrationTestsWithDbSpec with CustomsDataStoreService with ScalaFutures  {
+class CustomsDataStoreIntegrationSpec
+    extends IntegrationTestsWithDbSpec with CustomsDataStoreService with ScalaFutures {
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private val expectedUrl = "/customs-data-store/graphql"
+  private implicit val hc: HeaderCarrier     = HeaderCarrier()
+  private val expectedUrl                    = "/customs-data-store/graphql"
   private lazy val customsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
 
-  private val dataStoreRequest = DataStoreRequest(eori.value, recipientDetails.recipientEmailAddress, emailVerificationTimestamp)
-  private val dataStoreRequestQuery = s"""{"query" : "mutation {byEori(eoriHistory:{eori:\\"${eori.value}\\"}, notificationEmail:{address:\\"${recipientDetails.recipientEmailAddress}\\", timestamp:\\"$emailVerificationTimestamp\\"})}"}"""
+  private val dataStoreRequest =
+    DataStoreRequest(eori.value, recipientDetails.recipientEmailAddress, emailVerificationTimestamp)
 
-  override def beforeAll: Unit = {
+  private val dataStoreRequestQuery =
+    s"""{"query" : "mutation {byEori(eoriHistory:{eori:\\"${eori.value}\\"}, notificationEmail:{address:\\"${recipientDetails.recipientEmailAddress}\\", timestamp:\\"$emailVerificationTimestamp\\"})}"}"""
+
+  override def beforeAll: Unit =
     startMockServer()
-  }
 
-  override def afterAll: Unit = {
+  override def afterAll: Unit =
     stopMockServer()
-  }
 
   "CustomsDataStoreConnector" should {
     "call customs data store service with correct url and payload" in {

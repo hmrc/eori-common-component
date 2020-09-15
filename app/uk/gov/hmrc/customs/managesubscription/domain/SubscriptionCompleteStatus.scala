@@ -19,9 +19,9 @@ package uk.gov.hmrc.customs.managesubscription.domain
 object SubscriptionCompleteStatus extends Enumeration {
   type SubscriptionCompleteStatus = Value
 
-  val SUCCEEDED = Value
-  val ERROR = Value
+  val SUCCEEDED      = Value
+  val ERROR          = Value
   val EnrolmentError = Value
-  val AuthRefreshed = Value
-  val Enrolled = Value
+  val AuthRefreshed  = Value
+  val Enrolled       = Value
 }

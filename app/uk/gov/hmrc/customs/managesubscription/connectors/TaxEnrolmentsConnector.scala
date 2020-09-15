@@ -28,20 +28,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class TaxEnrolmentsConnector @Inject()(buildUrl: BuildUrl, httpClient: HttpClient) {
+class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient) {
 
   private val LoggerComponentId = "TaxEnrolmentsConnector"
-  private val baseUrl = buildUrl("tax-enrolments")
+  private val baseUrl           = buildUrl("tax-enrolments")
 
   def enrol(request: TaxEnrolmentsRequest, formBundleId: String)(implicit hc: HeaderCarrier): Future[Int] = {
     val loggerId = s"[$LoggerComponentId]"
-    val url = s"$baseUrl/$formBundleId/subscriber"
+    val url      = s"$baseUrl/$formBundleId/subscriber"
 
     logger.info(s"$loggerId putUrl: $url")
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request) map {
       _.status match {
-        case s@BAD_REQUEST =>
+        case s @ BAD_REQUEST =>
           logger.error(s"$loggerId tax enrolment request failed with BAD_REQUEST status")
           s
         case s =>
@@ -50,5 +50,5 @@ class TaxEnrolmentsConnector @Inject()(buildUrl: BuildUrl, httpClient: HttpClien
       }
     }
   }
-}
 
+}

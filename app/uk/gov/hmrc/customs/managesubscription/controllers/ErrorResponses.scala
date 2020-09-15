@@ -27,22 +27,22 @@ import scala.xml.NodeSeq
 // TODO Some of the errors are used, but there is a lot of not used
 trait HttpStatusCodeShortDescriptions {
   // 2XX
-  val OkCode = "OK"
-  val CreatedCode = "CREATED"
+  val OkCode       = "OK"
+  val CreatedCode  = "CREATED"
   val AcceptedCode = "ACCEPTED"
   // 4XX
-  val BadRequestCode = "BAD_REQUEST"
-  val UnauthorizedCode = "UNAUTHORIZED"
-  val NotFoundCode = "NOT_FOUND"
-  val ForbiddenCode = "FORBIDDEN"
-  val MethodNotAllowedCode = "METHOD_NOT_ALLOWED"
-  val NotAcceptableCode = "ACCEPT_HEADER_INVALID"
+  val BadRequestCode           = "BAD_REQUEST"
+  val UnauthorizedCode         = "UNAUTHORIZED"
+  val NotFoundCode             = "NOT_FOUND"
+  val ForbiddenCode            = "FORBIDDEN"
+  val MethodNotAllowedCode     = "METHOD_NOT_ALLOWED"
+  val NotAcceptableCode        = "ACCEPT_HEADER_INVALID"
   val UnsupportedMediaTypeCode = "UNSUPPORTED_MEDIA_TYPE"
   // 5XX
   val InternalServerErrorCode = "INTERNAL_SERVER_ERROR"
-  val NotImplemented = "NOT_IMPLEMENTED"
-  val BadGateway = "BAD_GATEWAY"
-  val ServiceUnavailable = "SERVICE_UNAVAILABLE"
+  val NotImplemented          = "NOT_IMPLEMENTED"
+  val BadGateway              = "BAD_GATEWAY"
+  val ServiceUnavailable      = "SERVICE_UNAVAILABLE"
 }
 
 case class ResponseContents(code: String, message: String)
@@ -51,16 +51,15 @@ object ResponseContents {
   implicit val writes: Writes[ResponseContents] = Json.writes[ResponseContents]
 }
 
-case class ErrorResponse(httpStatusCode: Int, errorCode: String, message: String, content: ResponseContents*) extends Error {
-  private lazy val errorContent = JsObject(Seq(
-    "code" -> JsString(errorCode),
-    "message" -> JsString(message))
-  )
+case class ErrorResponse(httpStatusCode: Int, errorCode: String, message: String, content: ResponseContents*)
+    extends Error {
+  private lazy val errorContent = JsObject(Seq("code" -> JsString(errorCode), "message" -> JsString(message)))
 
-  private lazy val responseJson: JsValue = if (content.isEmpty) errorContent else errorContent + ("errors" -> Json.toJson(content))
+  private lazy val responseJson: JsValue =
+    if (content.isEmpty) errorContent else errorContent + ("errors" -> Json.toJson(content))
 
   lazy val JsonResult: Result = Status(httpStatusCode)(responseJson).as(ContentTypes.JSON)
-  lazy val XmlResult: Result = Status(httpStatusCode)(responseXml).as(ContentTypes.XML)
+  lazy val XmlResult: Result  = Status(httpStatusCode)(responseXml).as(ContentTypes.XML)
 
   private lazy val responseXml: String = "<?xml version='1.0' encoding='UTF-8'?>\n" +
     <errorResponse>
@@ -70,20 +69,21 @@ case class ErrorResponse(httpStatusCode: Int, errorCode: String, message: String
     </errorResponse>
 
   private val errors =
-    if (content.nonEmpty) {
+    if (content.nonEmpty)
       <errors>
-        {content.map(c =>
-        <error>
+        {
+        content.map(c => <error>
           <code>{c.code}</code>
           <message>{c.message}</message>
-        </error>)}
+        </error>)
+      }
       </errors>
-    }
-    else {
+    else
       NodeSeq.Empty
-    }
 
-  def withErrors(contents: ResponseContents*): ErrorResponse = ErrorResponse(this.httpStatusCode, this.errorCode, this.message, contents :_ *)
+  def withErrors(contents: ResponseContents*): ErrorResponse =
+    ErrorResponse(this.httpStatusCode, this.errorCode, this.message, contents: _*)
+
 }
 
 object ErrorResponse extends HttpStatusCodeShortDescriptions {
@@ -100,9 +100,11 @@ object ErrorResponse extends HttpStatusCodeShortDescriptions {
   // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   val ErrorNotFound = ErrorResponse(NOT_FOUND, NotFoundCode, "Resource was not found")
 
-  val ErrorAcceptHeaderInvalid = ErrorResponse(NOT_ACCEPTABLE, NotAcceptableCode, "The accept header is missing or invalid")
+  val ErrorAcceptHeaderInvalid =
+    ErrorResponse(NOT_ACCEPTABLE, NotAcceptableCode, "The accept header is missing or invalid")
 
-  val ErrorContentTypeHeaderInvalid = ErrorResponse(UNSUPPORTED_MEDIA_TYPE, UnsupportedMediaTypeCode, "The content type header is missing or invalid")
+  val ErrorContentTypeHeaderInvalid =
+    ErrorResponse(UNSUPPORTED_MEDIA_TYPE, UnsupportedMediaTypeCode, "The content type header is missing or invalid")
 
   // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   def errorInternalServerError(errorMessage: String): ErrorResponse =
@@ -111,4 +113,3 @@ object ErrorResponse extends HttpStatusCodeShortDescriptions {
   // TODO NOT USED - NOT SURE IF WE WANT TO KEEP IT
   val ErrorInternalServerError: ErrorResponse = errorInternalServerError("Internal server error")
 }
-

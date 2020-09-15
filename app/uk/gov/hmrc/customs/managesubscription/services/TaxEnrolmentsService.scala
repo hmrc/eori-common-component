@@ -26,7 +26,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TaxEnrolmentsService @Inject()(appConfig: AppConfig, taxEnrolmentsConnector: TaxEnrolmentsConnector, recipientDetailsStore: RecipientDetailsStore) {
+class TaxEnrolmentsService @Inject() (
+  appConfig: AppConfig,
+  taxEnrolmentsConnector: TaxEnrolmentsConnector,
+  recipientDetailsStore: RecipientDetailsStore
+) {
 
   def saveRecipientDetailsAndCallTaxEnrolment(
     formBundleId: String,
@@ -37,13 +41,24 @@ class TaxEnrolmentsService @Inject()(appConfig: AppConfig, taxEnrolmentsConnecto
     safeId: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
     def saveRecipientDetails(): Future[Unit] =
-      recipientDetailsStore.saveRecipientDetailsForBundleId(formBundleId, eori, recipientDetails, emailVerificationTimestamp, safeId)
+      recipientDetailsStore.saveRecipientDetailsForBundleId(
+        formBundleId,
+        eori,
+        recipientDetails,
+        emailVerificationTimestamp,
+        safeId
+      )
 
     def taxEnrolmentsRequest =
-      TaxEnrolmentsRequest(appConfig.taxEnrolmentsServiceName, s"${appConfig.taxEnrolmentsCallbackUrl}/$formBundleId", sapNumber.id)
+      TaxEnrolmentsRequest(
+        appConfig.taxEnrolmentsServiceName,
+        s"${appConfig.taxEnrolmentsCallbackUrl}/$formBundleId",
+        sapNumber.id
+      )
 
     saveRecipientDetails().flatMap { _ =>
       taxEnrolmentsConnector.enrol(taxEnrolmentsRequest, formBundleId)
     }
   }
+
 }

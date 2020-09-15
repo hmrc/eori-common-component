@@ -24,8 +24,8 @@ import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MessagingHeaderValidator @Inject()(bodyParsers: PlayBodyParsers)(
-  implicit override val executionContext: ExecutionContext
+class MessagingHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit
+  override val executionContext: ExecutionContext
 ) extends ActionBuilder[Request, AnyContent] {
 
   override val parser: BodyParser[AnyContent] = bodyParsers.anyContent
@@ -37,4 +37,5 @@ class MessagingHeaderValidator @Inject()(bodyParsers: PlayBodyParsers)(
     if (contentTypeValid) block(request)
     else Future.successful(ErrorContentTypeHeaderInvalid.JsonResult)
   }
+
 }

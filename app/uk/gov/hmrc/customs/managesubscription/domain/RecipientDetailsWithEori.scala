@@ -18,7 +18,12 @@ package uk.gov.hmrc.customs.managesubscription.domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class RecipientDetailsWithEori(eori: Option[String], recipientDetails: RecipientDetails, emailVerificationTimestamp: String, safeId: String)
+case class RecipientDetailsWithEori(
+  eori: Option[String],
+  recipientDetails: RecipientDetails,
+  emailVerificationTimestamp: String,
+  safeId: String
+)
 
 object RecipientDetailsWithEori {
   implicit val format: OFormat[RecipientDetailsWithEori] = Json.format[RecipientDetailsWithEori]

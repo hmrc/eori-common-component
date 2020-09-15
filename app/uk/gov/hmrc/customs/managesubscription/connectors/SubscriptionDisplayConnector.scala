@@ -34,11 +34,15 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubscriptionDisplayConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit ec: ExecutionContext){
-  
-  def callSubscriptionDisplay(queryParams: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[Option[String]] = {
+class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+  ec: ExecutionContext
+) {
+
+  def callSubscriptionDisplay(
+    queryParams: Seq[(String, String)]
+  )(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val headerCarrier: HeaderCarrier = hc.withExtraHeaders(generateHeadersWithBearerToken: _*)
-    val url = appConfig.subscriptionDisplayUrl + makeQueryString(queryParams)
+    val url                          = appConfig.subscriptionDisplayUrl + makeQueryString(queryParams)
     auditRequestHeaders(headerCarrier.headers, url)
     httpClient.doGet(url)(headerCarrier, ec) map { response =>
       auditResponse(response, url)
@@ -47,10 +51,11 @@ class SubscriptionDisplayConnector @Inject()(appConfig: AppConfig, httpClient: H
     }
   }
 
-  private def extractEoriNumber: JsValue => Option[String] = json => (json \ "subscriptionDisplayResponse" \ "responseDetail" \ "EORINo").asOpt[String]
+  private def extractEoriNumber: JsValue => Option[String] = json =>
+    (json \ "subscriptionDisplayResponse" \ "responseDetail" \ "EORINo").asOpt[String]
 
   private val logResponse: Int => Unit = {
-    case OK => logger.info("Subscription display request is successful")
+    case OK     => logger.info("Subscription display request is successful")
     case status => logger.warn(s"Subscription display request is failed with status $status")
   }
 
@@ -61,11 +66,13 @@ class SubscriptionDisplayConnector @Inject()(appConfig: AppConfig, httpClient: H
 
   private def generateHeadersWithBearerToken: Seq[(String, String)] = {
     val clock = Clock.systemDefaultZone()
-    Seq(DATE -> DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock.withZone(ZoneId.of("GMT")))),
+    Seq(
+      DATE               -> DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock.withZone(ZoneId.of("GMT")))),
       "X-Correlation-ID" -> UUID.randomUUID().toString,
-      X_FORWARDED_HOST -> "MDTP",
-      ACCEPT -> MimeTypes.JSON,
-      AUTHORIZATION -> s"Bearer ${appConfig.subscriptionDisplayBearerToken}")
+      X_FORWARDED_HOST   -> "MDTP",
+      ACCEPT             -> MimeTypes.JSON,
+      AUTHORIZATION      -> s"Bearer ${appConfig.subscriptionDisplayBearerToken}"
+    )
   }
 
   private def auditRequestHeaders(headers: Seq[(String, String)], url: String)(implicit hc: HeaderCarrier): Unit =
@@ -83,4 +90,5 @@ class SubscriptionDisplayConnector @Inject()(appConfig: AppConfig, httpClient: H
       detail = Map("status" -> s"${response.status}", "message" -> s"${response.body}"),
       auditType = "SubscriptionDisplayResponse"
     )
+
 }

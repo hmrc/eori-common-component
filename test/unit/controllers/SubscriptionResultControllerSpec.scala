@@ -38,19 +38,23 @@ import scala.concurrent.Future
 
 class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  private val mockBusinessService = mock[SubscriptionCompleteBusinessService]
-  private val mockControllerComponents = mock[ControllerComponents]
+  private val mockBusinessService          = mock[SubscriptionCompleteBusinessService]
+  private val mockControllerComponents     = mock[ControllerComponents]
   private val mockMessagingHeaderValidator = new MessagingHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
 
-  private val controller = new SubscriptionResultController(mockBusinessService, mockControllerComponents, mockMessagingHeaderValidator)
+  private val controller =
+    new SubscriptionResultController(mockBusinessService, mockControllerComponents, mockMessagingHeaderValidator)
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     reset(mockBusinessService)
-  }
 
   "SubscriptionCompleteController" should {
     "respond with status 204 if the request is valid and status SUCCEEDED" in {
-      when(mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), ArgumentMatchers.eq(formBundleId))(any[HeaderCarrier]))
+      when(
+        mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), ArgumentMatchers.eq(formBundleId))(
+          any[HeaderCarrier]
+        )
+      )
         .thenReturn(Future.successful(()))
 
       testSubmitResult(validSucceededRequest) { result =>
@@ -61,7 +65,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
 
     "respond with status 204 if the request is valid and status FAILED" in {
-      when(mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier]))
+      when(
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+      )
         .thenReturn(Future.successful(()))
 
       testSubmitResult(validErrorRequest) { result =>
@@ -73,7 +79,11 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
 
     "respond with status 500 if the request processing fails" in {
-      when(mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier]))
+      when(
+        mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
+      )
         .thenReturn(Future.failed(emulatedServiceFailure))
 
       testSubmitResult(validSucceededRequest) { result =>
@@ -83,8 +93,10 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
 
     "respond with 400 if json is empty" in {
-      testSubmitResult(FakeRequest()
-        .withHeaders(RequestHeaders.ACCEPT_HEADER, RequestHeaders.CONTENT_TYPE_HEADER)) {
+      testSubmitResult(
+        FakeRequest()
+          .withHeaders(RequestHeaders.ACCEPT_HEADER, RequestHeaders.CONTENT_TYPE_HEADER)
+      ) {
         result =>
           status(result) shouldBe BAD_REQUEST
       }
@@ -93,10 +105,14 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
   }
 
   "state" should {
-    passMandatoryCheck(validSucceededJsonBody, stateField) { (m, v) => m.copy(state = v) }
+    passMandatoryCheck(validSucceededJsonBody, stateField)((m, v) => m.copy(state = v))
 
     "accept SUCCESS" in {
-      when(mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier]))
+      when(
+        mockBusinessService.onSubscriptionStatus(meq(successSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
+      )
         .thenReturn(Future.successful(()))
       testSubmitResult(mkRequest(validSucceededModel)) {
         result =>
@@ -105,7 +121,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
 
     "accept FAILED" in {
-      when(mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier]))
+      when(
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+      )
         .thenReturn(Future.successful(()))
       testSubmitResult(mkRequest(validErrorModel)) {
         result =>
@@ -121,8 +139,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def passMandatoryCheck(from: JsValue, fieldName: String)
-                                (modelFieldModifier: (RequestModel, Option[String]) => RequestModel) = {
+  private def passMandatoryCheck(from: JsValue, fieldName: String)(
+    modelFieldModifier: (RequestModel, Option[String]) => RequestModel
+  ) = {
     "be mandatory" in {
       testSubmitResult(mkRequest(pruneField(from, fieldName))) {
         result =>
@@ -141,4 +160,5 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
   private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) {
     test(controller.updateStatus(formBundleId).apply(request))
   }
+
 }

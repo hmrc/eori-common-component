@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext.global
 class MessagingHeaderValidatorSpec extends UnitSpec with AsyncTest {
 
   private val validator = new MessagingHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
-  val expectedResult = Ok("as expected")
+  val expectedResult    = Ok("as expected")
 
   val action: Action[AnyContent] = validator async {
     expectedResult

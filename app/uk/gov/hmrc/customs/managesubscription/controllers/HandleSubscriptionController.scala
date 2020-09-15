@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class HandleSubscriptionController @Inject()(
+class HandleSubscriptionController @Inject() (
   taxEnrolmentsService: TaxEnrolmentsService,
   cc: ControllerComponents,
   digitalHeaderValidator: DigitalHeaderValidator
@@ -51,4 +51,5 @@ class HandleSubscriptionController @Inject()(
       }
     }
   }
+
 }

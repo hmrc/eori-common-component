@@ -22,5 +22,5 @@ import play.api.{Application, Environment}
 import play.modules.reactivemongo.ReactiveMongoComponentImpl
 
 @Singleton
-class ReactiveMongoComponentForTests @Inject()(app: Application, env: Environment)
-  extends ReactiveMongoComponentImpl(app.configuration, env, new DefaultApplicationLifecycle())
+class ReactiveMongoComponentForTests @Inject() (app: Application, env: Environment)
+    extends ReactiveMongoComponentImpl(app.configuration, env, new DefaultApplicationLifecycle())

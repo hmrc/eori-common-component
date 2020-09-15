@@ -28,29 +28,34 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.Future
 
 @Singleton
-class EmailService @Inject()(appConfig: AppConfig, emailConnector: EmailConnector) {
-  private val Register = "Register"
+class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnector) {
+  private val Register  = "Register"
   private val Subscribe = "Subscribe"
 
   // TODO match may not be exhaustive - add default case just to clear compilation warning
-  def sendEmail(recipient: RecipientDetails, status: SubscriptionCompleteStatus)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+  def sendEmail(recipient: RecipientDetails, status: SubscriptionCompleteStatus)(implicit
+    hc: HeaderCarrier
+  ): Future[HttpResponse] =
     (recipient.journey, status) match {
-      case (Register, SUCCEEDED) => sendEmail(appConfig.emailGyeSuccessTemplateId, recipient)
-      case (Register, ERROR) => sendEmail(appConfig.emailGyeNotSuccessTemplateId, recipient)
+      case (Register, SUCCEEDED)  => sendEmail(appConfig.emailGyeSuccessTemplateId, recipient)
+      case (Register, ERROR)      => sendEmail(appConfig.emailGyeNotSuccessTemplateId, recipient)
       case (Subscribe, SUCCEEDED) => sendEmail(appConfig.emailMigrateSuccessTemplateId, recipient)
-      case (Subscribe, ERROR) => sendEmail(appConfig.emailMigrateNotSuccessTemplateId, recipient)
+      case (Subscribe, ERROR)     => sendEmail(appConfig.emailMigrateNotSuccessTemplateId, recipient)
     }
 
-  private def sendEmail(templateId: String, recipient: RecipientDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  private def sendEmail(templateId: String, recipient: RecipientDetails)(implicit
+    hc: HeaderCarrier
+  ): Future[HttpResponse] = {
     val email = Email(
       to = List(recipient.recipientEmailAddress),
       templateId = templateId,
       parameters = Map(
         "recipientName_FullName" -> recipient.recipientFullName,
-        "recipientOrgName" -> recipient.orgName.getOrElse(""),
-        "completionDate" -> recipient.completionDate.getOrElse("")
+        "recipientOrgName"       -> recipient.orgName.getOrElse(""),
+        "completionDate"         -> recipient.completionDate.getOrElse("")
       )
     )
     emailConnector.sendEmail(email)
   }
+
 }

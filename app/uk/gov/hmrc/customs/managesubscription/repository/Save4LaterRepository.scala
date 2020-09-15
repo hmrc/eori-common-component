@@ -26,53 +26,58 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Save4LaterRepository @Inject()(sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit ec: ExecutionContext) extends
-  CacheMongoRepository("save4later", sc.getDuration("cache.expiryInMinutes").toSeconds)(mongo.mongoConnector.db, ec) {
+class Save4LaterRepository @Inject() (sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit ec: ExecutionContext)
+    extends CacheMongoRepository("save4later", sc.getDuration("cache.expiryInMinutes").toSeconds)(
+      mongo.mongoConnector.db,
+      ec
+    ) {
 
-  def save(id: String, key: String, jsValue: JsValue): Future[Unit] = createOrUpdate(CacheId(id),key,jsValue).map(_ => (): Unit)
+  def save(id: String, key: String, jsValue: JsValue): Future[Unit] =
+    createOrUpdate(CacheId(id), key, jsValue).map(_ => (): Unit)
 
   def findByIdAndKey(id: String, key: String): Future[Option[JsValue]] =
     findById(CacheId(id)).map {
-      case Some(Cache(_, Some(data), _, _)) => (data \ key) match {
-        case js: JsDefined => Some(js.value)
-        case js: JsUndefined => {
-          logger.error(s"Key Not found : $key")
-          logger.debug(s"Key Not found : $key \n details : ${js.error}")
-          None
+      case Some(Cache(_, Some(data), _, _)) =>
+        (data \ key) match {
+          case js: JsDefined => Some(js.value)
+          case js: JsUndefined =>
+            logger.error(s"Key Not found : $key")
+            logger.debug(s"Key Not found : $key \n details : ${js.error}")
+            None
         }
-      }
-      case _ => {
+      case _ =>
         logger.error(s"Id Not found: $id")
         None
-      }
     }
 
   def remove(id: String): Future[Boolean] = removeById(CacheId(id)).map(_.ok)
 
   def removeKeyById(id: String, key: String): Future[Boolean] = {
-    val selector =  Json.obj(Id -> id)
+    val selector = Json.obj(Id -> id)
     findById(CacheId(id)).flatMap {
-      case Some(cache) => cache.data.fold(Future.successful(false)) { data =>
-        (data \ key) match {
-          case _: JsDefined => {
-            val updateData  = data.as[JsObject] - key
-            val cacheUpdated  = Json.toJson(cache.copy(data= Some(updateData)))
-            findAndUpdate(selector, cacheUpdated.as[JsObject], fetchNewObject = true,upsert = true).map { updateResult =>
-              if (updateResult.value.isEmpty) {
-                updateResult.lastError.foreach(_.err.foreach(errorMsg => logger.error(s"Problem during database update: $errorMsg")))
-                false
-              } else {
-                true
+      case Some(cache) =>
+        cache.data.fold(Future.successful(false)) { data =>
+          (data \ key) match {
+            case _: JsDefined =>
+              val updateData   = data.as[JsObject] - key
+              val cacheUpdated = Json.toJson(cache.copy(data = Some(updateData)))
+              findAndUpdate(selector, cacheUpdated.as[JsObject], fetchNewObject = true, upsert = true).map {
+                updateResult =>
+                  if (updateResult.value.isEmpty) {
+                    updateResult.lastError.foreach(
+                      _.err.foreach(errorMsg => logger.error(s"Problem during database update: $errorMsg"))
+                    )
+                    false
+                  } else
+                    true
               }
-            }
-          }
-          case _: JsUndefined => {
-            logger.warn(s"Key not found: $key")
-            Future.successful(false)
+            case _: JsUndefined =>
+              logger.warn(s"Key not found: $key")
+              Future.successful(false)
           }
         }
-      }
       case _ => Future.successful(false)
     }
   }
+
 }

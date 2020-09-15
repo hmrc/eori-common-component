@@ -25,7 +25,7 @@ trait WireMockRunner {
 
   import Constants._
 
-  lazy val wireMockUrl = s"http://$wireMockHost:$wireMockPort"
+  lazy val wireMockUrl    = s"http://$wireMockHost:$wireMockPort"
   lazy val wireMockServer = new WireMockServer(wireMockConfig().port(wireMockPort).notifier(new ConsoleNotifier(false)))
 
   def startMockServer() {
@@ -40,6 +40,7 @@ trait WireMockRunner {
   def stopMockServer() {
     wireMockServer.stop()
   }
+
 }
 
 object Constants {

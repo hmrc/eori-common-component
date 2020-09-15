@@ -28,17 +28,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class EmailConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient) {
+class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
 
-  def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    httpClient.doPost[Email](appConfig.emailServiceUrl, email, Seq("Content-Type" -> "application/json")).map { response =>
-      logResponse(email.templateId)(response.status)
-      response
+  def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+    httpClient.doPost[Email](appConfig.emailServiceUrl, email, Seq("Content-Type" -> "application/json")).map {
+      response =>
+        logResponse(email.templateId)(response.status)
+        response
     }
-  }
 
   private def logResponse(templateId: String): Int => Unit = {
     case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
-    case status => logger.info(s"sendEmail: request is failed with status $status for template Id: $templateId")
+    case status        => logger.info(s"sendEmail: request is failed with status $status for template Id: $templateId")
   }
+
 }

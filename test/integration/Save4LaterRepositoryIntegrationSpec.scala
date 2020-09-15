@@ -32,72 +32,70 @@ import util.mongo.ReactiveMongoComponentForTests
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, _}
-class Save4LaterRepositoryIntegrationSpec extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSpecSupport with ScalaFutures {
 
+class Save4LaterRepositoryIntegrationSpec
+    extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSpecSupport with ScalaFutures {
 
-  override implicit val patienceConfig = PatienceConfig(
-    timeout = scaled(200 millis),
-    interval = scaled(100 millis)
-  )
+  override implicit val patienceConfig = PatienceConfig(timeout = scaled(200 millis), interval = scaled(100 millis))
 
   val reactiveMongoComponent = new ReactiveMongoComponentForTests(app, Environment.simple())
-  val mockServiceConfig = mock[ServicesConfig]
+  val mockServiceConfig      = mock[ServicesConfig]
 
   val email = Email("john.doe@digital.hmrc.gov.uk")
-  val eori = Eori("GB0123456789")
+  val eori  = Eori("GB0123456789")
 
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
 
   val repository = new Save4LaterRepository(mockServiceConfig, reactiveMongoComponent)
-  val id = "id-1"
-  val key1 = "key-1"
-  val data = Json.toJson(eori)
+  val id         = "id-1"
+  val key1       = "key-1"
+  val data       = Json.toJson(eori)
 
   "recipient details repository" should {
     "save  the details" in {
-      repository.save(id ,key1, data).futureValue shouldBe ((): Unit)
+      repository.save(id, key1, data).futureValue shouldBe ((): Unit)
     }
 
     "update the details" in {
       val data = Json.toJson(eori)
-      repository.save(id ,key1, data).futureValue shouldBe ((): Unit)
+      repository.save(id, key1, data).futureValue shouldBe ((): Unit)
     }
 
     "fetch Details correctly" in {
       val data = Json.toJson(eori)
-      repository.save(id ,key1, data).futureValue
-      repository.findByIdAndKey(id,key1).futureValue shouldBe Some(data)
+      repository.save(id, key1, data).futureValue
+      repository.findByIdAndKey(id, key1).futureValue shouldBe Some(data)
     }
 
     "remove key from collection" in {
-      val eori1 = Json.toJson(eori)
+      val eori1  = Json.toJson(eori)
       val email1 = Json.toJson(email)
-      repository.save(id ,"eori", eori1).futureValue
-      repository.save(id ,"email", email1).futureValue
-      repository.findByIdAndKey(id,"email").futureValue shouldBe Some(email1)
-      repository.removeKeyById(id,"eori").futureValue shouldBe true
-      repository.findByIdAndKey(id,"email").futureValue shouldBe Some(email1)
-      repository.findByIdAndKey(id,"eori").futureValue shouldBe None
+      repository.save(id, "eori", eori1).futureValue
+      repository.save(id, "email", email1).futureValue
+      repository.findByIdAndKey(id, "email").futureValue shouldBe Some(email1)
+      repository.removeKeyById(id, "eori").futureValue shouldBe true
+      repository.findByIdAndKey(id, "email").futureValue shouldBe Some(email1)
+      repository.findByIdAndKey(id, "eori").futureValue shouldBe None
 
     }
     "remove non existing key from collection" in {
       val email1 = Json.toJson(email)
-      repository.save(id ,"email", email1).futureValue
-      repository.removeKeyById(id,"eori").futureValue shouldBe false
+      repository.save(id, "email", email1).futureValue
+      repository.removeKeyById(id, "eori").futureValue shouldBe false
     }
     "remove non existing id from collection" in {
-      repository.save(id ,"email", JsNull).futureValue shouldBe ((): Unit)
-      repository.removeKeyById("id-not-exist","eori").futureValue shouldBe false
+      repository.save(id, "email", JsNull).futureValue shouldBe ((): Unit)
+      repository.removeKeyById("id-not-exist", "eori").futureValue shouldBe false
     }
 
     "remove id from collection" in {
-      val eori1 = Json.toJson(eori)
+      val eori1  = Json.toJson(eori)
       val email1 = Json.toJson(email)
-      repository.save(id ,"eori", eori1).futureValue
-      repository.save(id ,"email", email1).futureValue
-      repository.remove(id).futureValue  shouldBe true
-      repository.findByIdAndKey(id,"email").futureValue shouldBe None
-      repository.findByIdAndKey(id,"eori").futureValue shouldBe None
+      repository.save(id, "eori", eori1).futureValue
+      repository.save(id, "email", email1).futureValue
+      repository.remove(id).futureValue shouldBe true
+      repository.findByIdAndKey(id, "email").futureValue shouldBe None
+      repository.findByIdAndKey(id, "eori").futureValue shouldBe None
 
     }
 

@@ -28,13 +28,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class Save4LaterController @Inject()(
+class Save4LaterController @Inject() (
   save4LaterRepository: Save4LaterRepository,
   cc: ControllerComponents,
   override val authConnector: MicroserviceAuthConnector
 ) extends BackendController(cc) with AuthorisedFunctions {
 
-  def put(id:String,key:String): Action[AnyContent] = Action.async { implicit request =>
+  def put(id: String, key: String): Action[AnyContent] = Action.async { implicit request =>
     authorised(AuthProviders(GovernmentGateway)) {
       request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
         save4LaterRepository.save(id, key, js).map(_ => Created)
@@ -42,31 +42,31 @@ class Save4LaterController @Inject()(
     }
   }
 
-  def get(id:String,key:String): Action[AnyContent] = Action.async { implicit request =>
+  def get(id: String, key: String): Action[AnyContent] = Action.async { implicit request =>
     authorised(AuthProviders(GovernmentGateway)) {
       save4LaterRepository.findByIdAndKey(id, key).map {
         case Some(js) => Ok(js)
-        case None => NotFound(s"key:$key | id:$id")
+        case None     => NotFound(s"key:$key | id:$id")
       }
     }
   }
 
-    def removeKeyById(id:String,key:String): Action[AnyContent] = Action.async { implicit request =>
-      authorised(AuthProviders(GovernmentGateway)) {
-        save4LaterRepository.removeKeyById(id, key).map {
-          case true => NoContent
-          case false => NotFound(s"key:$key | id:$id")
-        }
+  def removeKeyById(id: String, key: String): Action[AnyContent] = Action.async { implicit request =>
+    authorised(AuthProviders(GovernmentGateway)) {
+      save4LaterRepository.removeKeyById(id, key).map {
+        case true  => NoContent
+        case false => NotFound(s"key:$key | id:$id")
       }
     }
+  }
 
-   def delete(id:String): Action[AnyContent] = Action.async { implicit request =>
-     authorised(AuthProviders(GovernmentGateway)) {
-       save4LaterRepository.remove(id).map {
-         case true => NoContent
-         case false => NotFound(s"id:$id")
-       }
-     }
-   }
+  def delete(id: String): Action[AnyContent] = Action.async { implicit request =>
+    authorised(AuthProviders(GovernmentGateway)) {
+      save4LaterRepository.remove(id).map {
+        case true  => NoContent
+        case false => NotFound(s"id:$id")
+      }
+    }
+  }
+
 }
-

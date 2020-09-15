@@ -26,7 +26,6 @@ import play.mvc.Http.MimeTypes.JSON
 import play.mvc.Http.Status.NO_CONTENT
 import util.TestData.formBundleId
 
-
 trait MockHelpers {
   val stub: MappingBuilder => StubMapping = mb => stubFor(mb)
 
@@ -41,12 +40,13 @@ trait MDTPEmailService extends WireMockRunner {
 
   val MDTPEmailServicePath: UrlPattern = urlMatching("/hmrc/email")
 
-  def mdtpEmailServiceIsRunning(): Unit = {
-    stubFor(post(MDTPEmailServicePath).
-      willReturn(
+  def mdtpEmailServiceIsRunning(): Unit =
+    stubFor(
+      post(MDTPEmailServicePath).willReturn(
         aResponse()
-          .withStatus(NO_CONTENT)))
-  }
+          .withStatus(NO_CONTENT)
+      )
+    )
 
   def requestMadeToMDTPEmailService(): String =
     wireMockServer.findRequestsMatching(postRequestedFor(MDTPEmailServicePath).build())
@@ -57,51 +57,54 @@ trait MDTPEmailService extends WireMockRunner {
 trait TaxEnrolmentService extends WireMockRunner {
   private def taxEnrolmentsUrl(formBundleId: String) = s"/tax-enrolments/subscriptions/$formBundleId/subscriber"
 
-  def returnEnrolmentResponseWhenReceiveRequest(url: String, request: String, status: Int): Unit = {
-    stubFor(put(urlEqualTo(url))
-      .withRequestBody(equalToJson(request))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader(CONTENT_TYPE, JSON)
-      )
+  def returnEnrolmentResponseWhenReceiveRequest(url: String, request: String, status: Int): Unit =
+    stubFor(
+      put(urlEqualTo(url))
+        .withRequestBody(equalToJson(request))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withHeader(CONTENT_TYPE, JSON)
+        )
     )
-  }
 
   def verifyTaxEnrolmentsCalled(formBundleId: String = formBundleId): Unit =
     verify(putRequestedFor(urlEqualTo(taxEnrolmentsUrl(formBundleId))))
+
 }
 
 trait CustomsDataStoreService extends WireMockRunner {
 
-  def returnCustomsDataStoreResponse(url: String, request: String, status: Int): Unit = {
-    stubFor(post(urlEqualTo(url))
-      .withRequestBody(equalToJson(request))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader(CONTENT_TYPE, JSON)
-      )
+  def returnCustomsDataStoreResponse(url: String, request: String, status: Int): Unit =
+    stubFor(
+      post(urlEqualTo(url))
+        .withRequestBody(equalToJson(request))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withHeader(CONTENT_TYPE, JSON)
+        )
     )
-  }
+
 }
 
 trait SubscriptionDisplayService extends WireMockRunner {
   private val responseBody = """{"subscriptionDisplayResponse": {"responseDetail": {"EORINo": "123456789"}}}"""
 
-  def returnSubscriptionDisplayResponse(url: String, status: Int): Unit = {
-    stubFor(get(urlEqualTo(url))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader(CONTENT_TYPE, JSON)
-          .withBody(responseBody)
-      )
+  def returnSubscriptionDisplayResponse(url: String, status: Int): Unit =
+    stubFor(
+      get(urlEqualTo(url))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withHeader(CONTENT_TYPE, JSON)
+            .withBody(responseBody)
+        )
     )
-  }
+
 }
 
 object ExternalServicesConfig {
-  val Port: Int = sys.env.getOrElse("WIREMOCK_SERVICE_LOCATOR_PORT", "11111").toInt
+  val Port: Int    = sys.env.getOrElse("WIREMOCK_SERVICE_LOCATOR_PORT", "11111").toInt
   val Host: String = "localhost"
 }

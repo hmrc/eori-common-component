@@ -24,8 +24,8 @@ import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DigitalHeaderValidator @Inject()(bodyParsers: PlayBodyParsers)(
-  implicit override val executionContext: ExecutionContext
+class DigitalHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit
+  override val executionContext: ExecutionContext
 ) extends ActionBuilder[Request, AnyContent] {
 
   override val parser: BodyParser[AnyContent] = bodyParsers.anyContent

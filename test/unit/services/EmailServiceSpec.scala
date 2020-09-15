@@ -34,47 +34,79 @@ class EmailServiceSpec extends BaseSpec {
 
   private val mockEmailConnector = mock[EmailConnector]
 
-  private val gyeSuccessTemplateId: String = "customs_registration_successful"
-  private val gyeNotSuccessTemplateId: String = "customs_registration_not_successful"
-  private val migrateSuccessTemplateId: String = "customs_migrate_successful"
+  private val gyeSuccessTemplateId: String        = "customs_registration_successful"
+  private val gyeNotSuccessTemplateId: String     = "customs_registration_not_successful"
+  private val migrateSuccessTemplateId: String    = "customs_migrate_successful"
   private val migrateNotSuccessTemplateId: String = "customs_migrate_not_successful"
 
   private lazy val emailService = new EmailService(appConfig, mockEmailConnector)
 
   private val gyeRecipientEmailAddress = "john.doe@example.com"
-  private val gyeRecipientFullName = "John Doe"
-  private val gyeOrgName = "Test Company Name"
-  private val gyeCompletionDate = "5 May 2017"
-  private val gyeRecipientDetails = RecipientDetails("Register", "ATaR", gyeRecipientEmailAddress, gyeRecipientFullName, Some(gyeOrgName), Some(gyeCompletionDate))
+  private val gyeRecipientFullName     = "John Doe"
+  private val gyeOrgName               = "Test Company Name"
+  private val gyeCompletionDate        = "5 May 2017"
+
+  private val gyeRecipientDetails = RecipientDetails(
+    "Register",
+    "ATaR",
+    gyeRecipientEmailAddress,
+    gyeRecipientFullName,
+    Some(gyeOrgName),
+    Some(gyeCompletionDate)
+  )
 
   private val migrateRecipientEmailAddress = "jane.doe@example.com"
-  private val migrateRecipientFullName = "Jane Doe"
-  private val migrateOrgName = "Test Company Name 2"
-  private val migrateCompletionDate = "23 June 2004"
-  private val migrateRecipientDetails = RecipientDetails("Subscribe", "ATaR", migrateRecipientEmailAddress, migrateRecipientFullName, Some(migrateOrgName), Some(migrateCompletionDate))
+  private val migrateRecipientFullName     = "Jane Doe"
+  private val migrateOrgName               = "Test Company Name 2"
+  private val migrateCompletionDate        = "23 June 2004"
+
+  private val migrateRecipientDetails = RecipientDetails(
+    "Subscribe",
+    "ATaR",
+    migrateRecipientEmailAddress,
+    migrateRecipientFullName,
+    Some(migrateOrgName),
+    Some(migrateCompletionDate)
+  )
 
   private val getYourEORISuccessEmail = Email(
     to = List(gyeRecipientEmailAddress),
     templateId = gyeSuccessTemplateId,
-    parameters = Map("recipientName_FullName" -> gyeRecipientFullName, "recipientOrgName" -> gyeOrgName, "completionDate" -> gyeCompletionDate)
+    parameters = Map(
+      "recipientName_FullName" -> gyeRecipientFullName,
+      "recipientOrgName"       -> gyeOrgName,
+      "completionDate"         -> gyeCompletionDate
+    )
   )
 
   private val getYourEORINotSuccessEmail = Email(
     to = List(gyeRecipientEmailAddress),
     templateId = gyeNotSuccessTemplateId,
-    parameters = Map("recipientName_FullName" -> gyeRecipientFullName, "recipientOrgName" -> gyeOrgName, "completionDate" -> gyeCompletionDate)
+    parameters = Map(
+      "recipientName_FullName" -> gyeRecipientFullName,
+      "recipientOrgName"       -> gyeOrgName,
+      "completionDate"         -> gyeCompletionDate
+    )
   )
 
   private val migrateSuccessEmail = Email(
     to = List(migrateRecipientEmailAddress),
     templateId = migrateSuccessTemplateId,
-    parameters = Map("recipientName_FullName" -> migrateRecipientFullName, "recipientOrgName" -> migrateOrgName, "completionDate" -> migrateCompletionDate)
+    parameters = Map(
+      "recipientName_FullName" -> migrateRecipientFullName,
+      "recipientOrgName"       -> migrateOrgName,
+      "completionDate"         -> migrateCompletionDate
+    )
   )
 
   private val migrateNotSuccessEmail = Email(
     to = List(migrateRecipientEmailAddress),
     templateId = migrateNotSuccessTemplateId,
-    parameters = Map("recipientName_FullName" -> migrateRecipientFullName, "recipientOrgName" -> migrateOrgName, "completionDate" -> migrateCompletionDate)
+    parameters = Map(
+      "recipientName_FullName" -> migrateRecipientFullName,
+      "recipientOrgName"       -> migrateOrgName,
+      "completionDate"         -> migrateCompletionDate
+    )
   )
 
   override def beforeEach() {
@@ -83,7 +115,9 @@ class EmailServiceSpec extends BaseSpec {
 
   "EmailService" should {
     "call emailConnector with proper content for Register success email" in {
-      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(200)))
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200))
+      )
 
       emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED)
 
@@ -91,7 +125,9 @@ class EmailServiceSpec extends BaseSpec {
     }
 
     "call emailConnector with proper content for Register not success email" in {
-      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(200)))
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200))
+      )
 
       emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.ERROR)
 
@@ -99,7 +135,9 @@ class EmailServiceSpec extends BaseSpec {
     }
 
     "call emailConnector with proper content for Subscribe success email" in {
-      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(200)))
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200))
+      )
 
       emailService.sendEmail(migrateRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED)
 
@@ -107,7 +145,9 @@ class EmailServiceSpec extends BaseSpec {
     }
 
     "call emailConnector with proper content for Subscribe not success email" in {
-      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(200)))
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200))
+      )
 
       emailService.sendEmail(migrateRecipientDetails, SubscriptionCompleteStatus.ERROR)
 
@@ -115,7 +155,9 @@ class EmailServiceSpec extends BaseSpec {
     }
 
     "propagate error when emailConnector fails on sending email" in {
-      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(Future.failed(emulatedServiceFailure))
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.failed(emulatedServiceFailure)
+      )
 
       the[RuntimeException] thrownBy {
         await(emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED))

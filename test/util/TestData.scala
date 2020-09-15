@@ -27,12 +27,12 @@ import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest,
 
 object TestData {
   val formBundleId = "dummy-bundle-id-1"
-  val sapNumber = "0123456789"
-  val taxPayerId = TaxPayerId(sapNumber)
-  val eori = Eori("GB0123456789")
+  val sapNumber    = "0123456789"
+  val taxPayerId   = TaxPayerId(sapNumber)
+  val eori         = Eori("GB0123456789")
 
   val emailVerificationTimestamp = "timestamp"
-  val safeId = "SAFEID"
+  val safeId                     = "SAFEID"
 
   def pruneField(from: JsValue, fieldName: String): JsValue =
     from.transform((__ \ fieldName).json.prune).get
@@ -40,13 +40,13 @@ object TestData {
   val emulatedServiceFailure = new RuntimeException("Emulated service failure")
 
   val MdtpBearerToken: String = "Bearer ValidBearerToken"
-  val AcceptHmrcJson: String = "application/vnd.hmrc.1.0+xml"
+  val AcceptHmrcJson: String  = "application/vnd.hmrc.1.0+xml"
 
-  val Journey = "Register"
-  val Service = "ATaR"
-  val FullName = "Full Name"
-  val Email = "john.doe@digital.hmrc.gov.uk"
-  val OrgName = "Test Company Name"
+  val Journey        = "Register"
+  val Service        = "ATaR"
+  val FullName       = "Full Name"
+  val Email          = "john.doe@digital.hmrc.gov.uk"
+  val OrgName        = "Test Company Name"
   val CompletionDate = "5 May 2017"
 
   val recipientDetails = RecipientDetails(Journey, Service, Email, FullName, Some(OrgName), Some(CompletionDate))
@@ -57,9 +57,7 @@ object TestData {
 
     import RequestHeaders._
 
-    case class RequestModel(url: Option[String],
-                            state: Option[String],
-                            errorResponse: Option[String])
+    case class RequestModel(url: Option[String], state: Option[String], errorResponse: Option[String])
 
     def mkRequest(model: RequestModel): FakeRequest[AnyContentAsJson] = mkRequest(mkJson(model))
 
@@ -70,47 +68,48 @@ object TestData {
         .withHeaders(ACCEPT_HEADER, CONTENT_TYPE_HEADER)
         .withJsonBody(jsonBody)
 
-    val successSubscriptionComplete: SubscriptionComplete = subscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED, None)
+    val successSubscriptionComplete: SubscriptionComplete =
+      subscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED, None)
+
     private val errorResponseString = "error description, terrible things have happened"
-    val failedSubscriptionComplete: SubscriptionComplete = subscriptionComplete(SubscriptionCompleteStatus.ERROR, Some(errorResponseString))
+
+    val failedSubscriptionComplete: SubscriptionComplete =
+      subscriptionComplete(SubscriptionCompleteStatus.ERROR, Some(errorResponseString))
 
     lazy val url = s"http://test:8080/tax-enrolments/subscriptions/$formBundleId"
 
-    val validSucceededModel = RequestModel(
-      url = Some(url),
-      state = Some("SUCCEEDED"),
-      errorResponse = None)
+    val validSucceededModel = RequestModel(url = Some(url), state = Some("SUCCEEDED"), errorResponse = None)
 
-    val validErrorModel = RequestModel(
-      url = Some(url),
-      state = Some("ERROR"),
-      errorResponse = Some(errorResponseString))
+    val validErrorModel =
+      RequestModel(url = Some(url), state = Some("ERROR"), errorResponse = Some(errorResponseString))
 
     val validSucceededJsonBody: JsValue = mkJson(validSucceededModel)
-    val validErrorJsonBody: JsValue = mkJson(validErrorModel)
+    val validErrorJsonBody: JsValue     = mkJson(validErrorModel)
 
     val validSucceededRequest: Request[AnyContent] = mkRequest(validSucceededJsonBody)
-    val validErrorRequest: Request[AnyContent] = mkRequest(validErrorJsonBody)
+    val validErrorRequest: Request[AnyContent]     = mkRequest(validErrorJsonBody)
 
     val stateField = "state"
 
     private def subscriptionComplete(status: SubscriptionCompleteStatus, errorResponse: Option[String]) =
-      SubscriptionComplete(
-        url = url,
-        state = status,
-        errorResponse = errorResponse)
+      SubscriptionComplete(url = url, state = status, errorResponse = errorResponse)
+
   }
 
   object HandleSubscription {
 
     import RequestHeaders._
 
-    val validHeaders: Map[String, String] = Map(
-      AUTHORISATION_HEADER,
-      CONTENT_TYPE_HEADER,
-      ACCEPT_HEADER)
+    val validHeaders: Map[String, String] = Map(AUTHORISATION_HEADER, CONTENT_TYPE_HEADER, ACCEPT_HEADER)
 
-    val handleSubscriptionRequest = HandleSubscriptionRequest(formBundleId, recipientDetails, sapNumber, Some(eori.value), emailVerificationTimestamp, safeId)
+    val handleSubscriptionRequest = HandleSubscriptionRequest(
+      formBundleId,
+      recipientDetails,
+      sapNumber,
+      Some(eori.value),
+      emailVerificationTimestamp,
+      safeId
+    )
 
     val validRequestJsonString: String =
       s"""
@@ -130,7 +129,6 @@ object TestData {
         | "safeId": "$safeId"
         |}
       """.stripMargin
-
 
     val validRequestJson: JsValue = Json.parse(validRequestJsonString)
 
@@ -155,51 +153,51 @@ object TestData {
       .withHeaders(CONTENT_TYPE_HEADER, ACCEPT_HEADER_INVALID)
       .withJsonBody(validRequestJson)
 
-    val errorUnsupportedMediaType: JsValue = Json.parse(
-      """
+    val errorUnsupportedMediaType: JsValue = Json.parse("""
         |{
         |  "code":"UNSUPPORTED_MEDIA_TYPE",
         |  "message":"The content type header is missing or invalid"
         |}""".stripMargin)
 
-    val errorAcceptHeaderInvalid: JsValue = Json.parse(
-      """
+    val errorAcceptHeaderInvalid: JsValue = Json.parse("""
         |{
         |  "code":"ACCEPT_HEADER_INVALID",
         |  "message":"The accept header is missing or invalid"
         |}""".stripMargin)
 
-    val errorPayloadInvalid: JsValue = Json.parse(
-      """
+    val errorPayloadInvalid: JsValue = Json.parse("""
         |{
         |  "code":"BAD_REQUEST",
         |  "message":"Invalid payload"
         |}""".stripMargin)
 
-    val errorUnauthorized: JsValue = Json.parse(
-      """
+    val errorUnauthorized: JsValue = Json.parse("""
         |{
         |  "code":"UNAUTHORIZED",
         |  "message":"Bearer token is missing or not authorized"
         |}""".stripMargin)
 
-    def request(body: JsValue = validRequestJson, path: String = "/handle-subscription",
-                headers: Map[String, String] = validHeaders): FakeRequest[AnyContentAsJson] = {
+    def request(
+      body: JsValue = validRequestJson,
+      path: String = "/handle-subscription",
+      headers: Map[String, String] = validHeaders
+    ): FakeRequest[AnyContentAsJson] =
       FakeRequest(method = "POST", path = path)
         .withHeaders(headers.toSeq: _*)
         .withJsonBody(body)
-    }
 
-    def requestWithTextBody(path: String = "/handle-subscription",
-                            headers: Map[String, String] = validHeaders): FakeRequest[AnyContentAsText] = {
+    def requestWithTextBody(
+      path: String = "/handle-subscription",
+      headers: Map[String, String] = validHeaders
+    ): FakeRequest[AnyContentAsText] =
       FakeRequest(method = "POST", path = path)
         .withHeaders(headers.toSeq: _*)
         .withTextBody("<testTextBody></testTextBody>")
-    }
 
   }
 
   object TaxEnrolment {
+
     val validRequestJsonString: String =
       s"""
          |{
@@ -208,6 +206,7 @@ object TestData {
          |  "etmpId": "$sapNumber"
          |}
         """.stripMargin
+
     val validRequestJson: JsValue = Json.parse(validRequestJsonString)
   }
 
