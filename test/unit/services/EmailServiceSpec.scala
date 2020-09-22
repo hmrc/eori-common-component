@@ -19,7 +19,7 @@ package unit.services
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito._
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
-import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, SubscriptionCompleteStatus}
+import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RecipientDetails, SubscriptionCompleteStatus}
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -47,7 +47,7 @@ class EmailServiceSpec extends BaseSpec {
   private val gyeCompletionDate        = "5 May 2017"
 
   private val gyeRecipientDetails = RecipientDetails(
-    "Register",
+    Journey.Register,
     "ATaR",
     gyeRecipientEmailAddress,
     gyeRecipientFullName,
@@ -61,7 +61,7 @@ class EmailServiceSpec extends BaseSpec {
   private val migrateCompletionDate        = "23 June 2004"
 
   private val migrateRecipientDetails = RecipientDetails(
-    "Subscribe",
+    Journey.Subscribe,
     "ATaR",
     migrateRecipientEmailAddress,
     migrateRecipientFullName,
@@ -119,7 +119,7 @@ class EmailServiceSpec extends BaseSpec {
         Future.successful(HttpResponse(200))
       )
 
-      emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED)
+      emailService.sendSuccessEmail(gyeRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(getYourEORISuccessEmail))(meq(hc))
     }
@@ -129,7 +129,7 @@ class EmailServiceSpec extends BaseSpec {
         Future.successful(HttpResponse(200))
       )
 
-      emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.ERROR)
+      emailService.sendFailureEmail(gyeRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(getYourEORINotSuccessEmail))(meq(hc))
     }
@@ -139,7 +139,7 @@ class EmailServiceSpec extends BaseSpec {
         Future.successful(HttpResponse(200))
       )
 
-      emailService.sendEmail(migrateRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED)
+      emailService.sendSuccessEmail(migrateRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(migrateSuccessEmail))(meq(hc))
     }
@@ -149,7 +149,7 @@ class EmailServiceSpec extends BaseSpec {
         Future.successful(HttpResponse(200))
       )
 
-      emailService.sendEmail(migrateRecipientDetails, SubscriptionCompleteStatus.ERROR)
+      emailService.sendFailureEmail(migrateRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(migrateNotSuccessEmail))(meq(hc))
     }
@@ -160,7 +160,7 @@ class EmailServiceSpec extends BaseSpec {
       )
 
       the[RuntimeException] thrownBy {
-        await(emailService.sendEmail(gyeRecipientDetails, SubscriptionCompleteStatus.SUCCEEDED))
+        await(emailService.sendSuccessEmail(gyeRecipientDetails))
       } shouldBe emulatedServiceFailure
     }
   }

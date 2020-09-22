@@ -54,19 +54,19 @@ class AppConfigSpec extends BaseSpec {
     }
 
     "have emailGyeSuccessTemplateId defined" in {
-      appConfig.emailGyeSuccessTemplateId shouldBe "customs_registration_successful"
+      appConfig.emailRegisterSuccessTemplateId shouldBe "customs_registration_successful"
     }
 
     "have emailGyeNotSuccessTemplateId defined" in {
-      appConfig.emailGyeNotSuccessTemplateId shouldBe "customs_registration_not_successful"
+      appConfig.emailRegisterNotSuccessTemplateId shouldBe "customs_registration_not_successful"
     }
 
     "have emailMigrateSuccessTemplateId defined" in {
-      appConfig.emailMigrateSuccessTemplateId shouldBe "customs_migrate_successful"
+      appConfig.emailSubscribeSuccessTemplateId shouldBe "customs_migrate_successful"
     }
 
     "have emailMigrateNotSuccessTemplateId defined" in {
-      appConfig.emailMigrateNotSuccessTemplateId shouldBe "customs_migrate_not_successful"
+      appConfig.emailSubscribeNotSuccessTemplateId shouldBe "customs_migrate_not_successful"
     }
 
     "have taxEnrolmentsContext defined" in {

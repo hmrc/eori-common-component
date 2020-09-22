@@ -49,10 +49,10 @@ class SubscriptionCompleteBusinessService @Inject() (
     subscriptionComplete.state match {
       case status @ SubscriptionCompleteStatus.SUCCEEDED =>
         auditStatus(status, formBundleId)
-        sendAndStoreEmail(status, formBundleId)
+        sendAndStoreSuccessEmail(formBundleId)
       case status @ SubscriptionCompleteStatus.ERROR =>
         auditStatus(status, formBundleId)
-        sendEmail(status, formBundleId)
+        sendFailureEmail(formBundleId)
       case badState =>
         auditStatus(badState, formBundleId)
         triggerEnrolmentStateIssueAlert()
@@ -63,22 +63,18 @@ class SubscriptionCompleteBusinessService @Inject() (
     Future.successful(logger.error(MessageThatTriggersPagerDutyAlert))
   }
 
-  private def sendAndStoreEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit
-    hc: HeaderCarrier
-  ): Future[Unit] =
+  private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
       recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _          <- emailService.sendEmail(recipient.recipientDetails, status)
+      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
       eoriNumber <- retrieveEori(recipient)
       _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
     } yield (): Unit
 
-  private def sendEmail(status: SubscriptionCompleteStatus, formBundleId: String)(implicit
-    hc: HeaderCarrier
-  ): Future[Unit] =
+  private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
       recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _         <- emailService.sendEmail(recipient.recipientDetails, status)
+      _         <- emailService.sendFailureEmail(recipient.recipientDetails)
     } yield (): Unit
 
   private def dataStoreEmailRequest(

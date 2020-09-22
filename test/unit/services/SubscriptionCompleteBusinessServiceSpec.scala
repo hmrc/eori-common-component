@@ -52,7 +52,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
   )
 
   private val recipientDetails: RecipientDetails = RecipientDetails(
-    "Subscribe",
+    Journey.Subscribe,
     "ATaR",
     "john.doe@example.com",
     "John Doe",
@@ -88,7 +88,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
   "SubscriptionCompleteBusinessService" should {
     "generate an audit event when subscription completes with a good state" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
@@ -109,19 +109,19 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
 
     "send success email to recipient on successful SubscriptionComplete" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verify(mockEmailService).sendEmail(recipientDetails, SubscriptionCompleteStatus.SUCCEEDED)(mockHeaderCarrier)
+      verify(mockEmailService).sendSuccessEmail(recipientDetails)(mockHeaderCarrier)
     }
 
     "send data store request on successful SubscriptionComplete and eori number is available" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
@@ -139,7 +139,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
         Future.successful(RecipientDetailsWithEori(None, recipientDetails, emailVerificationTimestamp, safeId))
       )
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
@@ -148,7 +148,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
 
     "not send subscription display request when eori number is found in cache" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
@@ -164,7 +164,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
         Future.successful(RecipientDetailsWithEori(None, recipientDetails, emailVerificationTimestamp, safeId))
       )
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
@@ -173,14 +173,14 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
 
     "send non-success email to recipient on unsuccessful SubscriptionComplete" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.ERROR)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendFailureEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200))
       )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verify(mockEmailService).sendEmail(recipientDetails, SubscriptionCompleteStatus.ERROR)(mockHeaderCarrier)
+      verify(mockEmailService).sendFailureEmail(recipientDetails)(mockHeaderCarrier)
     }
 
     "Do not send any email to recipient or data store request for EnrolmentError" in {
@@ -206,7 +206,7 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
 
     "propagate error when email service fails" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendEmail(any(), any())(any[HeaderCarrier])).thenReturn(
+      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.failed(emulatedServiceFailure)
       )
 

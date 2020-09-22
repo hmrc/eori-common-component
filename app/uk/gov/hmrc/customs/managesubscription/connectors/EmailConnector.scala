@@ -39,7 +39,7 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
 
   private def logResponse(templateId: String): Int => Unit = {
     case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
-    case status        => logger.info(s"sendEmail: request is failed with status $status for template Id: $templateId")
+    case status        => logger.warn(s"sendEmail: request is failed with status $status for template Id: $templateId")
   }
 
 }
