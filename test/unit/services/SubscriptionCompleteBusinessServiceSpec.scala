@@ -54,10 +54,12 @@ class SubscriptionCompleteBusinessServiceSpec extends UnitSpec with MockitoSugar
   private val recipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
     "ATaR",
+    "Advance Tariff Rulings",
     "john.doe@example.com",
     "John Doe",
     Some("Test Company Name"),
-    Some("5 May 2017")
+    Some("5 May 2017"),
+    Some("en")
   )
 
   private val transactionName = "eori-common-component-update-status"

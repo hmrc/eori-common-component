@@ -44,12 +44,14 @@ object TestData {
 
   val Register       = Journey.Register
   val Service        = "ATaR"
+  val ServiceName    = "Advance Tariff Rulings"
   val FullName       = "Full Name"
   val Email          = "john.doe@digital.hmrc.gov.uk"
   val OrgName        = "Test Company Name"
   val CompletionDate = "5 May 2017"
 
-  val recipientDetails = RecipientDetails(Register, Service, Email, FullName, Some(OrgName), Some(CompletionDate))
+  val recipientDetails =
+    RecipientDetails(Register, Service, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)
 
   val NoHeaders: Map[String, String] = Map[String, String]()
 
@@ -118,6 +120,7 @@ object TestData {
         |	"recipientDetails": {
         |   "journey": "$Register",
         |   "service": "$Service",
+        |   "serviceName": "$ServiceName",
         |   "recipientFullName": "$FullName",
         |	  "recipientEmailAddress": "$Email",
         |   "orgName": "$OrgName",

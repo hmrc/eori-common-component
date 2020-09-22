@@ -46,7 +46,9 @@ class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnect
   ): Future[HttpResponse] = {
     val email = Email(
       to = List(recipient.recipientEmailAddress),
-      templateId = templateId, // TODO - replace when cy template available if(recipient.languageCode.contains("cy")) s"${templateId}_cy" else templateId,
+      // TODO - replace when cy template available
+//      templateId = if(recipient.languageCode.contains("cy")) s"${templateId}_cy" else templateId,
+      templateId = templateId,
       parameters = Map(
         "recipientName_FullName" -> recipient.recipientFullName,
         "recipientOrgName"       -> recipient.orgName.getOrElse(""),

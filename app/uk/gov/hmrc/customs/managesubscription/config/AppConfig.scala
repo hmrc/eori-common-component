@@ -41,10 +41,17 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val emailServiceContext: String = config.get[String]("microservice.services.email.context")
   val emailServiceUrl: String     = s"$emailServiceBaseUrl$emailServiceContext"
 
-  val emailRegisterSuccessTemplateId: String     = config.get[String]("microservice.services.email.registerSuccessTemplateId")
-  val emailRegisterNotSuccessTemplateId: String  = config.get[String]("microservice.services.email.registerNotSuccessTemplateId")
-  val emailSubscribeSuccessTemplateId: String = config.get[String]("microservice.services.email.subscribeSuccessTemplateId")
-  val emailSubscribeNotSuccessTemplateId: String = config.get[String]("microservice.services.email.subscribeNotSuccessTemplateId")
+  val emailRegisterSuccessTemplateId: String =
+    config.get[String]("microservice.services.email.registerSuccessTemplateId")
+
+  val emailRegisterNotSuccessTemplateId: String =
+    config.get[String]("microservice.services.email.registerNotSuccessTemplateId")
+
+  val emailSubscribeSuccessTemplateId: String =
+    config.get[String]("microservice.services.email.subscribeSuccessTemplateId")
+
+  val emailSubscribeNotSuccessTemplateId: String =
+    config.get[String]("microservice.services.email.subscribeNotSuccessTemplateId")
 
   private val taxEnrolmentsBaseUrl: String = servicesConfig.baseUrl("tax-enrolments")
 

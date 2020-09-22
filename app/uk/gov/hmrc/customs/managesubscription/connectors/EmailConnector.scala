@@ -33,13 +33,13 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
   def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient.doPost[Email](appConfig.emailServiceUrl, email, Seq("Content-Type" -> "application/json")).map {
       response =>
-        logResponse(email.templateId)(response.status)
+        logResponse(email.templateId, response)
         response
     }
 
-  private def logResponse(templateId: String): Int => Unit = {
+  private def logResponse(templateId: String, response: HttpResponse) = response.status match {
     case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
-    case status        => logger.warn(s"sendEmail: request is failed with status $status for template Id: $templateId")
+    case _             => logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
   }
 
 }
