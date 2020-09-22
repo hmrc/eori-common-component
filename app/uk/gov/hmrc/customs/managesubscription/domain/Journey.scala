@@ -16,19 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Reads, Writes}
 
-case class RecipientDetails(
-  journey: Journey.Value,
-  service: String,
-  serviceName: String,
-  recipientEmailAddress: String,
-  recipientFullName: String,
-  orgName: Option[String],
-  completionDate: Option[String],
-  languageCode: Option[String] = None
-)
+object Journey extends Enumeration {
 
-object RecipientDetails {
-  implicit val format = Json.format[RecipientDetails]
+  val Register, Subscribe = Value
+
+  implicit val reads: Reads[Journey.Value]   = Reads.enumNameReads(Journey)
+  implicit val writes: Writes[Journey.Value] = Writes.enumNameWrites
+
 }

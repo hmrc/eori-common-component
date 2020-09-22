@@ -42,14 +42,16 @@ object TestData {
   val MdtpBearerToken: String = "Bearer ValidBearerToken"
   val AcceptHmrcJson: String  = "application/vnd.hmrc.1.0+xml"
 
-  val Journey        = "Register"
+  val Register       = Journey.Register
   val Service        = "ATaR"
+  val ServiceName    = "Advance Tariff Rulings"
   val FullName       = "Full Name"
   val Email          = "john.doe@digital.hmrc.gov.uk"
   val OrgName        = "Test Company Name"
   val CompletionDate = "5 May 2017"
 
-  val recipientDetails = RecipientDetails(Journey, Service, Email, FullName, Some(OrgName), Some(CompletionDate))
+  val recipientDetails =
+    RecipientDetails(Register, Service, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)
 
   val NoHeaders: Map[String, String] = Map[String, String]()
 
@@ -116,8 +118,9 @@ object TestData {
         |{
         |	"formBundleId": "$formBundleId",
         |	"recipientDetails": {
-        |   "journey": "$Journey",
+        |   "journey": "$Register",
         |   "service": "$Service",
+        |   "serviceName": "$ServiceName",
         |   "recipientFullName": "$FullName",
         |	  "recipientEmailAddress": "$Email",
         |   "orgName": "$OrgName",
