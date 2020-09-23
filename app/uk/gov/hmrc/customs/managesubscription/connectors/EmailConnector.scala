@@ -17,8 +17,8 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.http.Status.{ACCEPTED, OK}
-import uk.gov.hmrc.customs.managesubscription.CdsLogger.logger
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -30,6 +30,8 @@ import scala.concurrent.Future
 @Singleton
 class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
 
+  private val logger = Logger(this.getClass)
+
   def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient.doPost[Email](appConfig.emailServiceUrl, email, Seq("Content-Type" -> "application/json")).map {
       response =>
@@ -37,7 +39,7 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
         response
     }
 
-  private def logResponse(templateId: String, response: HttpResponse) = response.status match {
+  private def logResponse(templateId: String, response: HttpResponse): Unit = response.status match {
     case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
     case _             => logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
   }

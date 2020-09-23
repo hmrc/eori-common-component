@@ -19,7 +19,7 @@ package uk.gov.hmrc.customs.managesubscription.services
 import java.util.UUID
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.customs.managesubscription.CdsLogger.logger
+import play.api.Logger
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
@@ -42,6 +42,8 @@ class SubscriptionCompleteBusinessService @Inject() (
   dataStoreConnector: CustomsDataStoreConnector,
   subscriptionDisplayConnector: SubscriptionDisplayConnector
 ) {
+
+  private val logger = Logger(this.getClass)
 
   def onSubscriptionStatus(subscriptionComplete: SubscriptionComplete, formBundleId: String)(implicit
     hc: HeaderCarrier
