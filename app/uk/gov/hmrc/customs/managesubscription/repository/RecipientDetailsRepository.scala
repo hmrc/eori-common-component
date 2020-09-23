@@ -17,11 +17,11 @@
 package uk.gov.hmrc.customs.managesubscription.repository
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import uk.gov.hmrc.cache.model.{Cache, Id}
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
-import uk.gov.hmrc.customs.managesubscription.CdsLogger.logger
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, RecipientDetailsWithEori}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -31,6 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepository) {
+
+  private val logger = Logger(this.getClass)
 
   private val recipientDetailsKey = "recipientDetailsWithEori"
 

@@ -17,9 +17,9 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.http.Status._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
-import uk.gov.hmrc.customs.managesubscription.CdsLogger.logger
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -29,6 +29,8 @@ import scala.concurrent.Future
 
 @Singleton
 class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient) {
+
+  private val logger = Logger(this.getClass)
 
   private val LoggerComponentId = "TaxEnrolmentsConnector"
   private val baseUrl           = buildUrl("tax-enrolments")
