@@ -126,7 +126,7 @@ class EmailServiceSpec extends BaseSpec {
   "EmailService" should {
     "call emailConnector with proper content for Register success email" in {
       when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200))
+        Future.successful(HttpResponse(200, ""))
       )
 
       emailService.sendSuccessEmail(registerRecipientDetails)
@@ -136,7 +136,7 @@ class EmailServiceSpec extends BaseSpec {
 
     "call emailConnector with proper content for Register not success email" in {
       when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200))
+        Future.successful(HttpResponse(200, ""))
       )
 
       emailService.sendFailureEmail(registerRecipientDetails)
@@ -146,7 +146,7 @@ class EmailServiceSpec extends BaseSpec {
 
     "call emailConnector with proper content for Subscribe success email" in {
       when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200))
+        Future.successful(HttpResponse(200, ""))
       )
 
       emailService.sendSuccessEmail(subscribeRecipientDetails)
@@ -156,7 +156,7 @@ class EmailServiceSpec extends BaseSpec {
 
     "call emailConnector with proper content for Subscribe not success email" in {
       when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200))
+        Future.successful(HttpResponse(200, ""))
       )
 
       emailService.sendFailureEmail(subscribeRecipientDetails)

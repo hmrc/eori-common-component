@@ -29,7 +29,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.{
   SubscriptionComplete,
   SubscriptionCompleteStatus
 }
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,10 +67,9 @@ class SubscriptionCompleteBusinessService @Inject() (
 
   private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
-      recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
-      eoriNumber <- retrieveEori(recipient)
-      _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
+      recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
+      _         <- emailService.sendSuccessEmail(recipient.recipientDetails)
+      _         <- dataStoreEmailRequest(recipient)
     } yield (): Unit
 
   private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
@@ -79,12 +78,14 @@ class SubscriptionCompleteBusinessService @Inject() (
       _         <- emailService.sendFailureEmail(recipient.recipientDetails)
     } yield (): Unit
 
-  private def dataStoreEmailRequest(
-    recipient: RecipientDetailsWithEori
-  )(implicit hc: HeaderCarrier): String => Future[HttpResponse] = eori =>
-    dataStoreConnector.storeEmailAddress(
-      DataStoreRequest(eori, recipient.recipientDetails.recipientEmailAddress, recipient.emailVerificationTimestamp)
-    )
+  private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
+    retrieveEori(recipient).flatMap {
+      case Some(eori) if recipient.recipientDetails.service == "CDS" =>
+        dataStoreConnector.storeEmailAddress(
+          DataStoreRequest(eori, recipient.recipientDetails.recipientEmailAddress, recipient.emailVerificationTimestamp)
+        ).map(_ => (): Unit)
+      case _ => Future.successful((): Unit)
+    }
 
   private def retrieveEori(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     lazy val buildQueryParams: List[(String, String)] = {

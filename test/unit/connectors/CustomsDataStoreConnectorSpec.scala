@@ -38,14 +38,18 @@ class CustomsDataStoreConnectorSpec extends BaseSpec {
 
   "CustomsDataStoreConnector" should {
     "successfully send a query request to customs data store and return the OK response" in {
-      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(Future.successful(HttpResponse(200)))
+      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       val result = await(testConnector.storeEmailAddress(DataStoreRequest("eori", "emailaddress", "timestamp")))
       result.status shouldBe 200
     }
 
     "return the failure response from customs data store" in {
-      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(Future.successful(HttpResponse(400)))
+      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(
+        Future.successful(HttpResponse(400, ""))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       val result = await(testConnector.storeEmailAddress(DataStoreRequest("", "", "")))
       result.status shouldBe 400
