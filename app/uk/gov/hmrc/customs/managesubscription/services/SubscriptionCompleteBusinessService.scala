@@ -67,10 +67,9 @@ class SubscriptionCompleteBusinessService @Inject() (
 
   private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
-      recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
-      eoriNumber <- retrieveEori(recipient)
-      _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
+      recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
+      _         <- emailService.sendSuccessEmail(recipient.recipientDetails)
+      _         <- dataStoreEmailRequest(recipient)
     } yield (): Unit
 
   private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
@@ -79,12 +78,24 @@ class SubscriptionCompleteBusinessService @Inject() (
       _         <- emailService.sendFailureEmail(recipient.recipientDetails)
     } yield (): Unit
 
-  private def dataStoreEmailRequest(
-    recipient: RecipientDetailsWithEori
-  )(implicit hc: HeaderCarrier): String => Future[HttpResponse] = eori =>
-    dataStoreConnector.storeEmailAddress(
-      DataStoreRequest(eori, recipient.recipientDetails.recipientEmailAddress, recipient.emailVerificationTimestamp)
-    )
+  private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
+    if (recipient.recipientDetails.service == "cds")
+      retrieveEori(recipient).flatMap { eoriOpt =>
+        eoriOpt.fold(Future.successful((): Unit)) { eori =>
+          sendEmailToDataStore(
+            eori,
+            recipient.recipientDetails.recipientEmailAddress,
+            recipient.emailVerificationTimestamp
+          ).map(_ => (): Unit)
+        }
+      }
+    else
+      Future.successful((): Unit)
+
+  private def sendEmailToDataStore(eori: String, email: String, emailVerificationTimestamp: String)(implicit
+    hc: HeaderCarrier
+  ): Future[HttpResponse] =
+    dataStoreConnector.storeEmailAddress(DataStoreRequest(eori, email, emailVerificationTimestamp))
 
   private def retrieveEori(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     lazy val buildQueryParams: List[(String, String)] = {

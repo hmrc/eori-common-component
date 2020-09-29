@@ -31,7 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockRecipientDetailsCacheRepo = mock[RecipientDetailsCacheRepository]
-  private implicit val hc                   = HeaderCarrier()
 
   private val recipientDetailsCache = new RecipientDetailsRepository(mockRecipientDetailsCacheRepo)
 
