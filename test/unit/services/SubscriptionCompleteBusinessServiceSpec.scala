@@ -173,6 +173,7 @@ class SubscriptionCompleteBusinessServiceSpec
 
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
 
+      verifyZeroInteractions(mockSubDisplayConnector)
       verifyZeroInteractions(mockDataStoreConnector)
     }
 
