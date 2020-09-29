@@ -49,7 +49,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val registerRecipientDetails = RecipientDetails(
     Journey.Register,
-    "ATaR",
+    "atar",
     registerServiceName,
     registerRecipientEmailAddress,
     registerRecipientFullName,
@@ -66,7 +66,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val subscribeRecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "ATaR",
+    "atar",
     subscribeServiceName,
     subscribeRecipientEmailAddress,
     subscribeRecipientFullName,

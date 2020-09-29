@@ -54,7 +54,7 @@ class SubscriptionCompleteBusinessServiceSpec
 
   private val recipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "ATaR",
+    "atar",
     "Advance Tariff Rulings",
     "john.doe@example.com",
     "John Doe",
@@ -65,7 +65,7 @@ class SubscriptionCompleteBusinessServiceSpec
 
   private val cdsRecipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "CDS",
+    "cds",
     "Customs Declaration Service",
     "john.doe@example.com",
     "John Doe",
@@ -179,7 +179,7 @@ class SubscriptionCompleteBusinessServiceSpec
     "send subscription display request when eori number is not found in cache" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
       when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(RecipientDetailsWithEori(None, recipientDetails, emailVerificationTimestamp, safeId))
+        Future.successful(RecipientDetailsWithEori(None, cdsRecipientDetails, emailVerificationTimestamp, safeId))
       )
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(

@@ -29,7 +29,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.{
   SubscriptionComplete,
   SubscriptionCompleteStatus
 }
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -79,13 +79,23 @@ class SubscriptionCompleteBusinessService @Inject() (
     } yield (): Unit
 
   private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
-    retrieveEori(recipient).flatMap {
-      case Some(eori) if recipient.recipientDetails.service == "CDS" =>
-        dataStoreConnector.storeEmailAddress(
-          DataStoreRequest(eori, recipient.recipientDetails.recipientEmailAddress, recipient.emailVerificationTimestamp)
-        ).map(_ => (): Unit)
-      case _ => Future.successful((): Unit)
-    }
+    if (recipient.recipientDetails.service == "cds")
+      retrieveEori(recipient).flatMap { eoriOpt =>
+        eoriOpt.fold(Future.successful((): Unit)) { eori =>
+          sendEmailToDataStore(
+            eori,
+            recipient.recipientDetails.recipientEmailAddress,
+            recipient.emailVerificationTimestamp
+          ).map(_ => (): Unit)
+        }
+      }
+    else
+      Future.successful((): Unit)
+
+  private def sendEmailToDataStore(eori: String, email: String, emailVerificationTimestamp: String)(implicit
+    hc: HeaderCarrier
+  ): Future[HttpResponse] =
+    dataStoreConnector.storeEmailAddress(DataStoreRequest(eori, email, emailVerificationTimestamp))
 
   private def retrieveEori(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     lazy val buildQueryParams: List[(String, String)] = {
