@@ -36,8 +36,8 @@ class EmailServiceSpec extends BaseSpec {
 
   private val registerSuccessTemplateId: String     = "customs_registration_successful"
   private val registerNotSuccessTemplateId: String  = "customs_registration_not_successful"
-  private val subscribeSuccessTemplateId: String    = "customs_migrate_successful"
-  private val subscribeNotSuccessTemplateId: String = "customs_migrate_not_successful"
+  private val subscribeSuccessTemplateId: String    = "ecc_subscription_successful"
+  private val subscribeNotSuccessTemplateId: String = "ecc_subscription_not_successful"
 
   private lazy val emailService = new EmailService(appConfig, mockEmailConnector)
 
