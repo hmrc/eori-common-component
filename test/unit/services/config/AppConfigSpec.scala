@@ -62,11 +62,11 @@ class AppConfigSpec extends BaseSpec {
     }
 
     "have emailMigrateSuccessTemplateId defined" in {
-      appConfig.emailSubscribeSuccessTemplateId shouldBe "customs_migrate_successful"
+      appConfig.emailSubscribeSuccessTemplateId shouldBe "ecc_subscription_successful"
     }
 
     "have emailMigrateNotSuccessTemplateId defined" in {
-      appConfig.emailSubscribeNotSuccessTemplateId shouldBe "customs_migrate_not_successful"
+      appConfig.emailSubscribeNotSuccessTemplateId shouldBe "ecc_subscription_not_successful"
     }
 
     "have taxEnrolmentsContext defined" in {
