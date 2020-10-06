@@ -81,8 +81,5 @@ class AppConfigSpec extends BaseSpec {
       appConfig.taxEnrolmentsCallbackUrl shouldBe "http://callback.url"
     }
 
-    "have taxEnrolmentsServiceName defined" in {
-      appConfig.taxEnrolmentsServiceName shouldBe "HMRC-CUS-ORG"
-    }
   }
 }

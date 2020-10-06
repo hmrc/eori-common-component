@@ -44,7 +44,7 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
   private val eori                 = Eori("GB0123456789")
 
   private val taxEnrolmentRequest = TaxEnrolmentsRequest(
-    appConfig.taxEnrolmentsServiceName,
+    "HMRC-ATAR-ORG",
     appConfig.taxEnrolmentsCallbackUrl + "/" + formBundleId,
     etmpId = taxPayerId.id
   )

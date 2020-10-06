@@ -79,7 +79,7 @@ class SubscriptionCompleteBusinessService @Inject() (
     } yield (): Unit
 
   private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
-    if (recipient.recipientDetails.service == "cds")
+    if (recipient.recipientDetails.service == "HMRC_CUS_ORG")
       retrieveEori(recipient).flatMap { eoriOpt =>
         eoriOpt.fold(Future.successful((): Unit)) { eori =>
           sendEmailToDataStore(
