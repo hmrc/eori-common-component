@@ -34,7 +34,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val mockEmailConnector = mock[EmailConnector]
 
-  private val service = "atar"
+  private val service = "HMRC-ATAR_ORG"
 
   private val registerSuccessTemplateId: String     = "customs_registration_successful"
   private val registerNotSuccessTemplateId: String  = "customs_registration_not_successful"
@@ -51,7 +51,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val registerRecipientDetails = RecipientDetails(
     Journey.Register,
-    "HMRC-ATAR_ORG",
+    service,
     registerServiceName,
     registerRecipientEmailAddress,
     registerRecipientFullName,
@@ -68,7 +68,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val subscribeRecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "HMRC-ATAR_ORG",
+    service,
     subscribeServiceName,
     subscribeRecipientEmailAddress,
     subscribeRecipientFullName,
