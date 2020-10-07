@@ -34,7 +34,7 @@ class EmailServiceSpec extends BaseSpec {
 
   private val mockEmailConnector = mock[EmailConnector]
 
-  private val service = "HMRC-ATAR_ORG"
+  private val service = "HMRC-ATAR-ORG"
 
   private val registerSuccessTemplateId: String     = "customs_registration_successful"
   private val registerNotSuccessTemplateId: String  = "customs_registration_not_successful"

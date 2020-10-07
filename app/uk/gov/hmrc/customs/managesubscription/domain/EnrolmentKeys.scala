@@ -16,19 +16,7 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain
 
-import play.api.libs.json.Json
+object EnrolmentKeys {
 
-case class RecipientDetails(
-  journey: Journey.Value,
-  enrolmentKey: String,
-  serviceName: String,
-  recipientEmailAddress: String,
-  recipientFullName: String,
-  orgName: Option[String],
-  completionDate: Option[String],
-  languageCode: Option[String] = None
-)
-
-object RecipientDetails {
-  implicit val format = Json.format[RecipientDetails]
+  val CDS = "HMRC-CUS-ORG"
 }

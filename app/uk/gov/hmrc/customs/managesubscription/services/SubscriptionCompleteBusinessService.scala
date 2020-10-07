@@ -25,6 +25,7 @@ import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnec
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
 import uk.gov.hmrc.customs.managesubscription.domain.{
   DataStoreRequest,
+  EnrolmentKeys,
   RecipientDetailsWithEori,
   SubscriptionComplete,
   SubscriptionCompleteStatus
@@ -79,7 +80,7 @@ class SubscriptionCompleteBusinessService @Inject() (
     } yield (): Unit
 
   private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
-    if (recipient.recipientDetails.service == "HMRC_CUS_ORG")
+    if (recipient.recipientDetails.enrolmentKey == EnrolmentKeys.CDS)
       retrieveEori(recipient).flatMap { eoriOpt =>
         eoriOpt.fold(Future.successful((): Unit)) { eori =>
           sendEmailToDataStore(

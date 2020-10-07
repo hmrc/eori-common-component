@@ -51,7 +51,7 @@ class TaxEnrolmentsService @Inject() (
 
     def taxEnrolmentsRequest =
       TaxEnrolmentsRequest(
-        recipientDetails.service,
+        recipientDetails.enrolmentKey,
         s"${appConfig.taxEnrolmentsCallbackUrl}/$formBundleId",
         sapNumber.id
       )

@@ -54,7 +54,7 @@ class SubscriptionCompleteBusinessServiceSpec
 
   private val recipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "HMRC_ATAR_ORG",
+    "HMRC-ATAR-ORG",
     "Advance Tariff Rulings",
     "john.doe@example.com",
     "John Doe",
@@ -65,7 +65,7 @@ class SubscriptionCompleteBusinessServiceSpec
 
   private val cdsRecipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
-    "HMRC_CUS_ORG",
+    "HMRC-CUS-ORG",
     "Customs Declaration Service",
     "john.doe@example.com",
     "John Doe",
