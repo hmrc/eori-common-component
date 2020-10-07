@@ -43,7 +43,7 @@ object TestData {
   val AcceptHmrcJson: String  = "application/vnd.hmrc.1.0+xml"
 
   val Register       = Journey.Register
-  val Service        = "atar"
+  val EnrolmentKey   = "HMRC-ATAR-ORG"
   val ServiceName    = "Advance Tariff Rulings"
   val FullName       = "Full Name"
   val Email          = "john.doe@digital.hmrc.gov.uk"
@@ -51,7 +51,7 @@ object TestData {
   val CompletionDate = "5 May 2017"
 
   val recipientDetails =
-    RecipientDetails(Register, Service, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)
+    RecipientDetails(Register, EnrolmentKey, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)
 
   val NoHeaders: Map[String, String] = Map[String, String]()
 
@@ -119,7 +119,7 @@ object TestData {
         |	"formBundleId": "$formBundleId",
         |	"recipientDetails": {
         |   "journey": "$Register",
-        |   "service": "$Service",
+        |   "enrolmentKey": "$EnrolmentKey",
         |   "serviceName": "$ServiceName",
         |   "recipientFullName": "$FullName",
         |	  "recipientEmailAddress": "$Email",

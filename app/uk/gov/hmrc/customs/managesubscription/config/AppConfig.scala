@@ -58,5 +58,4 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val taxEnrolmentsContext: String     = config.get[String]("microservice.services.tax-enrolments.context")
   val taxEnrolmentsUrl: String         = s"$taxEnrolmentsBaseUrl$taxEnrolmentsContext"
   val taxEnrolmentsCallbackUrl: String = config.get[String]("microservice.services.tax-enrolments.callback-url")
-  val taxEnrolmentsServiceName: String = config.get[String]("microservice.services.tax-enrolments.service-name")
 }
