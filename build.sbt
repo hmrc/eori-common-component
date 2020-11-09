@@ -52,6 +52,7 @@ javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
   "uk.gov.hmrc" %% "bootstrap-play-26" % "2.0.0",
+  "uk.gov.hmrc" %% "auth-client" % "3.2.0-play-26",
   "uk.gov.hmrc" %% "http-caching-client" % "9.1.0-play-26",
   "uk.gov.hmrc" %% "mongo-caching" % "6.15.0-play-26",
   "com.typesafe.play" %% "play-json-joda" % "2.6.10",
