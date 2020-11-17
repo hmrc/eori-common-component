@@ -18,8 +18,8 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.http.Status.{ACCEPTED, OK}
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
+import uk.gov.hmrc.customs.managesubscription.domain.HttpStatusCheck
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -39,9 +39,10 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
         response
     }
 
-  private def logResponse(templateId: String, response: HttpResponse): Unit = response.status match {
-    case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
-    case _             => logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
-  }
+  private def logResponse(templateId: String, response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xxSuccessfull(response.status))
+      logger.info(s"sendEmail succeeded for template Id: $templateId")
+    else
+      logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
 
 }

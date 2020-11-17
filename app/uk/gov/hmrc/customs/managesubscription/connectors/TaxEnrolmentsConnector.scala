@@ -18,10 +18,10 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.http.Status._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
+import uk.gov.hmrc.customs.managesubscription.domain.HttpStatusCheck
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,25 +32,26 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
 
   private val logger = Logger(this.getClass)
 
-  private val LoggerComponentId = "TaxEnrolmentsConnector"
-  private val baseUrl           = buildUrl("tax-enrolments")
+  private val baseUrl = buildUrl("tax-enrolments")
 
   def enrol(request: TaxEnrolmentsRequest, formBundleId: String)(implicit hc: HeaderCarrier): Future[Int] = {
-    val loggerId = s"[$LoggerComponentId]"
-    val url      = s"$baseUrl/$formBundleId/subscriber"
+    val url = s"$baseUrl/$formBundleId/subscriber"
 
-    logger.info(s"$loggerId putUrl: $url")
+    // $COVERAGE-OFF$Loggers
+    logger.info(s"putUrl: $url")
+    logger.debug(s"[Tax enrolment: $url, body: $request and headers: $hc")
+    // $COVERAGE-ON
 
-    httpClient.doPut[TaxEnrolmentsRequest](url, request) map {
-      _.status match {
-        case s @ BAD_REQUEST =>
-          logger.error(s"$loggerId tax enrolment request failed with BAD_REQUEST status")
-          s
-        case s =>
-          logger.info(s"$loggerId tax enrolment complete. Status:$s")
-          s
-      }
+    httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
+      logResponse(response)
+      response.status
     }
   }
+
+  private def logResponse(response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xxSuccessfull(response.status))
+      logger.info(s"Tax enrolment complete. Status:${response.status}")
+    else
+      logger.warn(s"Tax enrolment request failed with response $response")
 
 }
