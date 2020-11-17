@@ -32,12 +32,20 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
 
   private val logger = Logger(this.getClass)
 
-  def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    httpClient.doPost[Email](appConfig.emailServiceUrl, email, Seq("Content-Type" -> "application/json")).map {
+  def sendEmail(email: Email)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+
+    val url = appConfig.emailServiceUrl
+
+    // $COVERAGE-OFF$Loggers
+    logger.debug(s"[SendEmail: $url, body: $email and headers: $hc")
+    // $COVERAGE-ON
+
+    httpClient.doPost[Email](url, email, Seq("Content-Type" -> "application/json")).map {
       response =>
         logResponse(email.templateId, response)
         response
     }
+  }
 
   private def logResponse(templateId: String, response: HttpResponse): Unit = response.status match {
     case ACCEPTED | OK => logger.info(s"sendEmail succeeded for template Id: $templateId")
