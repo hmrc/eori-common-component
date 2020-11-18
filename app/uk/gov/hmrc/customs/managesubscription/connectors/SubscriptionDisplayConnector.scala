@@ -25,7 +25,6 @@ import javax.inject.Inject
 import play.api.Logger
 import play.api.http.HeaderNames._
 import play.api.http.MimeTypes
-import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
@@ -60,10 +59,11 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
   private def extractEoriNumber: JsValue => Option[String] = json =>
     (json \ "subscriptionDisplayResponse" \ "responseDetail" \ "EORINo").asOpt[String]
 
-  private def logResponse(response: HttpResponse): Unit = response.status match {
-    case OK => logger.info("Subscription display request is successful")
-    case _  => logger.warn(s"Subscription display request is failed with response $response")
-  }
+  private def logResponse(response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug("Subscription display request is successful")
+    else
+      logger.warn(s"Subscription display request is failed with response $response")
 
   private def makeQueryString(queryParams: Seq[(String, String)]): String = {
     val params: String = queryParams map Function.tupled((k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}") mkString "&"

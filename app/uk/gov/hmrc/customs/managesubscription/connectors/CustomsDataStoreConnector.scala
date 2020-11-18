@@ -18,7 +18,6 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.http.Status._
 import play.api.libs.json._
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
@@ -60,10 +59,11 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
       }
   }
 
-  private def logResponse(response: HttpResponse): Unit = response.status match {
-    case OK => logger.info("CustomsDataStore: data store request is successful")
-    case _  => logger.warn(s"CustomsDataStore: data store request is failed with response $response")
-  }
+  private def logResponse(response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug("CustomsDataStore: data store request is successful")
+    else
+      logger.warn(s"CustomsDataStore: data store request is failed with response $response")
 
   private def auditRequest(request: DataStoreRequest, url: String)(implicit hc: HeaderCarrier): Unit =
     audit.sendDataEvent(

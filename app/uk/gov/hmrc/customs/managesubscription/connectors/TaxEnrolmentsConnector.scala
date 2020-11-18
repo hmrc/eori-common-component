@@ -18,7 +18,6 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.http.Status._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -43,14 +42,11 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     // $COVERAGE-ON
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
-      response.status match {
-        case s @ BAD_REQUEST =>
-          logger.error(s"Tax enrolment request failed with BAD_REQUEST $response")
-          s
-        case s =>
-          logger.info(s"Tax enrolment complete. Status:$s")
-          s
-      }
+      if (HttpStatusCheck.is2xx(response.status))
+        logger.debug(s"Tax enrolment complete. Status:${response.status}")
+      else
+        logger.warn(s"Tax enrolment request failed with BAD_REQUEST $response")
+      response.status
     }
   }
 
