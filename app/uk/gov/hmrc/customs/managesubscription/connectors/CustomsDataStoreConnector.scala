@@ -42,7 +42,7 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
     val url    = appConfig.customDataStoreUrl
 
     // $COVERAGE-OFF$Loggers
-    logger.debug(s"[StoreEmailAddress: $url, body: $query and headers: $header")
+    logger.debug(s"StoreEmailAddress: $url, body: $query and headers: $header")
     // $COVERAGE-ON
 
     auditRequest(dataStoreRequest, appConfig.customDataStoreUrl)

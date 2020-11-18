@@ -38,7 +38,7 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
 
     // $COVERAGE-OFF$Loggers
     logger.info(s"putUrl: $url")
-    logger.debug(s"[Tax enrolment: $url, body: $request and headers: $hc")
+    logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
@@ -49,7 +49,7 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
 
   private def logResponse(response: HttpResponse): Unit =
     if (HttpStatusCheck.is2xx(response.status))
-      logger.info(s"Tax enrolment complete. Status:${response.status}")
+      logger.debug(s"Tax enrolment complete. Status:${response.status}")
     else
       logger.warn(s"Tax enrolment request failed with response $response")
 

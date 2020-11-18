@@ -46,7 +46,7 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
     auditRequestHeaders(headerCarrier.headers, url)
 
     // $COVERAGE-OFF$Loggers
-    logger.debug(s"[CallSubscriptionDisplay: $url and headers: $headerCarrier")
+    logger.debug(s"CallSubscriptionDisplay: $url and headers: $headerCarrier")
     // $COVERAGE-ON
 
     httpClient.doGet(url)(headerCarrier, ec) map { response =>
