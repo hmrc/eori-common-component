@@ -17,8 +17,7 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
-import play.api.Logger._
-import play.api.http.Status._
+import play.api.Logger
 import play.api.libs.json._
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
@@ -34,10 +33,17 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
   ec: ExecutionContext
 ) {
 
+  private val logger = Logger(this.getClass)
+
   def storeEmailAddress(dataStoreRequest: DataStoreRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val query =
       s"""{"query" : "mutation {byEori(eoriHistory:{eori:\\"${dataStoreRequest.eori}\\"}, notificationEmail:{address:\\"${dataStoreRequest.email}\\", timestamp:\\"${dataStoreRequest.emailVerificationTimestamp}\\"})}"}"""
     val header = hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.customDataStoreToken}")))
+    val url    = appConfig.customDataStoreUrl
+
+    // $COVERAGE-OFF$Loggers
+    logger.debug(s"[StoreEmailAddress: $url, body: $query and headers: $header")
+    // $COVERAGE-ON
 
     auditRequest(dataStoreRequest, appConfig.customDataStoreUrl)
 
@@ -48,15 +54,16 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
     )(implicitly, header, ec)
       .map { response =>
         auditResponse(response, appConfig.customDataStoreUrl)
-        logResponse(response.status)
+        logResponse(response)
         response
       }
   }
 
-  private val logResponse: Int => Unit = {
-    case OK     => logger.info("CustomsDataStore: data store request is successful")
-    case status => logger.warn(s"CustomsDataStore: data store request is failed with status $status")
-  }
+  private def logResponse(response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug("CustomsDataStore: data store request is successful")
+    else
+      logger.warn(s"CustomsDataStore: data store request is failed with response $response")
 
   private def auditRequest(request: DataStoreRequest, url: String)(implicit hc: HeaderCarrier): Unit =
     audit.sendDataEvent(
