@@ -19,7 +19,6 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
-import uk.gov.hmrc.customs.managesubscription.domain.HttpStatusCheck
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient

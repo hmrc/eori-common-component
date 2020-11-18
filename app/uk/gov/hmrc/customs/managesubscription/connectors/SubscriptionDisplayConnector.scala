@@ -28,7 +28,6 @@ import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
-import uk.gov.hmrc.customs.managesubscription.domain.HttpStatusCheck
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
