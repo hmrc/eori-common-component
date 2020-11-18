@@ -47,8 +47,8 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
   }
 
   private def logResponse(templateId: String, response: HttpResponse): Unit =
-    if (HttpStatusCheck.is2xxSuccessfull(response.status))
-      logger.info(s"sendEmail succeeded for template Id: $templateId")
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug(s"sendEmail succeeded for template Id: $templateId")
     else
       logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
 

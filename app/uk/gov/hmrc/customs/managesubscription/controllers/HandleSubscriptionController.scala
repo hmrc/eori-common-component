@@ -46,7 +46,7 @@ class HandleSubscriptionController @Inject() (
             subscriptionRequest.eori.map(Eori(_)),
             subscriptionRequest.emailVerificationTimestamp,
             subscriptionRequest.safeId
-          ).map(status => if (HttpStatusCheck.is2xxSuccessfull(status)) NoContent else InternalServerError)
+          ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
 
         case JsError(_) =>
           Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)

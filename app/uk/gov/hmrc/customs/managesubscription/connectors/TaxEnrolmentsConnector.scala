@@ -48,7 +48,7 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
   }
 
   private def logResponse(response: HttpResponse): Unit =
-    if (HttpStatusCheck.is2xxSuccessfull(response.status))
+    if (HttpStatusCheck.is2xx(response.status))
       logger.info(s"Tax enrolment complete. Status:${response.status}")
     else
       logger.warn(s"Tax enrolment request failed with response $response")

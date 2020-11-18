@@ -60,8 +60,8 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
     (json \ "subscriptionDisplayResponse" \ "responseDetail" \ "EORINo").asOpt[String]
 
   private def logResponse(response: HttpResponse): Unit =
-    if (HttpStatusCheck.is2xxSuccessfull(response.status))
-      logger.info("Subscription display request is successful")
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug("Subscription display request is successful")
     else
       logger.warn(s"Subscription display request is failed with response $response")
 
