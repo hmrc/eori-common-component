@@ -50,7 +50,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
     reset(mockTaxEnrolmentsService)
 
   "HandleSubscriptionController" should {
-    "respond with status 204 if the request is valid and status SUCCEEDED" in {
+    "respond with status 204 (No Content) if the request is valid and status SUCCEEDED" in {
       when(
         mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
           meq(formBundleId),
@@ -72,6 +72,22 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
           meq(emailVerificationTimestamp),
           meq(safeId)
         )(any[HeaderCarrier], any[ExecutionContext])
+      }
+    }
+
+    "respond with status 500 (Internal Server Error) if the request fails" in {
+      when(
+        mockTaxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
+          meq(formBundleId),
+          meq(recipientDetails),
+          meq(taxPayerId),
+          meq(Option(eori)),
+          meq(emailVerificationTimestamp),
+          meq(safeId)
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(Future.successful(404))
+      testSubmitResult(validRequest) { result =>
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 

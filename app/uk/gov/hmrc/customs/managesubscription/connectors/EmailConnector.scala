@@ -36,7 +36,7 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
     val url = appConfig.emailServiceUrl
 
     // $COVERAGE-OFF$Loggers
-    logger.debug(s"[SendEmail: $url, body: $email and headers: $hc")
+    logger.debug(s"SendEmail: $url, body: $email and headers: $hc")
     // $COVERAGE-ON
 
     httpClient.doPost[Email](url, email, Seq("Content-Type" -> "application/json")).map {

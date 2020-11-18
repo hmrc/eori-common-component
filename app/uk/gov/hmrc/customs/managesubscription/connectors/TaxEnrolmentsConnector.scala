@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -38,16 +38,19 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
 
     // $COVERAGE-OFF$Loggers
     logger.info(s"putUrl: $url")
-    logger.debug(s"[Tax enrolment: $url, body: $request and headers: $hc")
+    logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
-      if (HttpStatusCheck.is2xx(response.status))
-        logger.debug(s"Tax enrolment complete. Status:${response.status}")
-      else
-        logger.warn(s"Tax enrolment request failed with BAD_REQUEST $response")
+      logResponse(response)
       response.status
     }
   }
+
+  private def logResponse(response: HttpResponse): Unit =
+    if (HttpStatusCheck.is2xx(response.status))
+      logger.debug(s"Tax enrolment complete. Status:${response.status}")
+    else
+      logger.warn(s"Tax enrolment request failed with response $response")
 
 }

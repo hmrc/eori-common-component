@@ -19,6 +19,7 @@ package uk.gov.hmrc.customs.managesubscription.controllers
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.customs.managesubscription.connectors.HttpStatusCheck
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest, TaxPayerId}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
@@ -45,7 +46,8 @@ class HandleSubscriptionController @Inject() (
             subscriptionRequest.eori.map(Eori(_)),
             subscriptionRequest.emailVerificationTimestamp,
             subscriptionRequest.safeId
-          ).map(_ => NoContent)
+          ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
+
         case JsError(_) =>
           Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
       }
