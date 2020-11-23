@@ -33,18 +33,6 @@ class AppConfigSpec extends BaseSpec {
       appConfig.subscriptionDisplayBearerToken shouldBe "bearer_token_must_be_set_in_app-config-xxx"
     }
 
-    "have customDataStoreContext defined" in {
-      appConfig.customDataStoreContext shouldBe "/customs-data-store/graphql"
-    }
-
-    "have customDataStoreUrl defined" in {
-      appConfig.customDataStoreUrl shouldBe "http://localhost:9893/customs-data-store/graphql"
-    }
-
-    "have customDataStoreToken defined" in {
-      appConfig.customDataStoreToken shouldBe "secret-token"
-    }
-
     "have emailServiceContext defined" in {
       appConfig.emailServiceContext shouldBe "/hmrc/email"
     }

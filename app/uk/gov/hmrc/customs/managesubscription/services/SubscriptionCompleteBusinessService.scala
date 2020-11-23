@@ -16,21 +16,12 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
-import java.util.UUID
-
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
-import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
-import uk.gov.hmrc.customs.managesubscription.domain.{
-  DataStoreRequest,
-  EnrolmentKeys,
-  RecipientDetailsWithEori,
-  SubscriptionComplete,
-  SubscriptionCompleteStatus
-}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.customs.managesubscription.domain.{SubscriptionComplete, SubscriptionCompleteStatus}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,9 +30,7 @@ import scala.concurrent.Future
 class SubscriptionCompleteBusinessService @Inject() (
   recipientDetailsStore: RecipientDetailsStore,
   emailService: EmailService,
-  audit: Auditable,
-  dataStoreConnector: CustomsDataStoreConnector,
-  subscriptionDisplayConnector: SubscriptionDisplayConnector
+  audit: Auditable
 ) {
 
   private val logger = Logger(this.getClass)
@@ -70,7 +59,6 @@ class SubscriptionCompleteBusinessService @Inject() (
     for {
       recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
       _         <- emailService.sendSuccessEmail(recipient.recipientDetails)
-      _         <- dataStoreEmailRequest(recipient)
     } yield (): Unit
 
   private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
@@ -78,37 +66,6 @@ class SubscriptionCompleteBusinessService @Inject() (
       recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
       _         <- emailService.sendFailureEmail(recipient.recipientDetails)
     } yield (): Unit
-
-  private def dataStoreEmailRequest(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Unit] =
-    if (recipient.recipientDetails.enrolmentKey == EnrolmentKeys.CDS)
-      retrieveEori(recipient).flatMap { eoriOpt =>
-        eoriOpt.fold(Future.successful((): Unit)) { eori =>
-          sendEmailToDataStore(
-            eori,
-            recipient.recipientDetails.recipientEmailAddress,
-            recipient.emailVerificationTimestamp
-          ).map(_ => (): Unit)
-        }
-      }
-    else
-      Future.successful((): Unit)
-
-  private def sendEmailToDataStore(eori: String, email: String, emailVerificationTimestamp: String)(implicit
-    hc: HeaderCarrier
-  ): Future[HttpResponse] =
-    dataStoreConnector.storeEmailAddress(DataStoreRequest(eori, email, emailVerificationTimestamp))
-
-  private def retrieveEori(recipient: RecipientDetailsWithEori)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    lazy val buildQueryParams: List[(String, String)] = {
-      val generateUUIDAsString: String = UUID.randomUUID().toString.replace("-", "")
-      List("regime" -> "CDS", "acknowledgementReference" -> generateUUIDAsString)
-    }
-
-    if (recipient.eori.isDefined)
-      Future.successful(recipient.eori)
-    else
-      subscriptionDisplayConnector.callSubscriptionDisplay(("taxPayerID" -> recipient.safeId) :: buildQueryParams)
-  }
 
   private def auditStatus(status: SubscriptionCompleteStatus, formBundleId: String)(implicit hc: HeaderCarrier): Unit =
     audit.sendDataEvent(

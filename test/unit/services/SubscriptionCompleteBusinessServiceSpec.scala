@@ -22,7 +22,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
-import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
 import uk.gov.hmrc.customs.managesubscription.domain._
 import uk.gov.hmrc.customs.managesubscription.services._
@@ -41,16 +40,9 @@ class SubscriptionCompleteBusinessServiceSpec
   private val mockContactDetailsStore = mock[RecipientDetailsStore]
   private val mockEmailService        = mock[EmailService]
   private val mockAuditable           = mock[Auditable]
-  private val mockDataStoreConnector  = mock[CustomsDataStoreConnector]
-  private val mockSubDisplayConnector = mock[SubscriptionDisplayConnector]
 
-  private val service = new SubscriptionCompleteBusinessService(
-    mockContactDetailsStore,
-    mockEmailService,
-    mockAuditable,
-    mockDataStoreConnector,
-    mockSubDisplayConnector
-  )
+  private val service =
+    new SubscriptionCompleteBusinessService(mockContactDetailsStore, mockEmailService, mockAuditable)
 
   private val recipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
@@ -94,14 +86,7 @@ class SubscriptionCompleteBusinessServiceSpec
   }
 
   override protected def afterEach(): Unit = {
-    reset(
-      mockContactDetailsStore,
-      mockEmailService,
-      mockSubscriptionComplete,
-      mockAuditable,
-      mockDataStoreConnector,
-      mockSubDisplayConnector
-    )
+    reset(mockContactDetailsStore, mockEmailService, mockSubscriptionComplete, mockAuditable)
 
     super.afterEach()
   }
@@ -110,9 +95,6 @@ class SubscriptionCompleteBusinessServiceSpec
     "generate an audit event when subscription completes with a good state" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
-      when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
@@ -133,48 +115,8 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
-      when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockEmailService).sendSuccessEmail(recipientDetails)(mockHeaderCarrier)
-    }
-
-    "send data store request on successful SubscriptionComplete, eori number is available and user is subscribing to CDS" in {
-      mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
-      when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
-      when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(
-          RecipientDetailsWithEori(Some(eori.value), cdsRecipientDetails, emailVerificationTimestamp, safeId)
-        )
-      )
-
-      await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verify(mockDataStoreConnector).storeEmailAddress(
-        DataStoreRequest(eori.value, cdsRecipientDetails.recipientEmailAddress, emailVerificationTimestamp)
-      )(mockHeaderCarrier)
-    }
-
-    "doesn't send data store request on successful SubscriptionComplete if user is subscribing to ATaR" in {
-      mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
-      when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(
-          RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId)
-        )
-      )
-
-      await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-
-      verifyZeroInteractions(mockSubDisplayConnector)
-      verifyZeroInteractions(mockDataStoreConnector)
     }
 
     "send subscription display request when eori number is not found in cache" in {
@@ -182,12 +124,10 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
         Future.successful(RecipientDetailsWithEori(None, cdsRecipientDetails, emailVerificationTimestamp, safeId))
       )
-      when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verify(mockSubDisplayConnector).callSubscriptionDisplay(any())(any())
     }
 
     "not send subscription display request when eori number is found in cache" in {
@@ -195,24 +135,7 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
-      when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verifyZeroInteractions(mockSubDisplayConnector)
-    }
-
-    "not send data store request when eori number is not retrieved from cache or subscription display" in {
-      mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
-      when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(RecipientDetailsWithEori(None, recipientDetails, emailVerificationTimestamp, safeId))
-      )
-      when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
-      when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
-      await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verifyZeroInteractions(mockDataStoreConnector)
     }
 
     "send non-success email to recipient on unsuccessful SubscriptionComplete" in {
@@ -220,32 +143,26 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendFailureEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
-      when(mockDataStoreConnector.storeEmailAddress(any())(any[HeaderCarrier])).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockEmailService).sendFailureEmail(recipientDetails)(mockHeaderCarrier)
     }
 
-    "Do not send any email to recipient or data store request for EnrolmentError" in {
+    "Do not send any email to recipient for EnrolmentError" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.EnrolmentError)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verifyZeroInteractions(mockEmailService)
-      verifyZeroInteractions(mockDataStoreConnector)
     }
 
-    "Do not send any email to recipient or data store request for AuthRefreshed" in {
+    "Do not send any email to recipient for AuthRefreshed" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.AuthRefreshed)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verifyZeroInteractions(mockEmailService)
-      verifyZeroInteractions(mockDataStoreConnector)
     }
 
-    "Do not send any email to recipient or data store request for Enrolled" in {
+    "Do not send any email to recipient for Enrolled" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.Enrolled)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verifyZeroInteractions(mockEmailService)
-      verifyZeroInteractions(mockDataStoreConnector)
     }
 
     "propagate error when email service fails" in {
