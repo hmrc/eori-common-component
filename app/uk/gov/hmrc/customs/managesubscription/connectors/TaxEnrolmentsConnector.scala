@@ -18,8 +18,11 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
+import play.api.libs.json.Json
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
+import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
+import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -27,7 +30,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient) {
+class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient, audit: Auditable) {
 
   private val logger = Logger(this.getClass)
 
@@ -43,8 +46,23 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
       logResponse(response)
+      auditCall(url, request, response)
       response.status
     }
+  }
+
+  private def auditCall(url: String, request: TaxEnrolmentsRequest, response: HttpResponse)(implicit
+    hc: HeaderCarrier
+  ): Unit = {
+    val subscriberRequest  = SubscriberRequest(request)
+    val subscriberResponse = SubscriberResponse(response)
+
+    audit.sendExtendedDataEvent(
+      transactionName = "ecc-subscriber-call",
+      path = url,
+      details = Json.toJson(SubscriberCall(subscriberRequest, subscriberResponse)),
+      eventType = "SubscriberCall"
+    )
   }
 
   private def logResponse(response: HttpResponse): Unit =
