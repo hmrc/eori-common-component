@@ -69,8 +69,11 @@ class SubscriptionCompleteBusinessServiceSpec
   private val transactionName = "eori-common-component-update-status"
   private val path            = s"/eori-common-component/$formBundleId"
   private val tagsGoodState   = Map("state" -> "SUCCEEDED", "formBundleId" -> formBundleId)
-  private val tagsBadState    = Map("state" -> "EnrolmentError", "formBundleId" -> formBundleId)
-  private val auditType       = "taxEnrolmentStatus"
+
+  private val tagsBadState =
+    Map("state" -> "EnrolmentError", "formBundleId" -> formBundleId, "errorResponse" -> "error")
+
+  private val auditType = "taxEnrolmentStatus"
 
   val mockSubscriptionComplete: SubscriptionComplete = mock[SubscriptionComplete]
 
@@ -83,6 +86,7 @@ class SubscriptionCompleteBusinessServiceSpec
       )
     )
     when(mockSubscriptionComplete.url).thenReturn(url)
+    when(mockSubscriptionComplete.errorResponse).thenReturn(None)
   }
 
   override protected def afterEach(): Unit = {
@@ -103,7 +107,7 @@ class SubscriptionCompleteBusinessServiceSpec
     }
 
     "generate an audit event when subscription completes with a bad state" in {
-      mockSubscriptionComplete(SubscriptionCompleteStatus.EnrolmentError)
+      mockSubscriptionComplete(SubscriptionCompleteStatus.EnrolmentError, Some("error"))
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockAuditable).sendDataEvent(transactionName, path, tagsBadState, auditType)
@@ -177,8 +181,9 @@ class SubscriptionCompleteBusinessServiceSpec
     }
   }
 
-  private def mockSubscriptionComplete(status: SubscriptionCompleteStatus) {
+  private def mockSubscriptionComplete(status: SubscriptionCompleteStatus, errorResponse: Option[String] = None) {
     when(mockSubscriptionComplete.state).thenReturn(status)
+    when(mockSubscriptionComplete.errorResponse).thenReturn(errorResponse)
   }
 
 }

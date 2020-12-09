@@ -40,13 +40,13 @@ class SubscriptionCompleteBusinessService @Inject() (
   ): Future[Unit] =
     subscriptionComplete.state match {
       case status @ SubscriptionCompleteStatus.SUCCEEDED =>
-        auditStatus(status, formBundleId)
+        auditStatus(status, formBundleId, subscriptionComplete.errorResponse)
         sendAndStoreSuccessEmail(formBundleId)
       case status @ SubscriptionCompleteStatus.ERROR =>
-        auditStatus(status, formBundleId)
+        auditStatus(status, formBundleId, subscriptionComplete.errorResponse)
         sendFailureEmail(formBundleId)
       case badState =>
-        auditStatus(badState, formBundleId)
+        auditStatus(badState, formBundleId, subscriptionComplete.errorResponse)
         triggerEnrolmentStateIssueAlert()
     }
 
@@ -67,12 +67,17 @@ class SubscriptionCompleteBusinessService @Inject() (
       _         <- emailService.sendFailureEmail(recipient.recipientDetails)
     } yield (): Unit
 
-  private def auditStatus(status: SubscriptionCompleteStatus, formBundleId: String)(implicit hc: HeaderCarrier): Unit =
+  private def auditStatus(status: SubscriptionCompleteStatus, formBundleId: String, errorResponse: Option[String])(
+    implicit hc: HeaderCarrier
+  ): Unit = {
+    val details = Map("state" -> status.toString, "formBundleId" -> formBundleId)
+
     audit.sendDataEvent(
       transactionName = "eori-common-component-update-status",
       path = s"/eori-common-component/$formBundleId",
-      detail = Map("state" -> status.toString, "formBundleId" -> formBundleId),
+      detail = if (errorResponse.isDefined) details + ("errorResponse" -> errorResponse.get) else details,
       auditType = "taxEnrolmentStatus"
     )
+  }
 
 }
