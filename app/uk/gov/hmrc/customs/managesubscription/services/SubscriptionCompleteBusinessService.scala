@@ -47,12 +47,12 @@ class SubscriptionCompleteBusinessService @Inject() (
         sendFailureEmail(formBundleId)
       case badState =>
         auditStatus(badState, formBundleId, subscriptionComplete.errorResponse)
-        triggerEnrolmentStateIssueAlert()
+        triggerEnrolmentStateIssueAlert(subscriptionComplete)
     }
 
-  private def triggerEnrolmentStateIssueAlert(): Future[Unit] = {
-    val MessageThatTriggersPagerDutyAlert = "TAX_ENROLMENT_STATE_ISSUE"
-    Future.successful(logger.error(MessageThatTriggersPagerDutyAlert))
+  private def triggerEnrolmentStateIssueAlert(subscriptionComplete: SubscriptionComplete): Future[Unit] = {
+    val messageThatTriggersPagerDutyAlert = s"TAX_ENROLMENT_STATE_ISSUE - $subscriptionComplete"
+    Future.successful(logger.error(messageThatTriggersPagerDutyAlert))
   }
 
   private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
