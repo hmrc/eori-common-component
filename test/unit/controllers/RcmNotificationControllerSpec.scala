@@ -41,10 +41,11 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
 
   val rcmNotifyRequest =
     RcmNotificationRequest("a@b.com", "fullname", "GBXXXXXXXXX000", "Some Service", "2018-07-05T09:08:12.831Z")
+
   val validRcmNotifyRequest: Request[RcmNotificationRequest] =
     FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
 
-  private val mockEmailService         = mock[EmailService]
+  private val mockEmailService = mock[EmailService]
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
@@ -62,16 +63,13 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
   "RcmNotificationController POST" should {
 
     "respond with status 204 for a valid request" in {
-      testSubmitResult(FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)) { result =>
+      testSubmitResult(
+        FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
+      ) { result =>
         status(result) shouldBe NO_CONTENT
       }
     }
 
-    "respond with status 404 for a invalid request url" in {
-      testSubmitResult(FakeRequest("POST", "/notify/rcm/11").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)) { result =>
-        status(result) shouldBe NOT_FOUND
-      }
-    }
   }
 
   private def testSubmitResult(request: Request[RcmNotificationRequest])(test: Future[Result] => Unit) {
