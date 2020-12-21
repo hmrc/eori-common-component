@@ -17,14 +17,12 @@
 package uk.gov.hmrc.customs.managesubscription.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsError, JsSuccess}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 @Singleton
 class RcmNotificationController @Inject() (
@@ -33,17 +31,9 @@ class RcmNotificationController @Inject() (
   digitalHeaderValidator: DigitalHeaderValidator
 ) extends BackendController(cc) {
 
-  def notifyRCM(): Action[AnyContent] = digitalHeaderValidator.async {
+  def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(parse.json[RcmNotificationRequest]).async {
     implicit request =>
-      request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
-        js.validate[RcmNotificationRequest] match {
-          case JsSuccess(request, _) =>
-            emailService.sendRcmNotificationEmail(request).map(_ => NoContent)
-          case JsError(_) =>
-            Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
-        }
-      }
-
+      emailService.sendRcmNotificationEmail(request.body).map(_ => NoContent)
   }
 
 }
