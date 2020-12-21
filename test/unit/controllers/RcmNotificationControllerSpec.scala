@@ -45,7 +45,6 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
     FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
 
   private val mockEmailService         = mock[EmailService]
-  private val mockControllerComponents = mock[ControllerComponents]
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
@@ -55,7 +54,7 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
     new RcmNotificationController(mockEmailService, stubControllerComponents(), mockDigitalHeaderValidator)
 
   override protected def beforeEach(): Unit = {
-    reset(mockControllerComponents, mockEmailService)
+    reset(mockEmailService)
     when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
       .thenReturn(Future.successful(HttpResponse(200)))
   }
