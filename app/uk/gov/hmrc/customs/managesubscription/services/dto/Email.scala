@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.customs.managesubscription.services.dto
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.Json
 
 case class Email(to: List[String], templateId: String, parameters: Map[String, String], force: Boolean = false)
 
 object Email {
-  implicit val emailWrites: Writes[Email] = Json.writes[Email]
-  implicit val format                     = Json.format[Email]
+  implicit val format = Json.format[Email]
 }
