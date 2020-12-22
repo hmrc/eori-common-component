@@ -47,6 +47,12 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val emailSubscribeNotSuccessTemplateId: String =
     config.get[String]("microservice.services.email.subscribeNotSuccessTemplateId")
 
+  val emailRCMTemplateId: String =
+    config.get[String]("microservice.services.email.rcmTemplateId")
+
+  val rcmEmailAddress: String =
+    config.get[String]("microservice.services.email.rcmEmailAddress")
+
   private val taxEnrolmentsBaseUrl: String = servicesConfig.baseUrl("tax-enrolments")
 
   val taxEnrolmentsContext: String     = config.get[String]("microservice.services.tax-enrolments.context")

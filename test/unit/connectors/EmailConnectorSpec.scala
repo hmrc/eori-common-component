@@ -18,6 +18,7 @@ package unit.connectors
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -28,8 +29,9 @@ import scala.concurrent.Future
 
 class EmailConnectorSpec extends BaseSpec {
   val mockHttp      = mock[HttpClient]
+  val mockAuditable = mock[Auditable]
   implicit val hc   = HeaderCarrier()
-  val testConnector = new EmailConnector(appConfig, mockHttp)
+  val testConnector = new EmailConnector(appConfig, mockHttp, mockAuditable)
 
   "EmailConnector" should {
     "successfully send a email request to Email service and return the OK response" in {

@@ -20,7 +20,7 @@ import com.google.inject.Singleton
 import javax.inject.Inject
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
-import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RecipientDetails}
+import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RcmNotificationRequest, RecipientDetails}
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
@@ -40,6 +40,13 @@ class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnect
       case Journey.Register  => sendEmail(appConfig.emailRegisterNotSuccessTemplateId, recipient)
       case Journey.Subscribe => sendEmail(appConfig.emailSubscribeNotSuccessTemplateId, recipient)
     }
+
+  def sendRcmNotificationEmail(request: RcmNotificationRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    val templateId = appConfig.emailRCMTemplateId
+    val rcmEmail   = appConfig.rcmEmailAddress.split(",").map(_.trim).toList
+    val email      = Email(to = rcmEmail, templateId = templateId, parameters = request.toMap)
+    emailConnector.sendEmail(email)
+  }
 
   private def sendEmail(templateId: String, recipient: RecipientDetails)(implicit
     hc: HeaderCarrier

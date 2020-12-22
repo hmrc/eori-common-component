@@ -19,7 +19,7 @@ package unit.services
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito._
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
-import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RecipientDetails}
+import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RcmNotificationRequest, RecipientDetails}
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -40,6 +40,7 @@ class EmailServiceSpec extends BaseSpec {
   private val registerNotSuccessTemplateId: String  = "customs_registration_not_successful"
   private val subscribeSuccessTemplateId: String    = "ecc_subscription_successful"
   private val subscribeNotSuccessTemplateId: String = "ecc_subscription_not_successful"
+  private val rcmNotificationTemplateId: String     = "ecc_rcm_notifications"
 
   private lazy val emailService = new EmailService(appConfig, mockEmailConnector)
 
@@ -76,6 +77,9 @@ class EmailServiceSpec extends BaseSpec {
     Some(subscribeCompletionDate),
     Some("en")
   )
+
+  private val rcmNotifyRequest =
+    RcmNotificationRequest("a@b.com", "fullname", "GBXXXXXXXXX000", "Some Service", "26-May-2019 08:12:83")
 
   private val registerSuccessEmail = Email(
     to = List(registerRecipientEmailAddress),
@@ -118,6 +122,18 @@ class EmailServiceSpec extends BaseSpec {
       "recipientOrgName"       -> subscribeOrgName,
       "serviceName"            -> subscribeServiceName,
       "completionDate"         -> subscribeCompletionDate
+    )
+  )
+
+  private val rcmNotifyEmail = Email(
+    to = List("john.doe@example.com"),
+    templateId = rcmNotificationTemplateId,
+    parameters = Map(
+      "email"       -> rcmNotifyRequest.email,
+      "name"        -> rcmNotifyRequest.name,
+      "eori"        -> rcmNotifyRequest.eori,
+      "serviceName" -> rcmNotifyRequest.serviceName,
+      "timestamp"   -> rcmNotifyRequest.timestamp
     )
   )
 
@@ -164,6 +180,16 @@ class EmailServiceSpec extends BaseSpec {
       emailService.sendFailureEmail(subscribeRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(subscribeNotSuccessEmail))(meq(hc))
+    }
+
+    "call emailConnector with proper content for RCM notification email" in {
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
+
+      emailService.sendRcmNotificationEmail(rcmNotifyRequest)
+
+      verify(mockEmailConnector).sendEmail(meq(rcmNotifyEmail))(meq(hc))
     }
 
     "propagate error when emailConnector fails on sending email" in {

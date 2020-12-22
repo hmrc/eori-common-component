@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.customs.managesubscription.services.dto
+package uk.gov.hmrc.customs.managesubscription.domain
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
-case class Email(to: List[String], templateId: String, parameters: Map[String, String], force: Boolean = false)
+case class RcmNotificationRequest(email: String, name: String, eori: String, serviceName: String, timestamp: String) {
 
-object Email {
-  implicit val format = Json.format[Email]
+  val toMap: Map[String, String] =
+    Map(
+      "email"       -> this.email,
+      "name"        -> this.name,
+      "eori"        -> this.eori,
+      "serviceName" -> this.serviceName,
+      "timestamp"   -> this.timestamp
+    )
+
+}
+
+object RcmNotificationRequest {
+  implicit val jsonFormat: OFormat[RcmNotificationRequest] = Json.format[RcmNotificationRequest]
 }

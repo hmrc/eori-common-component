@@ -18,7 +18,10 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
+import play.api.libs.json.Json
+import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
+import uk.gov.hmrc.customs.managesubscription.models.events.{EmailCall, EmailResponse}
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -27,7 +30,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
+class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable) {
 
   private val logger = Logger(this.getClass)
 
@@ -41,6 +44,7 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
 
     httpClient.doPost[Email](url, email, Seq("Content-Type" -> "application/json")).map {
       response =>
+        audit(email, response, appConfig.emailServiceUrl)
         logResponse(email.templateId, response)
         response
     }
@@ -51,5 +55,15 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient) {
       logger.debug(s"sendEmail succeeded for template Id: $templateId")
     else
       logger.warn(s"sendEmail: request is failed with $response for template Id: $templateId")
+
+  private def audit(email: Email, response: HttpResponse, url: String)(implicit hc: HeaderCarrier): Future[Unit] =
+    Future.successful {
+      audit.sendExtendedDataEvent(
+        transactionName = "ecc-email-call",
+        path = url,
+        details = Json.toJson(EmailCall(email, EmailResponse(response))),
+        eventType = "EmailCall"
+      )
+    }
 
 }

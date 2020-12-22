@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.customs.managesubscription.services.dto
+package uk.gov.hmrc.customs.managesubscription.models.events
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HttpResponse
 
-case class Email(to: List[String], templateId: String, parameters: Map[String, String], force: Boolean = false)
+case class EmailResponse(status: String, body: String)
 
-object Email {
-  implicit val format = Json.format[Email]
+object EmailResponse {
+  implicit val format = Json.format[EmailResponse]
+
+  def apply(response: HttpResponse): EmailResponse =
+    EmailResponse(status = response.status.toString, body = response.body)
+
 }
