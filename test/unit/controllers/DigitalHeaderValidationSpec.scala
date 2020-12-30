@@ -24,7 +24,7 @@ import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames._
 import uk.gov.hmrc.customs.managesubscription.controllers.DigitalHeaderValidator
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription.validHeaders
 import util.TestData._

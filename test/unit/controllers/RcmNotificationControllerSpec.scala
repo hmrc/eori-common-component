@@ -16,24 +16,19 @@
 
 package unit.controllers
 
-import org.mockito.ArgumentMatchers.{any, eq => meq}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import play.api.libs.json.Json
-import play.api.mvc.{ControllerComponents, Request, Result}
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.{Request, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, NoMaterializer}
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core.AuthProviders
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
-import uk.gov.hmrc.customs.managesubscription.connectors.MicroserviceAuthConnector
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, RcmNotificationController}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.test.UnitSpec
-import util.TestData.HandleSubscription.{validHeaders, validRequest}
+import util.UnitSpec
+import util.TestData.HandleSubscription.validHeaders
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -57,7 +52,7 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
   override protected def beforeEach(): Unit = {
     reset(mockEmailService)
     when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
-      .thenReturn(Future.successful(HttpResponse(200)))
+      .thenReturn(Future.successful(HttpResponse(status = 200, body = "")))
   }
 
   "RcmNotificationController POST" should {

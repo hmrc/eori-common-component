@@ -22,7 +22,7 @@ import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.SubscriptionDisplayConnector
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import util.BaseSpec
 import util.RequestHeaders.{ACCEPT_HEADER, AUTHORISATION_HEADER, CONTENT_TYPE_HEADER}
 

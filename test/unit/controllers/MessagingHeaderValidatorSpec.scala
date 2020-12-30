@@ -23,8 +23,7 @@ import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames.CONTENT_TYPE
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
 import uk.gov.hmrc.customs.managesubscription.controllers.MessagingHeaderValidator
-import uk.gov.hmrc.play.test.UnitSpec
-import util.AsyncTest
+import util.{AsyncTest, UnitSpec}
 import util.RequestHeaders._
 import util.TestData.HandleSubscription.validHeaders
 

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import uk.gov.hmrc.cache.model.Id
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori

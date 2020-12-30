@@ -17,11 +17,10 @@
 package util
 
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment, Mode}
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
-import uk.gov.hmrc.play.bootstrap.config.{RunMode, ServicesConfig}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class BaseSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
@@ -29,7 +28,7 @@ class BaseSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
   private val config = Configuration.load(env)
 
-  private val serviceConfig = new ServicesConfig(config, new RunMode(config, Mode.Dev))
+  private val serviceConfig = new ServicesConfig(config)
 
   implicit val appConfig: AppConfig = new AppConfig(config, serviceConfig)
 }

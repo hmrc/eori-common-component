@@ -22,7 +22,7 @@ import play.api.inject._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, Environment}
 import play.modules.reactivemongo.ReactiveMongoComponent
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 import util.ExternalServicesConfig.{Host, Port}
 import util.mongo.ReactiveMongoComponentForTests
 
