@@ -19,7 +19,7 @@ package unit.controllers
 import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status._
 import play.api.mvc._
 import play.api.test.{FakeRequest, NoMaterializer}
@@ -27,7 +27,7 @@ import play.api.test.Helpers.stubPlayBodyParsers
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, HandleSubscriptionController}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription._
 import util.TestData._

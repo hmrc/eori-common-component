@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.{AuthProviders, AuthorisedFunctions}
 import uk.gov.hmrc.customs.managesubscription.connectors.MicroserviceAuthConnector
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

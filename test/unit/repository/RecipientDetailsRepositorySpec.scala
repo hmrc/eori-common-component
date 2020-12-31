@@ -19,13 +19,12 @@ package unit.repository
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsError, Json}
 import reactivemongo.api.ReadPreference
 import uk.gov.hmrc.cache.model.{Cache, Id}
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 

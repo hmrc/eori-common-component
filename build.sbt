@@ -26,6 +26,8 @@ scalaVersion := "2.12.12"
 
 resolvers += Resolver.bintrayRepo("hmrc", "releases")
 
+Test / fork := false
+
 lazy val microservice = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
@@ -51,22 +53,18 @@ javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 
 libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "2.0.0",
-  "uk.gov.hmrc" %% "auth-client" % "3.2.0-play-26",
-  "uk.gov.hmrc" %% "http-caching-client" % "9.1.0-play-26",
-  "uk.gov.hmrc" %% "mongo-caching" % "6.15.0-play-26",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-27" % "2.25.0",
+  "uk.gov.hmrc" %% "auth-client" % "3.2.0-play-27",
+  "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-27",
+  "uk.gov.hmrc" %% "mongo-caching" % "6.16.0-play-27",
   "com.typesafe.play" %% "play-json-joda" % "2.6.10",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.8.0",
-
-
   "com.typesafe.play" %% "play-test" % PlayVersion.current % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % "test",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % "test",
   "com.github.tomakehurst" % "wiremock-standalone" % "2.23.2" % "test",
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "2.0.0" % "test" classifier "tests",
   "org.mockito" % "mockito-core" % "2.23.0" % "test",
   "org.scalatest" %% "scalatest" % "3.0.4" % "test",
-  "uk.gov.hmrc" %% "hmrctest" % "3.8.0-play-26" % "test",
-  "uk.gov.hmrc" %% "reactivemongo-test" % "4.21.0-play-26" % Test
+  "uk.gov.hmrc" %% "reactivemongo-test" % "4.22.0-play-27" % Test
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {

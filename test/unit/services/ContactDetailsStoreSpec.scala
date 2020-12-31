@@ -18,12 +18,12 @@ package unit.services
 
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.JsError
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
 import uk.gov.hmrc.customs.managesubscription.services.RecipientDetailsStore
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 import util.TestData._
 
 import scala.concurrent.Future

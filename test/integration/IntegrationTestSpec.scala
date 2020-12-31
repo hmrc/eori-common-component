@@ -18,6 +18,6 @@ package integration
 
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 
 trait IntegrationTestSpec extends UnitSpec with BeforeAndAfterEach with BeforeAndAfterAll with Eventually

@@ -20,7 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.JsValue
 import play.api.mvc._
 import play.api.test.{FakeRequest, NoMaterializer}
@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.controllers.{MessagingHeaderValidator, SubscriptionResultController}
 import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusinessService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import util.UnitSpec
 import util.RequestHeaders
 import util.TestData.SubscriptionResult._
 import util.TestData._

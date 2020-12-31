@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
