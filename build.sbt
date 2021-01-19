@@ -3,7 +3,6 @@ import play.core.PlayVersion
 import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, targetJvm}
-import uk.gov.hmrc.SbtArtifactory
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
@@ -29,7 +28,7 @@ resolvers += Resolver.bintrayRepo("hmrc", "releases")
 Test / fork := false
 
 lazy val microservice = (project in file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
   .settings(
     commonSettings,
