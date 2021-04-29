@@ -16,10 +16,11 @@
 
 package unit.controllers
 
+import akka.stream.testkit.NoMaterializer
 import org.scalatest.prop.TableDrivenPropertyChecks
 import play.api.mvc.Results.Ok
 import play.api.mvc._
-import play.api.test.{FakeRequest, NoMaterializer}
+import play.api.test.FakeRequest
 import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames._
 import uk.gov.hmrc.customs.managesubscription.controllers.DigitalHeaderValidator
