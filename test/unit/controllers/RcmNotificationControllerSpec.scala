@@ -16,13 +16,14 @@
 
 package unit.controllers
 
+import akka.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{Request, Result}
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, NoMaterializer}
+import play.api.test.FakeRequest
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, RcmNotificationController}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService

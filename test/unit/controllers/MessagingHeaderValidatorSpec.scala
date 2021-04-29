@@ -16,9 +16,10 @@
 
 package unit.controllers
 
+import akka.stream.testkit.NoMaterializer
 import play.api.mvc.Results._
 import play.api.mvc.{Action, AnyContent}
-import play.api.test.{FakeRequest, NoMaterializer}
+import play.api.test.FakeRequest
 import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames.CONTENT_TYPE
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._

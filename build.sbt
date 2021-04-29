@@ -50,18 +50,18 @@ javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 
 libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
-  "uk.gov.hmrc" %% "bootstrap-backend-play-27" % "4.1.0",
-  "uk.gov.hmrc" %% "http-caching-client" % "9.3.0-play-27",
-  "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-27",
-  "com.typesafe.play" %% "play-json-joda" % "2.7.3",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "4.2.0",
+  "uk.gov.hmrc" %% "http-caching-client" % "9.4.0-play-28",
+  "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-28",
+  "com.typesafe.play" %% "play-json-joda" % "2.8.1",
   "uk.gov.hmrc" %% "logback-json-logger" % "5.1.0",
   "com.typesafe.play" %% "play-test" % PlayVersion.current % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % "test",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test",
   "com.github.tomakehurst" % "wiremock-standalone" % "2.23.2" % "test",
-  "org.mockito" % "mockito-core" % "2.23.0" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+  "org.mockito" % "mockito-core" % "3.0.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.pegdown" % "pegdown" % "1.6.0",
-  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-27" % Test
+  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % Test
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {

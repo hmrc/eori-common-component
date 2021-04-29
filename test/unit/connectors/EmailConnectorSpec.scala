@@ -35,25 +35,19 @@ class EmailConnectorSpec extends BaseSpec {
 
   "EmailConnector" should {
     "successfully send a email request to Email service and return the OK response" in {
-      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(
-        Future.successful(HttpResponse(200, ""))
-      )
+      when(mockHttp.doPost(any(), any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(200, "")))
       val result = await(testConnector.sendEmail(Email(List("toEmail"), "templateId", Map.empty)))
       result.status shouldBe 200
     }
 
     "successfully send a email request to Email service and return the ACCEPTED response" in {
-      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(
-        Future.successful(HttpResponse(202, ""))
-      )
+      when(mockHttp.doPost(any(), any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(202, "")))
       val result = await(testConnector.sendEmail(Email(List("toEmail"), "templateId", Map.empty)))
       result.status shouldBe 202
     }
 
     "return the failure response from Email service" in {
-      when(mockHttp.doPost(any(), any(), any())(any(), any(), any())).thenReturn(
-        Future.successful(HttpResponse(400, ""))
-      )
+      when(mockHttp.doPost(any(), any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(400, "")))
       val result = await(testConnector.sendEmail(Email(List(""), "", Map.empty)))
       result.status shouldBe 400
     }
