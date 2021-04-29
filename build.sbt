@@ -23,8 +23,6 @@ targetJvm := "jvm-1.8"
 
 scalaVersion := "2.12.12"
 
-resolvers += Resolver.bintrayRepo("hmrc", "releases")
-
 Test / fork := false
 
 lazy val microservice = (project in file("."))
