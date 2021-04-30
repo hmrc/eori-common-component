@@ -44,7 +44,11 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
-    httpClient.doPut[TaxEnrolmentsRequest](url, request) map { response =>
+    httpClient.doPut[TaxEnrolmentsRequest](
+      url,
+      request,
+      headers = hc.headers(Seq(play.mvc.Http.HeaderNames.AUTHORIZATION))
+    ) map { response =>
       logResponse(response)
       auditCall(url, request, response)
       response.status
