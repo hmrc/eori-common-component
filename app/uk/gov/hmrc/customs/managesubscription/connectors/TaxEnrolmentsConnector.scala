@@ -19,6 +19,7 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.Json
+import play.mvc.Http.HeaderNames._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
@@ -44,11 +45,9 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
-    httpClient.doPut[TaxEnrolmentsRequest](
-      url,
-      request,
-      headers = hc.headers(Seq(play.mvc.Http.HeaderNames.AUTHORIZATION))
-    ) map { response =>
+    val additionalHeaders = Seq(AUTHORIZATION, "X-SESSION-ID", "X-Request-ID")
+
+    httpClient.doPut[TaxEnrolmentsRequest](url, request, headers = hc.headers(additionalHeaders)) map { response =>
       logResponse(response)
       auditCall(url, request, response)
       response.status
