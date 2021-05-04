@@ -24,8 +24,7 @@ import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,7 +44,7 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
-    val additionalHeaders = Seq(AUTHORIZATION, "X-SESSION-ID", "X-Request-ID")
+    val additionalHeaders = Seq(AUTHORIZATION, HeaderNames.xSessionId, HeaderNames.xRequestId)
 
     httpClient.doPut[TaxEnrolmentsRequest](url, request, headers = hc.headers(additionalHeaders)) map { response =>
       logResponse(response)
