@@ -44,12 +44,11 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
-    val additionalHeaders = Seq(AUTHORIZATION, HeaderNames.xSessionId, HeaderNames.xRequestId)
-
-    httpClient.doPut[TaxEnrolmentsRequest](url, request, headers = hc.headers(additionalHeaders)) map { response =>
-      logResponse(response)
-      auditCall(url, request, response)
-      response.status
+    httpClient.PUT[TaxEnrolmentsRequest, HttpResponse](url, request) map {
+      response =>
+        logResponse(response)
+        auditCall(url, request, response)
+        response.status
     }
   }
 
