@@ -42,7 +42,7 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, au
     logger.debug(s"SendEmail: $url, body: $email and headers: $hc")
     // $COVERAGE-ON
 
-    httpClient.doPost[Email](url, email, Seq("Content-Type" -> "application/json")).map {
+    httpClient.POST[Email, HttpResponse](url, email, Seq("Content-Type" -> "application/json")).map {
       response =>
         audit(email, response, appConfig.emailServiceUrl)
         logResponse(email.templateId, response)
