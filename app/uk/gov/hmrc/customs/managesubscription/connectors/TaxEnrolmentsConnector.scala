@@ -19,12 +19,12 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.Json
-import play.mvc.Http.HeaderNames._
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
