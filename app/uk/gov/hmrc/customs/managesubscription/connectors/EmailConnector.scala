@@ -19,6 +19,7 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.models.events.{EmailCall, EmailResponse}

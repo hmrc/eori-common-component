@@ -22,7 +22,7 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.connectors.TaxEnrolmentsConnector
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import uk.gov.hmrc.http.HeaderCarrier
 import util.TaxEnrolmentService
 import util.TestData.TaxEnrolment.validRequestJson
 
@@ -57,9 +57,7 @@ class TaxEnrolmentsConnectorSpec extends IntegrationTestsWithDbSpec with TaxEnro
     "return successful future with correct status when enrolment status service returns any fail status" in {
       returnEnrolmentResponseWhenReceiveRequest(expectedPutUrl, validRequestJson.toString, BAD_REQUEST)
 
-      intercept[BadRequestException] {
-        await(taxEnrolmentsConnector.enrol(taxEnrolmentsRequest, formBundleId))
-      }
+      taxEnrolmentsConnector.enrol(taxEnrolmentsRequest, formBundleId).futureValue shouldBe BAD_REQUEST
     }
   }
 }
