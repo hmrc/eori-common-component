@@ -48,6 +48,8 @@ scalastyleConfig := baseDirectory.value / "project" / "scalastyle-config.xml"
 
 javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 
+WsdlKeys.wsdlUrls in Compile += url("https://ec.europa.eu/taxation_customs/vies/checkVatTestService.wsdl")
+
 libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
   "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.2.0",
@@ -61,7 +63,8 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.0.0" % "test",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.pegdown" % "pegdown" % "1.6.0",
-  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % Test
+  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % Test,
+  "javax.xml.ws" % "jaxws-api" % "2.3.1"
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {

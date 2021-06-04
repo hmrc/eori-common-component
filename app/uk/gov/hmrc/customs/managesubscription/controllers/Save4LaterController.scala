@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
+import eu.europa.ec.taxud.vies.services.checkvat.CheckVatTestService
+import eu.europa.ec.taxud.vies.services.checkvat.types.CheckVat
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -27,14 +29,23 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+import javax.xml.ws.Holder
+
 @Singleton
 class Save4LaterController @Inject() (
   save4LaterRepository: Save4LaterRepository,
   cc: ControllerComponents,
-  override val authConnector: MicroserviceAuthConnector
+  override val authConnector: MicroserviceAuthConnector,
+  checkVatTestService: CheckVatTestService
 ) extends BackendController(cc) with AuthorisedFunctions {
 
+
+  def test() = {
+    checkVatTestService.getCheckVatPort(new TestHandler()).checkVat(new Holder("FR"), new Holder("200"), new Holder(null), new Holder(null), new Holder(null), new Holder(null))
+  }
+
   def put(id: String, key: String): Action[AnyContent] = Action.async { implicit request =>
+    test()
     authorised(AuthProviders(GovernmentGateway)) {
       request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
         save4LaterRepository.save(id, key, js).map(_ => Created)
@@ -69,4 +80,41 @@ class Save4LaterController @Inject() (
     }
   }
 
+}
+
+import javax.xml.ws.handler.MessageContext
+import javax.xml.ws.handler.soap.{SOAPHandler, SOAPMessageContext}
+
+class TestHandler() extends SOAPHandler[SOAPMessageContext] {
+  def getHeaders = null
+
+  println("Creating Test Handler")
+
+  def handleMessage(context: SOAPMessageContext) = {
+    val outbound = context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY)
+      .asInstanceOf[java.lang.Boolean]
+    val message = context.getMessage
+
+    if (outbound) {
+      println(s"Sending message:")
+
+      message.writeTo(System.out)
+    } else {
+      val responseCode = context.get(MessageContext.HTTP_RESPONSE_CODE)
+      println("Message: " + context.getMessage)
+      println(s"Received $responseCode response:")
+      message.writeTo(System.out)
+    }
+    println()
+    true
+  }
+
+  def close(context: MessageContext) = ()
+
+  def handleFault(context: SOAPMessageContext) = {
+    println(s"Received fault:")
+    context.getMessage.writeTo(System.out)
+    println()
+    true
+  }
 }
