@@ -89,7 +89,7 @@ trait CustomsDataStoreService extends WireMockRunner {
 }
 
 trait SubscriptionDisplayService extends WireMockRunner {
-  private val responseBody = """{"subscriptionDisplayResponse": {"responseDetail": {"EORINo": "123456789"}}}"""
+  private val responseBody = """{"subscriptionDisplayResponse": {"responseDetail": {"EORINo": "ZZ123456789000"}}}"""
 
   def returnSubscriptionDisplayResponse(url: String, status: Int): Unit =
     stubFor(

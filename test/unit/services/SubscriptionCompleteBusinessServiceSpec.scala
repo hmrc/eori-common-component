@@ -22,6 +22,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
+import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
 import uk.gov.hmrc.customs.managesubscription.domain._
 import uk.gov.hmrc.customs.managesubscription.services._
@@ -40,9 +41,17 @@ class SubscriptionCompleteBusinessServiceSpec
   private val mockContactDetailsStore = mock[RecipientDetailsStore]
   private val mockEmailService        = mock[EmailService]
   private val mockAuditable           = mock[Auditable]
+  private val mockDataStoreConnector  = mock[CustomsDataStoreConnector]
+  private val mockSubDisplayConnector = mock[SubscriptionDisplayConnector]
 
   private val service =
-    new SubscriptionCompleteBusinessService(mockContactDetailsStore, mockEmailService, mockAuditable)
+    new SubscriptionCompleteBusinessService(
+      mockContactDetailsStore,
+      mockEmailService,
+      mockAuditable,
+      mockDataStoreConnector,
+      mockSubDisplayConnector
+    )
 
   private val recipientDetails: RecipientDetails = RecipientDetails(
     Journey.Subscribe,
@@ -80,6 +89,14 @@ class SubscriptionCompleteBusinessServiceSpec
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
+    reset(
+      mockContactDetailsStore,
+      mockEmailService,
+      mockSubscriptionComplete,
+      mockAuditable,
+      mockDataStoreConnector,
+      mockSubDisplayConnector
+    )
     when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
       Future.successful(
         RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId)
@@ -101,6 +118,9 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
+      when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
       doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockAuditable).sendDataEvent(transactionName, path, tagsGoodState, auditType)
@@ -119,6 +139,9 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
+      when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockEmailService).sendSuccessEmail(recipientDetails)(mockHeaderCarrier)
     }
@@ -131,6 +154,7 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
+      when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
     }
 
@@ -139,7 +163,11 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
+      when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
+      verifyNoMoreInteractions(mockSubDisplayConnector)
     }
 
     "send non-success email to recipient on unsuccessful SubscriptionComplete" in {

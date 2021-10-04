@@ -30,6 +30,11 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val subscriptionDisplayBearerToken: String =
     config.get[String]("microservice.services.subscription-display.bearer-token")
 
+  private val customDataStoreBaseUrl: String = servicesConfig.baseUrl("customs-data-store")
+
+  val customDataStoreContext: String = config.get[String]("microservice.services.customs-data-store.context")
+  val customDataStoreUrl: String     = s"$customDataStoreBaseUrl$customDataStoreContext"
+
   private val emailServiceBaseUrl: String = servicesConfig.baseUrl("email")
 
   val emailServiceContext: String = config.get[String]("microservice.services.email.context")

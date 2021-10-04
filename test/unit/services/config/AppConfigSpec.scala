@@ -37,6 +37,14 @@ class AppConfigSpec extends BaseSpec {
       appConfig.emailServiceContext shouldBe "/hmrc/email"
     }
 
+    "have customDataStoreContext defined" in {
+      appConfig.customDataStoreContext shouldBe "/customs-data-store/update-email"
+    }
+
+    "have customDataStoreUrl defined" in {
+      appConfig.customDataStoreUrl shouldBe "http://localhost:9893/customs-data-store/update-email"
+    }
+
     "have emailServiceUrl defined" in {
       appConfig.emailServiceUrl shouldBe "http://localhost:8300/hmrc/email"
     }
