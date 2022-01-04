@@ -50,9 +50,9 @@ javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 
 libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
-  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.2.0",
-  "uk.gov.hmrc" %% "http-caching-client" % "9.4.0-play-28",
-  "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-28",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.18.0",
+  "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-28",
+  "uk.gov.hmrc" %% "mongo-caching" % "7.1.0-play-28",
   "com.typesafe.play" %% "play-json-joda" % "2.8.1",
   "uk.gov.hmrc" %% "logback-json-logger" % "5.1.0",
   "com.typesafe.play" %% "play-test" % PlayVersion.current % "test",
