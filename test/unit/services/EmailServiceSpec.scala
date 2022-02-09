@@ -36,13 +36,15 @@ class EmailServiceSpec extends BaseSpec {
 
   private val service = "HMRC-ATAR-ORG"
 
-  private val registerSuccessTemplateId: String     = "customs_registration_successful"
-  private val registerSuccessTemplateId_Cy: String  = "customs_registration_successful_cy"
-  private val registerNotSuccessTemplateId: String  = "customs_registration_not_successful"
-  private val subscribeSuccessTemplateId: String    = "ecc_subscription_successful"
-  private val subscribeSuccessTemplateId_Cy: String = "ecc_subscription_successful_cy"
-  private val subscribeNotSuccessTemplateId: String = "ecc_subscription_not_successful"
-  private val rcmNotificationTemplateId: String     = "ecc_rcm_notifications"
+  private val registerSuccessTemplateId: String        = "customs_registration_successful"
+  private val registerSuccessTemplateId_Cy: String     = "customs_registration_successful_cy"
+  private val registerNotSuccessTemplateId: String     = "customs_registration_not_successful"
+  private val registerNotSuccessTemplateId_Cy: String  = "customs_registration_not_successful_cy"
+  private val subscribeSuccessTemplateId: String       = "ecc_subscription_successful"
+  private val subscribeSuccessTemplateId_Cy: String    = "ecc_subscription_successful_cy"
+  private val subscribeNotSuccessTemplateId: String    = "ecc_subscription_not_successful"
+  private val subscribeNotSuccessTemplateId_Cy: String = "ecc_subscription_not_successful_cy"
+  private val rcmNotificationTemplateId: String        = "ecc_rcm_notifications"
 
   private lazy val emailService = new EmailService(appConfig, mockEmailConnector)
 
@@ -138,6 +140,17 @@ class EmailServiceSpec extends BaseSpec {
     )
   )
 
+  private val registerNotSuccessEmail_Cy = Email(
+    to = List(registerRecipientEmailAddress),
+    templateId = registerNotSuccessTemplateId_Cy,
+    parameters = Map(
+      "recipientName_FullName" -> registerRecipientFullName,
+      "recipientOrgName"       -> registerOrgName,
+      "serviceName"            -> registerServiceName,
+      "completionDate"         -> registerCompletionDate
+    )
+  )
+
   private val subscribeSuccessEmail = Email(
     to = List(subscribeRecipientEmailAddress),
     templateId = subscribeSuccessTemplateId,
@@ -163,6 +176,17 @@ class EmailServiceSpec extends BaseSpec {
   private val subscribeNotSuccessEmail = Email(
     to = List(subscribeRecipientEmailAddress),
     templateId = subscribeNotSuccessTemplateId,
+    parameters = Map(
+      "recipientName_FullName" -> subscribeRecipientFullName,
+      "recipientOrgName"       -> subscribeOrgName,
+      "serviceName"            -> subscribeServiceName,
+      "completionDate"         -> subscribeCompletionDate
+    )
+  )
+
+  private val subscribeNotSuccessEmail_Cy = Email(
+    to = List(subscribeRecipientEmailAddress),
+    templateId = subscribeNotSuccessTemplateId_Cy,
     parameters = Map(
       "recipientName_FullName" -> subscribeRecipientFullName,
       "recipientOrgName"       -> subscribeOrgName,
@@ -218,6 +242,16 @@ class EmailServiceSpec extends BaseSpec {
       verify(mockEmailConnector).sendEmail(meq(registerNotSuccessEmail))(meq(hc))
     }
 
+    "call emailConnector with proper cy content for Register not success cy email" in {
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
+
+      emailService.sendFailureEmail(registerRecipientDetails_Cy)
+
+      verify(mockEmailConnector).sendEmail(meq(registerNotSuccessEmail_Cy))(meq(hc))
+    }
+
     "call emailConnector with proper content for Subscribe success email" in {
       when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
@@ -246,6 +280,16 @@ class EmailServiceSpec extends BaseSpec {
       emailService.sendFailureEmail(subscribeRecipientDetails)
 
       verify(mockEmailConnector).sendEmail(meq(subscribeNotSuccessEmail))(meq(hc))
+    }
+
+    "call emailConnector with proper cy content for Subscribe not success cy email" in {
+      when(mockEmailConnector.sendEmail(any[Email])(any[HeaderCarrier])).thenReturn(
+        Future.successful(HttpResponse(200, ""))
+      )
+
+      emailService.sendFailureEmail(subscribeRecipientDetails_Cy)
+
+      verify(mockEmailConnector).sendEmail(meq(subscribeNotSuccessEmail_Cy))(meq(hc))
     }
 
     "call emailConnector with proper content for RCM notification email" in {
