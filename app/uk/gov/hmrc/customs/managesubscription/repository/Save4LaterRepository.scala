@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.repository
 
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import uk.gov.hmrc.cache.model.{Cache, Id => CacheId}
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -56,19 +56,27 @@ class Save4LaterRepository @Inject() (sc: ServicesConfig, mongo: ReactiveMongoCo
     val selector = Json.obj(Id -> id)
     findById(CacheId(id)).flatMap {
       case Some(cache) =>
-        cache.data.fold(Future.successful(false)) { data =>
+        cache.data.fold(
+          // $COVERAGE-OFF$Hard to see how this is possible when creating documents using the repository
+          Future.successful(false)
+          // $COVERAGE-ON$
+        ) { data =>
           (data \ key) match {
             case _: JsDefined =>
               val updateData   = data.as[JsObject] - key
               val cacheUpdated = Json.toJson(cache.copy(data = Some(updateData)))
               findAndUpdate(selector, cacheUpdated.as[JsObject], fetchNewObject = true, upsert = true).map {
                 updateResult =>
-                  if (updateResult.value.isEmpty) {
-                    updateResult.lastError.foreach(
-                      _.err.foreach(errorMsg => logger.error(s"Problem during database update: $errorMsg"))
-                    )
-                    false
-                  } else
+                  if (updateResult.value.isEmpty)
+                    // $COVERAGE-OFF$Can't test this reliably as it's dependent on Mongo failures
+                    {
+                      updateResult.lastError.foreach(
+                        _.err.foreach(errorMsg => logger.error(s"Problem during database update: $errorMsg"))
+                      )
+                      false
+                    }
+                  // $COVERAGE-ON$
+                  else
                     true
               }
             case _: JsUndefined =>
