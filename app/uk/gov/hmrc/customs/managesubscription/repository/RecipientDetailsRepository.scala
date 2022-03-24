@@ -16,16 +16,15 @@
 
 package uk.gov.hmrc.customs.managesubscription.repository
 
-import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoComponent
-import uk.gov.hmrc.cache.model.{Cache, Id}
-import uk.gov.hmrc.cache.repository.CacheMongoRepository
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, RecipientDetailsWithEori}
+import uk.gov.hmrc.mongo.cache.{CacheIdType, CacheItem, DataKey, MongoCacheRepository}
+import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +35,7 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
 
   private val recipientDetailsKey = "recipientDetailsWithEori"
 
+
   def saveRecipientDetailsForBundleId(
     formBundleId: String,
     eori: Option[Eori],
@@ -43,9 +43,8 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
     emailVerificationTimestamp: String,
     safeId: String
   )(implicit writes: Writes[RecipientDetailsWithEori]): Future[Unit] =
-    cacheRepo.createOrUpdate(
-      Id(formBundleId),
-      recipientDetailsKey,
+    cacheRepo.put(formBundleId)(
+      DataKey(recipientDetailsKey),
       Json.toJson(RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId))
     ).map(_ => (): Unit)
 
@@ -54,28 +53,31 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
   ): Future[Either[JsError, RecipientDetailsWithEori]] = getCached(formBundleId)
 
   private def getCached(
-    formBundleId: Id
+    formBundleId: String
   )(implicit reads: Reads[RecipientDetailsWithEori]): Future[Either[JsError, RecipientDetailsWithEori]] =
-    cacheRepo.findById(formBundleId.id).map {
-      case Some(Cache(_, Some(data), _, _)) =>
+    cacheRepo.findById(formBundleId).map {
+      case Some(CacheItem(_, data, _, _)) =>
         (data \ recipientDetailsKey).validate[RecipientDetailsWithEori] match {
           case d: JsSuccess[RecipientDetailsWithEori] =>
             Right(d.value)
           case _: JsError =>
-            logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}")
-            Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId.id}"))
+            logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId}")
+            Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId}"))
         }
       case _ =>
-        logger.error(s"No data is saved for the formBundleId: ${formBundleId.id}")
-        Left(JsError(s"No data is saved for the formBundleId: ${formBundleId.id}"))
+        logger.error(s"No data is saved for the formBundleId: ${formBundleId}")
+        Left(JsError(s"No data is saved for the formBundleId: ${formBundleId}"))
     }
 
 }
 
 @Singleton
-class RecipientDetailsCacheRepository @Inject() (sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit
-  ec: ExecutionContext
-) extends CacheMongoRepository("recipient-details", sc.getDuration("cache.expiryInMinutes").toSeconds)(
-      mongo.mongoConnector.db,
-      ec
-    )
+class RecipientDetailsCacheRepository @Inject()(sc: ServicesConfig, mongoComponent: MongoComponent, timestampSupport: TimestampSupport)(implicit
+                                                                                                                                        ec: ExecutionContext
+) extends MongoCacheRepository(
+  mongoComponent = mongoComponent,
+  collectionName = "recipient-details",
+  ttl = sc.getDuration("cache.expiryInMinutes"),
+  timestampSupport = timestampSupport,
+  cacheIdType = CacheIdType.SimpleCacheId
+)(ec)
