@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.HttpStatusCheck
@@ -25,6 +24,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest,
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

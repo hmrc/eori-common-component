@@ -16,34 +16,30 @@
 
 package integration
 
-import java.util.UUID
-import java.util.concurrent.TimeUnit
-
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
-import uk.gov.hmrc.cache.model.Id
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
-import uk.gov.hmrc.mongo.MongoSpecSupport
+import uk.gov.hmrc.mongo.CurrentTimestampSupport
+import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import util.TestData._
-import util.mongo.ReactiveMongoComponentForTests
 
+import java.util.UUID
+import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 class RecipientDetailsRepositoryIntegrationSpec
-    extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSpecSupport with ScalaFutures {
+    extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSupport with ScalaFutures {
 
-  val reactiveMongoComponent = new ReactiveMongoComponentForTests(app, Environment.simple())
-
-  val mockServiceConfig = mock[ServicesConfig]
+  val mockTimeStampSupport = new CurrentTimestampSupport()
+  val mockServiceConfig    = mock[ServicesConfig]
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
 
-  val repository                                             = new RecipientDetailsCacheRepository(mockServiceConfig, reactiveMongoComponent)
+  val repository                                             = new RecipientDetailsCacheRepository(mockServiceConfig, mongoComponent, mockTimeStampSupport)
   val recipientDetailsRepository: RecipientDetailsRepository = new RecipientDetailsRepository(repository)
 
   "recipient details repository" should {
@@ -61,9 +57,9 @@ class RecipientDetailsRepositoryIntegrationSpec
         )
       )
 
-      val Some(cache) = repository.findById(Id(formBundleId)).futureValue
+      val Some(cache) = repository.findById(formBundleId).futureValue
 
-      val Some(cacheValue) = cache.data
+      val cacheValue = cache.data
       (cacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
         Some(eori.value),
         recipientDetails,
@@ -87,8 +83,8 @@ class RecipientDetailsRepositoryIntegrationSpec
         )
       )
 
-      val Some(updatedCache)      = repository.findById(Id(formBundleId)).futureValue
-      val Some(updatedCacheValue) = updatedCache.data
+      val Some(updatedCache) = repository.findById(formBundleId).futureValue
+      val updatedCacheValue  = updatedCache.data
 
       (updatedCacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
         Some(eori.value),

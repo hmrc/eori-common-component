@@ -16,8 +16,6 @@
 
 package unit.controllers
 
-import java.util.UUID
-
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -31,7 +29,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.modules.reactivemongo.ReactiveMongoComponent
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.AuthProviders
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
@@ -40,12 +37,12 @@ import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import util.TestData._
 
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class Save4LaterControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  lazy val mongoComponent      = app.injector.instanceOf(classOf[ReactiveMongoComponent])
   val id                       = "id-1"
   val key1                     = "key-1"
   val data                     = Json.toJson(recipientDetails)

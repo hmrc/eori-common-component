@@ -26,15 +26,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Save4LaterRepository @Inject()(sc: ServicesConfig, mongoComponent: MongoComponent, timestampSupport: TimestampSupport)(implicit ec: ExecutionContext)
-  extends MongoCacheRepository(
-    mongoComponent = mongoComponent,
-    collectionName = "save4later",
-    ttl = sc.getDuration("cache.expiryInMinutes"),
-    timestampSupport = timestampSupport,
-    cacheIdType = CacheIdType.SimpleCacheId
-  )(ec) {
+class Save4LaterRepository @Inject() (
+  sc: ServicesConfig,
+  mongoComponent: MongoComponent,
+  timestampSupport: TimestampSupport
+)(implicit ec: ExecutionContext)
+    extends MongoCacheRepository(
+      mongoComponent = mongoComponent,
+      collectionName = "save4later",
+      ttl = sc.getDuration("cache.expiryInMinutes"),
+      timestampSupport = timestampSupport,
+      cacheIdType = CacheIdType.SimpleCacheId
+    )(ec) {
   private val logger = Logger(this.getClass)
+
   def putData[A: Writes](id: String, key: String, data: A): Future[A] =
     put[A](id)(DataKey(key), data).map(_ => data)
 
@@ -58,6 +63,6 @@ class Save4LaterRepository @Inject()(sc: ServicesConfig, mongoComponent: MongoCo
 
   def remove(id: String): Future[Boolean] = deleteEntity(id).map(_ => true)
 
-  def removeKeyById(id: String, key: String): Future[Boolean] = delete(id)(DataKey(key)).map( _ => true)
+  def removeKeyById(id: String, key: String): Future[Boolean] = delete(id)(DataKey(key)).map(_ => true)
 
 }

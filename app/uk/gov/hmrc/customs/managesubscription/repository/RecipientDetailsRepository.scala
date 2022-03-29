@@ -35,7 +35,6 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
 
   private val recipientDetailsKey = "recipientDetailsWithEori"
 
-
   def saveRecipientDetailsForBundleId(
     formBundleId: String,
     eori: Option[Eori],
@@ -72,12 +71,15 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
 }
 
 @Singleton
-class RecipientDetailsCacheRepository @Inject()(sc: ServicesConfig, mongoComponent: MongoComponent, timestampSupport: TimestampSupport)(implicit
-                                                                                                                                        ec: ExecutionContext
-) extends MongoCacheRepository(
-  mongoComponent = mongoComponent,
-  collectionName = "recipient-details",
-  ttl = sc.getDuration("cache.expiryInMinutes"),
-  timestampSupport = timestampSupport,
-  cacheIdType = CacheIdType.SimpleCacheId
-)(ec)
+class RecipientDetailsCacheRepository @Inject() (
+  sc: ServicesConfig,
+  mongoComponent: MongoComponent,
+  timestampSupport: TimestampSupport
+)(implicit ec: ExecutionContext)
+    extends MongoCacheRepository(
+      mongoComponent = mongoComponent,
+      collectionName = "recipient-details",
+      ttl = sc.getDuration("cache.expiryInMinutes"),
+      timestampSupport = timestampSupport,
+      cacheIdType = CacheIdType.SimpleCacheId
+    )(ec)

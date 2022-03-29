@@ -18,17 +18,14 @@ package integration
 
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.inject._
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.{Application, Environment}
-import play.modules.reactivemongo.ReactiveMongoComponent
-import util.UnitSpec
+import uk.gov.hmrc.mongo.test.MongoSupport
 import util.ExternalServicesConfig.{Host, Port}
-import util.mongo.ReactiveMongoComponentForTests
+import util.UnitSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-trait IntegrationTestsWithDbSpec extends UnitSpec with BeforeAndAfter with BeforeAndAfterAll with GuiceOneAppPerSuite {
+trait IntegrationTestsWithDbSpec
+    extends UnitSpec with BeforeAndAfter with BeforeAndAfterAll with GuiceOneAppPerSuite with MongoSupport {
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
@@ -44,12 +41,9 @@ trait IntegrationTestsWithDbSpec extends UnitSpec with BeforeAndAfter with Befor
         "auditing.consumer.baseUri.port"                     -> Port
       )
     )
-    .overrides(bind[ReactiveMongoComponent].to[ReactiveMongoComponentForTests])
     .build()
 
-  lazy val database = new ReactiveMongoComponentForTests(app, Environment.simple()).mongoConnector.db
-
   override def beforeAll: Unit =
-    await(database().drop())
+    await(dropDatabase())
 
 }

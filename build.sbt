@@ -61,7 +61,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.0.0" % "test",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.pegdown" % "pegdown" % "1.6.0",
-  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % Test
+  "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-27" % "0.56.0" % Test
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {
