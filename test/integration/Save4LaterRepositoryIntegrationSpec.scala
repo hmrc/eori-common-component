@@ -20,7 +20,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.Json
+import play.api.libs.json.{JsNull, Json}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Email, Eori}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.mongo.CurrentTimestampSupport
@@ -75,7 +75,6 @@ class Save4LaterRepositoryIntegrationSpec
       repository.findByIdAndKey(id, "eori").futureValue shouldBe None
 
     }
-    /*
     "remove non existing key from collection" in {
       val email1 = Json.toJson(email)
       repository.save(id, "email", email1).futureValue
@@ -85,7 +84,6 @@ class Save4LaterRepositoryIntegrationSpec
       repository.save(id, "email", JsNull).futureValue shouldBe ((): Unit)
       repository.removeKeyById("id-not-exist", "eori").futureValue shouldBe false
     }
-     */
 
     "remove id from collection" in {
       val eori1  = Json.toJson(eori)
