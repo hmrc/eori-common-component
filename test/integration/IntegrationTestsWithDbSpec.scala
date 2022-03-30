@@ -19,7 +19,9 @@ package integration
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.test.MongoSupport
 import util.ExternalServicesConfig.{Host, Port}
 import util.UnitSpec
@@ -41,6 +43,7 @@ trait IntegrationTestsWithDbSpec
         "auditing.consumer.baseUri.port"                     -> Port
       )
     )
+    .overrides(bind[MongoComponent].toInstance(mongoComponent))
     .build()
 
   override def beforeAll: Unit =

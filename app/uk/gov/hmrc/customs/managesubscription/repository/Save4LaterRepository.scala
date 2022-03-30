@@ -61,12 +61,16 @@ class Save4LaterRepository @Inject() (
         None
     }
 
-  def remove(id: String): Future[Boolean] = deleteEntity(id).map(_ => true)
+  def remove(id: String): Future[Boolean] = deleteEntity(id).map(_ => true).recoverWith {
+    case _ => Future.successful(false)
+  }
 
   def removeKeyById(id: String, key: String): Future[Boolean] =
     findByIdAndKey(id, key).flatMap {
       case Some(_) =>
-        delete(id)(DataKey(key)).map(_ => true)
+        delete(id)(DataKey(key)).map(_ => true).recoverWith {
+          case _ => Future.successful(false)
+        }
       case _ => Future.successful(false)
     }
 

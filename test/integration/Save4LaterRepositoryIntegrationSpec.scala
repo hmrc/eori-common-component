@@ -42,7 +42,6 @@ class Save4LaterRepositoryIntegrationSpec
   val eori                 = Eori("GB0123456789")
   val mockTimeStampSupport = new CurrentTimestampSupport()
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
-
   val repository = new Save4LaterRepository(mockServiceConfig, mongoComponent, mockTimeStampSupport)
   val id         = "id-1"
   val key1       = "key-1"

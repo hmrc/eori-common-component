@@ -58,7 +58,6 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
     }
 
     "return JsError when no data found" in {
-      val invalidCache = CacheItem(idAsString, JsObject.empty, Instant.now(), Instant.now())
       when(mockRecipientDetailsCacheRepo.findById(idAsString)).thenReturn(Future.successful(None))
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
