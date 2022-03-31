@@ -17,6 +17,7 @@
 package integration
 
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -24,11 +25,13 @@ import play.api.libs.json.{JsNull, Json}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Email, Eori}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.mongo.CurrentTimestampSupport
+import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, _}
 
 class Save4LaterRepositoryIntegrationSpec
@@ -82,6 +85,26 @@ class Save4LaterRepositoryIntegrationSpec
     "remove non existing id from collection" in {
       repository.save(id, "email", JsNull).futureValue shouldBe ((): Unit)
       repository.removeKeyById("id-not-exist", "eori").futureValue shouldBe false
+    }
+
+    "remove id from collection with remove failed " in {
+      val spyRepository = Mockito.spy(repository)
+      val eori1         = Json.toJson(eori)
+      val email1        = Json.toJson(email)
+      spyRepository.save(id, "eori", eori1).futureValue
+      spyRepository.save(id, "email", email1).futureValue
+      when(spyRepository.deleteEntity(id)).thenReturn(Future.failed(new RuntimeException("future Failed")))
+      spyRepository.remove(id).futureValue shouldBe false
+    }
+
+    "remove id from collection with removeKeyById failed " in {
+      val spyRepository = Mockito.spy(repository)
+      val eori1         = Json.toJson(eori)
+      val email1        = Json.toJson(email)
+      spyRepository.save(id, "eori", eori1).futureValue
+      spyRepository.save(id, "email", email1).futureValue
+      when(spyRepository.delete(id)(DataKey("eori"))).thenReturn(Future.failed(new RuntimeException("future Failed")))
+      spyRepository.removeKeyById(id, "eori").futureValue shouldBe false
     }
 
     "remove id from collection" in {
