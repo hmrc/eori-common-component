@@ -21,7 +21,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.mongo.cache.{CacheIdType, CacheItem, DataKey, MongoCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
+import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,37 +41,47 @@ class Save4LaterRepository @Inject() (
   private val logger = Logger(this.getClass)
 
   def putData[A: Writes](id: String, key: String, data: A): Future[A] =
-    put[A](id)(DataKey(key), data).map(_ => data)
+    preservingMdc {
+      put[A](id)(DataKey(key), data).map(_ => data)
+    }
 
   def save(id: String, key: String, jsValue: JsValue): Future[Unit] =
     putData(id, key, jsValue).map(_ => (): Unit)
 
   def findByIdAndKey(id: String, key: String): Future[Option[JsValue]] =
-    findById(id).map {
-      case Some(CacheItem(_, data, _, _)) =>
-        (data \ key) match {
-          case js: JsDefined => Some(js.value)
-          case js: JsUndefined =>
-            logger.error(s"Key Not found : $key")
-            logger.debug(s"Key Not found : $key \n details : ${js.error}")
-            None
-        }
-      case _ =>
-        logger.error(s"Id Not found: $id")
-        None
+    preservingMdc {
+      findById(id).map {
+        case Some(CacheItem(_, data, _, _)) =>
+          (data \ key) match {
+            case js: JsDefined =>
+              Some(js.value)
+            case js: JsUndefined =>
+              logger.error(s"Key Not found : $key")
+              logger.debug(s"Key Not found : $key \n details : ${js.error}")
+              None
+          }
+        case _ =>
+          logger.error(s"Id Not found: $id")
+          None
+      }
     }
 
-  def remove(id: String): Future[Boolean] = deleteEntity(id).map(_ => true).recoverWith {
-    case _ => Future.successful(false)
-  }
+  def remove(id: String): Future[Boolean] =
+    preservingMdc {
+      deleteEntity(id).map(_ => true).recoverWith {
+        case _ => Future.successful(false)
+      }
+    }
 
   def removeKeyById(id: String, key: String): Future[Boolean] =
-    findByIdAndKey(id, key).flatMap {
-      case Some(_) =>
-        delete(id)(DataKey(key)).map(_ => true).recoverWith {
-          case _ => Future.successful(false)
-        }
-      case _ => Future.successful(false)
+    preservingMdc {
+      findByIdAndKey(id, key).flatMap {
+        case Some(_) =>
+          delete(id)(DataKey(key)).map(_ => true).recoverWith {
+            case _ => Future.successful(false)
+          }
+        case _ => Future.successful(false)
+      }
     }
 
 }

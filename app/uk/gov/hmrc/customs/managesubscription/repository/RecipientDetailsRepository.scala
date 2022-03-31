@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 
 @Singleton
 class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepository) {
@@ -42,10 +43,12 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
     emailVerificationTimestamp: String,
     safeId: String
   )(implicit writes: Writes[RecipientDetailsWithEori]): Future[Unit] =
-    cacheRepo.put(formBundleId)(
-      DataKey(recipientDetailsKey),
-      Json.toJson(RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId))
-    ).map(_ => (): Unit)
+    preservingMdc {
+      cacheRepo.put(formBundleId)(
+        DataKey(recipientDetailsKey),
+        Json.toJson(RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId))
+      ).map(_ => (): Unit)
+    }
 
   def recipientDetailsForBundleId(formBundleId: String)(implicit
     reads: Reads[RecipientDetailsWithEori]
@@ -54,18 +57,20 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
   private def getCached(
     formBundleId: String
   )(implicit reads: Reads[RecipientDetailsWithEori]): Future[Either[JsError, RecipientDetailsWithEori]] =
-    cacheRepo.findById(formBundleId).map {
-      case Some(CacheItem(_, data, _, _)) =>
-        (data \ recipientDetailsKey).validate[RecipientDetailsWithEori] match {
-          case d: JsSuccess[RecipientDetailsWithEori] =>
-            Right(d.value)
-          case _: JsError =>
-            logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId}")
-            Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId}"))
-        }
-      case _ =>
-        logger.error(s"No data is saved for the formBundleId: ${formBundleId}")
-        Left(JsError(s"No data is saved for the formBundleId: ${formBundleId}"))
+    preservingMdc {
+      cacheRepo.findById(formBundleId).map {
+        case Some(CacheItem(_, data, _, _)) =>
+          (data \ recipientDetailsKey).validate[RecipientDetailsWithEori] match {
+            case d: JsSuccess[RecipientDetailsWithEori] =>
+              Right(d.value)
+            case _: JsError =>
+              logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId}")
+              Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId}"))
+          }
+        case _ =>
+          logger.error(s"No data is saved for the formBundleId: ${formBundleId}")
+          Left(JsError(s"No data is saved for the formBundleId: ${formBundleId}"))
+      }
     }
 
 }
