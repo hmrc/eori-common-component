@@ -52,7 +52,7 @@ libraryDependencies ++= Seq(
   ws exclude("org.apache.httpcomponents", "httpclient") exclude("org.apache.httpcomponents", "httpcore"),
   "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.18.0",
   "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-28",
-  "uk.gov.hmrc" %% "mongo-caching" % "7.1.0-play-28",
+  "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28" % "0.62.0",
   "com.typesafe.play" %% "play-json-joda" % "2.8.1",
   "uk.gov.hmrc" %% "logback-json-logger" % "5.1.0",
   "com.typesafe.play" %% "play-test" % PlayVersion.current % "test",
@@ -61,7 +61,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "3.0.0" % "test",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.pegdown" % "pegdown" % "1.6.0",
-  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % Test
+  "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-27" % "0.56.0" % Test
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {

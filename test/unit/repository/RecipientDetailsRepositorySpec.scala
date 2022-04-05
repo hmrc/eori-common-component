@@ -16,17 +16,17 @@
 
 package unit.repository
 
-import org.mockito.ArgumentMatchers.{any, eq => meq}
+import org.mockito.ArgumentMatchers.{eq => meq}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.{JsError, Json}
-import reactivemongo.api.ReadPreference
-import uk.gov.hmrc.cache.model.{Cache, Id}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
+import uk.gov.hmrc.mongo.cache.CacheItem
 import util.UnitSpec
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.Instant
+import scala.concurrent.Future
 
 class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockRecipientDetailsCacheRepo = mock[RecipientDetailsCacheRepository]
@@ -34,7 +34,6 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
   private val recipientDetailsCache = new RecipientDetailsRepository(mockRecipientDetailsCacheRepo)
 
   private val idAsString = "some-id"
-  private val id         = Id(idAsString)
 
   private val invalidCacheDataJson =
     Json.parse("""
@@ -44,13 +43,14 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
         |  }
         |}""".stripMargin)
 
+  val recipientDetails: (String, JsValue) =
+    "recipientDetailsWithEori" -> invalidCacheDataJson
+
   "recipient details cache" should {
 
     "return JsError when invalid Json for recipientDetailsWithEori found" in {
-      val invalidCache = Cache(mock[Id], Some(invalidCacheDataJson))
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
-        Future.successful(Some(invalidCache))
-      )
+      val invalidCache = CacheItem(idAsString, JsObject.apply(Map(recipientDetails)), Instant.now(), Instant.now())
+      when(mockRecipientDetailsCacheRepo.findById(meq(idAsString))).thenReturn(Future.successful(Some(invalidCache)))
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
@@ -58,10 +58,7 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
     }
 
     "return JsError when no data found" in {
-      val invalidCache = Cache(mock[Id], None)
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
-        Future.successful(Some(invalidCache))
-      )
+      when(mockRecipientDetailsCacheRepo.findById(idAsString)).thenReturn(Future.successful(None))
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
@@ -76,10 +73,11 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
             |    "invalid": "invalid"
             |  }
             |}""".stripMargin)
-      val invalidCache = Cache(mock[Id], Some(previousJson))
-      when(mockRecipientDetailsCacheRepo.findById(meq(id), any[ReadPreference])(any[ExecutionContext])).thenReturn(
-        Future.successful(Some(invalidCache))
-      )
+      val recipientDetails: (String, JsValue) =
+        "recipientDetailsWithEori" -> previousJson
+      val invalidCache = CacheItem(idAsString, JsObject.apply(Map(recipientDetails)), Instant.now(), Instant.now())
+
+      when(mockRecipientDetailsCacheRepo.findById(idAsString)).thenReturn(Future.successful(Some(invalidCache)))
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 

@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.cache.model.Id
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, RecipientDetailsWithEori}
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -39,8 +38,8 @@ class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository) {
 
   def recipientDetailsForBundleId(formBundleId: String): Future[RecipientDetailsWithEori] = getCached(formBundleId)
 
-  private def getCached(formBundleId: Id): Future[RecipientDetailsWithEori] =
-    repository.recipientDetailsForBundleId(formBundleId.id).map {
+  private def getCached(formBundleId: String): Future[RecipientDetailsWithEori] =
+    repository.recipientDetailsForBundleId(formBundleId).map {
       case Right(recipientDetailsWithEori) => recipientDetailsWithEori
       case Left(_) =>
         throw new IllegalStateException("Unable to process the recipientDetails, recipientDetailsWithEori expected")

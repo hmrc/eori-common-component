@@ -16,76 +16,72 @@
 
 package uk.gov.hmrc.customs.managesubscription.repository
 
+import play.api.Logger
 import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoComponent
-import uk.gov.hmrc.cache.model.{Cache, Id => CacheId}
-import uk.gov.hmrc.cache.repository.CacheMongoRepository
+import uk.gov.hmrc.mongo.cache.{CacheIdType, CacheItem, DataKey, MongoCacheRepository}
+import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
+import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Save4LaterRepository @Inject() (sc: ServicesConfig, mongo: ReactiveMongoComponent)(implicit ec: ExecutionContext)
-    extends CacheMongoRepository("save4later", sc.getDuration("cache.expiryInMinutes").toSeconds)(
-      mongo.mongoConnector.db,
-      ec
-    ) {
+class Save4LaterRepository @Inject() (
+  sc: ServicesConfig,
+  mongoComponent: MongoComponent,
+  timestampSupport: TimestampSupport
+)(implicit ec: ExecutionContext)
+    extends MongoCacheRepository(
+      mongoComponent = mongoComponent,
+      collectionName = "save4later",
+      ttl = sc.getDuration("cache.expiryInMinutes"),
+      timestampSupport = timestampSupport,
+      cacheIdType = CacheIdType.SimpleCacheId
+    )(ec) {
+  private val logger = Logger(this.getClass)
+
+  def putData[A: Writes](id: String, key: String, data: A): Future[A] =
+    preservingMdc {
+      put[A](id)(DataKey(key), data).map(_ => data)
+    }
 
   def save(id: String, key: String, jsValue: JsValue): Future[Unit] =
-    createOrUpdate(CacheId(id), key, jsValue).map(_ => (): Unit)
+    putData(id, key, jsValue).map(_ => (): Unit)
 
   def findByIdAndKey(id: String, key: String): Future[Option[JsValue]] =
-    findById(CacheId(id)).map {
-      case Some(Cache(_, Some(data), _, _)) =>
-        (data \ key) match {
-          case js: JsDefined => Some(js.value)
-          case js: JsUndefined =>
-            logger.error(s"Key Not found : $key")
-            logger.debug(s"Key Not found : $key \n details : ${js.error}")
-            None
-        }
-      case _ =>
-        logger.error(s"Id Not found: $id")
-        None
-    }
-
-  def remove(id: String): Future[Boolean] = removeById(CacheId(id)).map(_.ok)
-
-  def removeKeyById(id: String, key: String): Future[Boolean] = {
-    val selector = Json.obj(Id -> id)
-    findById(CacheId(id)).flatMap {
-      case Some(cache) =>
-        cache.data.fold(
-          // $COVERAGE-OFF$Hard to see how this is possible when creating documents using the repository
-          Future.successful(false)
-          // $COVERAGE-ON$
-        ) { data =>
+    preservingMdc {
+      findById(id).map {
+        case Some(CacheItem(_, data, _, _)) =>
           (data \ key) match {
-            case _: JsDefined =>
-              val updateData   = data.as[JsObject] - key
-              val cacheUpdated = Json.toJson(cache.copy(data = Some(updateData)))
-              findAndUpdate(selector, cacheUpdated.as[JsObject], fetchNewObject = true, upsert = true).map {
-                updateResult =>
-                  if (updateResult.value.isEmpty)
-                    // $COVERAGE-OFF$Can't test this reliably as it's dependent on Mongo failures
-                    {
-                      updateResult.lastError.foreach(
-                        _.err.foreach(errorMsg => logger.error(s"Problem during database update: $errorMsg"))
-                      )
-                      false
-                    }
-                  // $COVERAGE-ON$
-                  else
-                    true
-              }
-            case _: JsUndefined =>
-              logger.warn(s"Key not found: $key")
-              Future.successful(false)
+            case js: JsDefined =>
+              Some(js.value)
+            case js: JsUndefined =>
+              logger.error(s"Key Not found : $key")
+              logger.debug(s"Key Not found : $key \n details : ${js.error}")
+              None
           }
-        }
-      case _ => Future.successful(false)
+        case _ =>
+          logger.error(s"Id Not found: $id")
+          None
+      }
     }
-  }
+
+  def remove(id: String): Future[Boolean] =
+    preservingMdc {
+      deleteEntity(id).map(_ => true).recoverWith {
+        case _ => Future.successful(false)
+      }
+    }
+
+  def removeKeyById(id: String, key: String): Future[Boolean] =
+    preservingMdc {
+      findByIdAndKey(id, key).flatMap {
+        case Some(_) =>
+          delete(id)(DataKey(key)).map(_ => true).recoverWith {
+            case _ => Future.successful(false)
+          }
+        case _ => Future.successful(false)
+      }
+    }
 
 }
