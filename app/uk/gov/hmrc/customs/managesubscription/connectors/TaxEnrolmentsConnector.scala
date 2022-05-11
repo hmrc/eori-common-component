@@ -24,13 +24,15 @@ import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
+import uk.gov.hmrc.customs.managesubscription.services.PayloadCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient, audit: Auditable) {
+class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient, audit: Auditable)
+    extends Instrumentable {
 
   private val logger = Logger(this.getClass)
 
@@ -43,6 +45,8 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.info(s"putUrl: $url")
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
+
+    sampleData(PayloadCache.SubscriberCall, request)
 
     httpClient.PUT[TaxEnrolmentsRequest, HttpResponse](url, request) map {
       response =>
