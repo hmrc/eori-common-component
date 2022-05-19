@@ -2,6 +2,7 @@
 logs
 project/project
 project/target
+test/project/target
 target
 lib_managed
 tmp
