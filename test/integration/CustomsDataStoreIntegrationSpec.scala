@@ -38,8 +38,8 @@ class CustomsDataStoreIntegrationSpec
 
   private val dataStoreRequestQuery = s"""{
                                         |  "eori" : "${eori.value}",
-                                        |  "email" : "${recipientDetails.recipientEmailAddress}",
-                                        |  "emailVerificationTimestamp" : "${emailVerificationTimestamp}"
+                                        |  "address" : "${recipientDetails.recipientEmailAddress}",
+                                        |  "timestamp" : "${emailVerificationTimestamp}"
                                         |}""".stripMargin
 
   override def beforeAll: Unit =

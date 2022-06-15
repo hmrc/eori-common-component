@@ -56,8 +56,8 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
       path = url,
       detail = Map(
         "eori number"  -> s"${request.eori}",
-        "emailAddress" -> s"${request.email}",
-        "timestamp"    -> s"${request.emailVerificationTimestamp}"
+        "emailAddress" -> s"${request.address}",
+        "timestamp"    -> s"${request.timestamp}"
       ),
       auditType = "DataStoreRequest"
     )

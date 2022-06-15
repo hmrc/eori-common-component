@@ -18,7 +18,7 @@ package uk.gov.hmrc.customs.managesubscription.domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class DataStoreRequest(eori: String, email: String, emailVerificationTimestamp: String)
+case class DataStoreRequest(eori: String, address: String, timestamp: String)
 
 object DataStoreRequest {
   implicit val format: OFormat[DataStoreRequest] = Json.format[DataStoreRequest]
