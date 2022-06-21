@@ -43,7 +43,6 @@ class CustomsDataStoreController @Inject() (
             case JsSuccess(r, _) =>
               customsDataStore.updateDataStore(r).map(_ => NoContent)
             case JsError(_) =>
-              println(s"############# bad payload ###################: ${request.body.asJson}")
               Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
           }
         }
