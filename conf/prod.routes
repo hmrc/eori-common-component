@@ -16,6 +16,8 @@ DELETE      /save4later/:id                @uk.gov.hmrc.customs.managesubscripti
 
 POST        /notify/rcm                    @uk.gov.hmrc.customs.managesubscription.controllers.RcmNotificationController.notifyRCM()
 
+POST        /customs/update/datastore       @uk.gov.hmrc.customs.managesubscription.controllers.CustomsDataStoreController.updateCustomsDataStore()
+
 # Test Support
 
 GET         /payloads/:key              @uk.gov.hmrc.customs.managesubscription.controllers.TestHelperController.payloads(key)
