@@ -73,7 +73,7 @@ class SubscriptionCompleteBusinessServiceSpec
     Some("Test Company Name"),
     Some("5 May 2017"),
     Some("en")
-    )
+  )
 
   private val transactionName = "eori-common-component-update-status"
   private val path            = s"/eori-common-component/$formBundleId"
@@ -113,15 +113,6 @@ class SubscriptionCompleteBusinessServiceSpec
   }
 
   "SubscriptionCompleteBusinessService" should {
-
-//    "update verified email for CDS" in {
-//      when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-//        Future.successful(
-//          RecipientDetailsWithEori(Some(eori.value), cdsRecipientDetails, emailVerificationTimestamp, safeId)
-//          )
-//        )
-//    }
-
 
     "generate an audit event when subscription completes with a good state" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
@@ -174,15 +165,17 @@ class SubscriptionCompleteBusinessServiceSpec
     "update data store when eori number is found in cache. CDS Service" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
       when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(RecipientDetailsWithEori(Some(eori.value), cdsRecipientDetails, emailVerificationTimestamp, safeId))
+        Future.successful(
+          RecipientDetailsWithEori(Some(eori.value), cdsRecipientDetails, emailVerificationTimestamp, safeId)
         )
+      )
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
-        )
+      )
       when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
-        )
-      
+      )
+
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
 
@@ -193,14 +186,16 @@ class SubscriptionCompleteBusinessServiceSpec
     "don't update data store when eori number is found in cache. Other Service" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.SUCCEEDED)
       when(mockContactDetailsStore.recipientDetailsForBundleId(meq(formBundleId))).thenReturn(
-        Future.successful(RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId))
+        Future.successful(
+          RecipientDetailsWithEori(Some(eori.value), recipientDetails, emailVerificationTimestamp, safeId)
         )
+      )
       when(mockEmailService.sendSuccessEmail(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
-        )
+      )
       when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
-        )
+      )
 
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))

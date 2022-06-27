@@ -66,8 +66,8 @@ class SubscriptionCompleteBusinessService @Inject() (
 
   private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
-      recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _         <- emailService.sendSuccessEmail(recipient.recipientDetails)
+      recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
+      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
       eoriNumber <- retrieveEori(recipient)
       _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
     } yield (): Unit
@@ -92,11 +92,10 @@ class SubscriptionCompleteBusinessService @Inject() (
       val generateUUIDAsString: String = UUID.randomUUID().toString.replace("-", "")
       List("regime" -> "CDS", "acknowledgementReference" -> generateUUIDAsString)
     }
-    
+
     if (recipient.recipientDetails.enrolmentKey != "HMRC-CUS-ORG")
       Future.successful(None)
-    else
-    if (recipient.eori.isDefined)
+    else if (recipient.eori.isDefined)
       Future.successful(recipient.eori)
     else
       subscriptionDisplayConnector.callSubscriptionDisplay(("taxPayerID" -> recipient.safeId) :: buildQueryParams)
