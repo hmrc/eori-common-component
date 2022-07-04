@@ -66,10 +66,10 @@ class SubscriptionCompleteBusinessService @Inject() (
 
   private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
-      recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _         <- emailService.sendSuccessEmail(recipient.recipientDetails)
-//      eoriNumber <- retrieveEori(recipient)    // TODO Add as part of ECC-605
-//      _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)     // TODO Add as part of ECC-605
+      recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
+      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
+      eoriNumber <- retrieveEori(recipient)
+      _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
     } yield (): Unit
 
   private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
@@ -92,11 +92,10 @@ class SubscriptionCompleteBusinessService @Inject() (
       val generateUUIDAsString: String = UUID.randomUUID().toString.replace("-", "")
       List("regime" -> "CDS", "acknowledgementReference" -> generateUUIDAsString)
     }
-    // TODO Remove gaurd for CDS clients only - do for everyone instead?
-//    if (recipient.recipientDetails.enrolmentKey != "HMRC-CUS-ORG")
-//      Future.successful(None)
-//    else
-    if (recipient.eori.isDefined)
+
+    if (recipient.recipientDetails.enrolmentKey != "HMRC-CUS-ORG")
+      Future.successful(None)
+    else if (recipient.eori.isDefined)
       Future.successful(recipient.eori)
     else
       subscriptionDisplayConnector.callSubscriptionDisplay(("taxPayerID" -> recipient.safeId) :: buildQueryParams)
