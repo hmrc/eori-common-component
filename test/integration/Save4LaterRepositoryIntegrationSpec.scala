@@ -17,10 +17,8 @@
 package integration
 
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito
-import org.mockito.Mockito.when
+import org.mockito.{Mockito, MockitoSugar}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsNull, Json}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Email, Eori}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository

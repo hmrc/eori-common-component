@@ -16,11 +16,12 @@
 
 package unit.services
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.customs.managesubscription.connectors.Instrumentable
 import uk.gov.hmrc.customs.managesubscription.services.PayloadCache
 
-class InstrumentableSpec extends FlatSpec with Matchers {
+class InstrumentableSpec extends AnyFlatSpecLike with Matchers {
 
   "Instrumentable" should "add payloads to cache" in {
     val subject = new Instrumentable() {}

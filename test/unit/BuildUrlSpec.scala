@@ -16,11 +16,12 @@
 
 package unit
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 
-class BuildUrlSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
+class BuildUrlSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
   val buildUrl = app.injector.instanceOf[BuildUrl]
 

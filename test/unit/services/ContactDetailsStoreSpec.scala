@@ -16,9 +16,8 @@
 
 package unit.services
 
-import org.mockito.Mockito._
+import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.JsError
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository

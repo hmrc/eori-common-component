@@ -17,10 +17,9 @@
 package unit.services
 
 import org.mockito.ArgumentMatchers.{eq => meq, _}
-import org.mockito.Mockito._
+import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
@@ -122,14 +121,14 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockDataStoreConnector.updateDataStore(any())(any[HeaderCarrier])).thenReturn(
         Future.successful(HttpResponse(200, ""))
       )
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockAuditable).sendDataEvent(transactionName, path, tagsGoodState, auditType)
     }
 
     "generate an audit event when subscription completes with a bad state" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.EnrolmentError, Some("error"))
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockAuditable).sendDataEvent(transactionName, path, tagsBadState, auditType)
       verifyZeroInteractions(mockEmailService)
@@ -159,7 +158,7 @@ class SubscriptionCompleteBusinessServiceSpec
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
 
       verify(mockSubDisplayConnector).callSubscriptionDisplay(any())(any())
-      verify(mockDataStoreConnector, never()).updateDataStore(any())(any())
+      verify(mockDataStoreConnector, never).updateDataStore(any())(any())
     }
 
     "update data store when eori number is found in cache. CDS Service" in {
@@ -179,7 +178,7 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
 
-      verify(mockSubDisplayConnector, never()).callSubscriptionDisplay(any())(any())
+      verify(mockSubDisplayConnector, never).callSubscriptionDisplay(any())(any())
       verify(mockDataStoreConnector).updateDataStore(any())(any())
     }
 
@@ -200,8 +199,8 @@ class SubscriptionCompleteBusinessServiceSpec
       when(mockSubDisplayConnector.callSubscriptionDisplay(any())(any())).thenReturn(Future.successful(None))
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
 
-      verify(mockSubDisplayConnector, never()).callSubscriptionDisplay(any())(any())
-      verify(mockDataStoreConnector, never()).updateDataStore(any())(any())
+      verify(mockSubDisplayConnector, never).callSubscriptionDisplay(any())(any())
+      verify(mockDataStoreConnector, never).updateDataStore(any())(any())
     }
 
     "not send subscription display request when eori number is found in cache" in {

@@ -17,7 +17,6 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.SubscriptionDisplayConnector
@@ -47,7 +46,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
           any()
         )
       ).thenReturn(Future.successful(HttpResponse(status = 200, json = responseBody, headers = Map.empty)))
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Seq(("queryparam", "value")))) shouldBe Some("123456789")
     }
 
@@ -60,7 +59,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
           any()
         )
       ).thenReturn(Future.successful(HttpResponse(status = 200, json = responseBody, headers = Map.empty)))
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Seq(("queryparam", "value")))) shouldBe None
     }
 
@@ -72,7 +71,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
           any()
         )
       ).thenReturn(Future.successful(HttpResponse(status = 400, json = JsString("error message"), headers = Map.empty)))
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Nil)) shouldBe None
     }
   }

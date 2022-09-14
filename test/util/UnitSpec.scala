@@ -16,16 +16,17 @@
 
 package util
 
-import org.scalatest.{Matchers, OptionValues, WordSpec}
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
 import play.api.test.Helpers._
 import play.api.mvc.Result
 
 import scala.language.implicitConversions
-
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 
-trait UnitSpec extends WordSpec with Matchers with OptionValues {
+trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
 
   // From github.com.hmrc/hmrctest to have a possibility to remove deprecated hmrctest library
   implicit val defaultTimeout: FiniteDuration = 5 seconds

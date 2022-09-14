@@ -16,8 +16,8 @@
 
 package util
 
+import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
