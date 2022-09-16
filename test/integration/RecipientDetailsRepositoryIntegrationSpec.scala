@@ -16,10 +16,12 @@
 
 package integration
 
+import akka.util.Timeout
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatestplus.play.ConfiguredApp
+import play.api.test.DefaultAwaitTimeout
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
 import uk.gov.hmrc.mongo.CurrentTimestampSupport

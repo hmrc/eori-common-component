@@ -17,9 +17,8 @@
 package unit.repository
 
 import org.mockito.ArgumentMatchers.{eq => meq}
-import org.mockito.Mockito._
+import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
 import uk.gov.hmrc.mongo.cache.CacheItem

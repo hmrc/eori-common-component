@@ -17,7 +17,6 @@
 package unit.services
 
 import org.mockito.ArgumentMatchers.{any, anyString, eq => meq}
-import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.connectors.TaxEnrolmentsConnector
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Eori, TaxEnrolmentsRequest}

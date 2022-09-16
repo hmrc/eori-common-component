@@ -17,7 +17,6 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
 import play.api.http.Status.NO_CONTENT
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.CustomsDataStoreConnector
@@ -41,7 +40,7 @@ class CustomsDataStoreConnectorSpec extends BaseSpec {
       when(mockHttp.POST[DataStoreRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(
         Future.successful(HttpResponse(204, ""))
       )
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       val result = await(testConnector.updateDataStore(DataStoreRequest("eori", "address", "timestamp")))
       result.status shouldBe NO_CONTENT
     }
@@ -50,7 +49,7 @@ class CustomsDataStoreConnectorSpec extends BaseSpec {
       when(mockHttp.POST[DataStoreRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(
         Future.successful(HttpResponse(500, "InternalServerError"))
       )
-      doNothing().when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
+      doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       val result = await(testConnector.updateDataStore(DataStoreRequest("", "", "")))
       result.status shouldBe 500
     }

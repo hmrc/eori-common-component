@@ -16,10 +16,11 @@
 
 package unit.services
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.customs.managesubscription.services.PayloadCache
 
-class PayloadCacheSpec extends FlatSpec with Matchers {
+class PayloadCacheSpec extends AnyFlatSpecLike with Matchers {
 
   "Cache" should "store SubscriberCall data" in {
     val subject = PayloadCache.payloads
