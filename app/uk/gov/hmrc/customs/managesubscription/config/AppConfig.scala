@@ -40,9 +40,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val emailServiceContext: String = config.get[String]("microservice.services.email.context")
   val emailServiceUrl: String     = s"$emailServiceBaseUrl$emailServiceContext"
 
-  val emailRegisterSuccessTemplateId: String =
-    config.get[String]("microservice.services.email.registerSuccessTemplateId")
-
   val emailEccRegistrationSuccessTemplateId: String =
     config.get[String]("microservice.services.email.eccRegistrationSuccessTemplateId")
 
