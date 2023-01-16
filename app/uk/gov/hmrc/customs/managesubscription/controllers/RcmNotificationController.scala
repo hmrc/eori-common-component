@@ -22,14 +22,15 @@ import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RcmNotificationController @Inject() (
   emailService: EmailService,
   cc: ControllerComponents,
   digitalHeaderValidator: DigitalHeaderValidator
-) extends BackendController(cc) {
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) {
 
   def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(parse.json[RcmNotificationRequest]).async {
     implicit request =>

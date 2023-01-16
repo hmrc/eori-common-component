@@ -25,15 +25,15 @@ import uk.gov.hmrc.customs.managesubscription.domain.DataStoreRequest
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CustomsDataStoreController @Inject() (
   customsDataStore: CustomsDataStoreConnector,
   cc: ControllerComponents,
   override val authConnector: MicroserviceAuthConnector
-) extends BackendController(cc) with AuthorisedFunctions {
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) with AuthorisedFunctions {
 
   def updateCustomsDataStore(): Action[AnyContent] = Action async {
     implicit request =>

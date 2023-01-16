@@ -25,10 +25,11 @@ import uk.gov.hmrc.mongo.cache.CacheItem
 import util.UnitSpec
 
 import java.time.Instant
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockRecipientDetailsCacheRepo = mock[RecipientDetailsCacheRepository]
+  implicit val ec: ExecutionContext         = ExecutionContext.Implicits.global
 
   private val recipientDetailsCache = new RecipientDetailsRepository(mockRecipientDetailsCacheRepo)
 

@@ -24,15 +24,15 @@ import uk.gov.hmrc.customs.managesubscription.connectors.MicroserviceAuthConnect
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class Save4LaterController @Inject() (
   save4LaterRepository: Save4LaterRepository,
   cc: ControllerComponents,
   override val authConnector: MicroserviceAuthConnector
-) extends BackendController(cc) with AuthorisedFunctions {
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) with AuthorisedFunctions {
 
   def put(id: String, key: String): Action[AnyContent] = Action.async { implicit request =>
     authorised(AuthProviders(GovernmentGateway)) {

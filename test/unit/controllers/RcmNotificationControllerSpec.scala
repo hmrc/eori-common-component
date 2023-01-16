@@ -46,6 +46,8 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
     ExecutionContext.global
   )
 
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+
   private val controller =
     new RcmNotificationController(mockEmailService, stubControllerComponents(), mockDigitalHeaderValidator)
 

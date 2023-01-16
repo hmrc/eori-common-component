@@ -43,6 +43,8 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
     ExecutionContext.global
   )
 
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+
   private val controller =
     new HandleSubscriptionController(mockTaxEnrolmentsService, mockControllerComponents, mockDigitalHeaderValidator)
 

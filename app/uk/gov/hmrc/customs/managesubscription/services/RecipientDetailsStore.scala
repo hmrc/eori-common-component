@@ -21,11 +21,10 @@ import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, Recipien
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository) {
+class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository)(implicit ec: ExecutionContext) {
 
   def saveRecipientDetailsForBundleId(
     formBundleId: String,

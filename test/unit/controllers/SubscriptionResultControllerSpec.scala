@@ -33,13 +33,14 @@ import util.TestData.SubscriptionResult._
 import util.TestData._
 
 import scala.concurrent.ExecutionContext.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
   private val mockBusinessService          = mock[SubscriptionCompleteBusinessService]
   private val mockControllerComponents     = mock[ControllerComponents]
   private val mockMessagingHeaderValidator = new MessagingHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
+  implicit val ec: ExecutionContext        = ExecutionContext.Implicits.global
 
   private val controller =
     new SubscriptionResultController(mockBusinessService, mockControllerComponents, mockMessagingHeaderValidator)
