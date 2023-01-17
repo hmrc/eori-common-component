@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,11 @@ import uk.gov.hmrc.mongo.cache.CacheItem
 import util.UnitSpec
 
 import java.time.Instant
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockRecipientDetailsCacheRepo = mock[RecipientDetailsCacheRepository]
+  implicit val ec: ExecutionContext         = ExecutionContext.Implicits.global
 
   private val recipientDetailsCache = new RecipientDetailsRepository(mockRecipientDetailsCacheRepo)
 

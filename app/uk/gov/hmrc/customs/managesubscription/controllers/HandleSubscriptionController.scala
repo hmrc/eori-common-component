@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,15 @@ import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class HandleSubscriptionController @Inject() (
   taxEnrolmentsService: TaxEnrolmentsService,
   cc: ControllerComponents,
   digitalHeaderValidator: DigitalHeaderValidator
-) extends BackendController(cc) {
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) {
 
   def handle(): Action[AnyContent] = digitalHeaderValidator.async { implicit request =>
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>

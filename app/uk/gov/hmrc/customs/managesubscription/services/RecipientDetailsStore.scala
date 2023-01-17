@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, Recipien
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository) {
+class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository)(implicit ec: ExecutionContext) {
 
   def saveRecipientDetailsForBundleId(
     formBundleId: String,

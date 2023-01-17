@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import util.UnitSpec
 import util.TestData.SubscriptionResult._
 import util.TestData._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionCompleteBusinessServiceSpec
     extends UnitSpec with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
@@ -42,6 +42,7 @@ class SubscriptionCompleteBusinessServiceSpec
   private val mockAuditable           = mock[Auditable]
   private val mockDataStoreConnector  = mock[CustomsDataStoreConnector]
   private val mockSubDisplayConnector = mock[SubscriptionDisplayConnector]
+  implicit val ec: ExecutionContext   = ExecutionContext.Implicits.global
 
   private val service =
     new SubscriptionCompleteBusinessService(

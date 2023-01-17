@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,17 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.HttpClient
 import util.BaseSpec
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmailConnectorSpec extends BaseSpec {
-  val mockHttp      = mock[HttpClient]
-  val mockAuditable = mock[Auditable]
-  implicit val hc   = HeaderCarrier()
-  val testConnector = new EmailConnector(appConfig, mockHttp, mockAuditable)
+  val mockHttp                      = mock[HttpClient]
+  val mockAuditable                 = mock[Auditable]
+  implicit val hc                   = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+  val testConnector                 = new EmailConnector(appConfig, mockHttp, mockAuditable)
 
   "EmailConnector" should {
+
     "successfully send a email request to Email service and return the OK response" in {
       when(mockHttp.POST[Email, HttpResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(
         Future.successful(HttpResponse(200, ""))

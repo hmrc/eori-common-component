@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,15 @@ import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionComplete
 import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusinessService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubscriptionResultController @Inject() (
   subscriptionCompleteBusinessService: SubscriptionCompleteBusinessService,
   cc: ControllerComponents,
   messagingHeaderValidator: MessagingHeaderValidator
-) extends BackendController(cc) {
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) {
 
   def updateStatus(formBundleId: String): Action[AnyContent] = messagingHeaderValidator.async { implicit request =>
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>

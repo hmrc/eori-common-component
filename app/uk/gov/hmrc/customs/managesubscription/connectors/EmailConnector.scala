@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,12 @@ import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.HttpClient
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable) {
+class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+  ec: ExecutionContext
+) {
 
   private val logger = Logger(this.getClass)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,14 @@ import uk.gov.hmrc.customs.managesubscription.services.RecipientDetailsStore
 import util.UnitSpec
 import util.TestData._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ContactDetailsStoreSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   private val mockContactDetailsRepository = mock[RecipientDetailsRepository]
-  private val contactDetailsStore          = new RecipientDetailsStore(mockContactDetailsRepository)
-  private val idAsString                   = "some-id"
+  implicit val ec: ExecutionContext        = ExecutionContext.Implicits.global
+
+  private val contactDetailsStore = new RecipientDetailsStore(mockContactDetailsRepository)
+  private val idAsString          = "some-id"
 
   "recipient details store" should {
 

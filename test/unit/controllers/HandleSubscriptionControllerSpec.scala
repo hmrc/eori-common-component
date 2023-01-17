@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,8 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
   )
+
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
     new HandleSubscriptionController(mockTaxEnrolmentsService, mockControllerComponents, mockDigitalHeaderValidator)
