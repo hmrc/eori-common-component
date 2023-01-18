@@ -49,10 +49,6 @@ class AppConfigSpec extends BaseSpec {
       appConfig.emailServiceUrl shouldBe "http://localhost:8300/hmrc/email"
     }
 
-    "have emailGyeSuccessTemplateId defined" in {
-      appConfig.emailRegisterSuccessTemplateId shouldBe "customs_registration_successful"
-    }
-
     "have emailGyeNotSuccessTemplateId defined" in {
       appConfig.emailRegisterNotSuccessTemplateId shouldBe "customs_registration_not_successful"
     }

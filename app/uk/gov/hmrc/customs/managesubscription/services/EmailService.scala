@@ -31,7 +31,7 @@ class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnect
 
   def sendSuccessEmail(recipient: RecipientDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     recipient.journey match {
-      case Journey.Register  => sendEmail(appConfig.emailRegisterSuccessTemplateId, recipient)
+      case Journey.Register  => sendEmail(appConfig.emailEccRegistrationSuccessTemplateId, recipient)
       case Journey.Subscribe => sendEmail(appConfig.emailSubscribeSuccessTemplateId, recipient)
     }
 
@@ -58,7 +58,8 @@ class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnect
         "recipientName_FullName" -> recipient.recipientFullName,
         "recipientOrgName"       -> recipient.orgName.getOrElse(""),
         "serviceName"            -> recipient.serviceName,
-        "completionDate"         -> recipient.completionDate.getOrElse("")
+        "completionDate"         -> recipient.completionDate.getOrElse(""),
+        "enrolmentKey"           -> recipient.enrolmentKey
       )
     )
     emailConnector.sendEmail(email)

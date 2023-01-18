@@ -35,14 +35,14 @@ class EmailServiceSpec extends BaseSpec {
 
   private val service = "HMRC-ATAR-ORG"
 
-  private val registerSuccessTemplateId: String        = "customs_registration_successful"
-  private val registerSuccessTemplateId_Cy: String     = "customs_registration_successful_cy"
-  private val registerNotSuccessTemplateId: String     = "customs_registration_not_successful"
-  private val subscribeSuccessTemplateId: String       = "ecc_subscription_successful"
-  private val subscribeSuccessTemplateId_Cy: String    = "ecc_subscription_successful_cy"
-  private val subscribeNotSuccessTemplateId: String    = "ecc_subscription_not_successful"
-  private val subscribeNotSuccessTemplateId_Cy: String = "ecc_subscription_not_successful_cy"
-  private val rcmNotificationTemplateId: String        = "ecc_rcm_notifications"
+  private val registerNotSuccessTemplateId: String        = "customs_registration_not_successful"
+  private val subscribeSuccessTemplateId: String          = "ecc_subscription_successful"
+  private val eccRegistrationSuccessTemplateId: String    = "ecc_registration_successful"
+  private val eccRegistrationSuccessTemplateId_Cy: String = "ecc_registration_successful_cy"
+  private val subscribeSuccessTemplateId_Cy: String       = "ecc_subscription_successful_cy"
+  private val subscribeNotSuccessTemplateId: String       = "ecc_subscription_not_successful"
+  private val subscribeNotSuccessTemplateId_Cy: String    = "ecc_subscription_not_successful_cy"
+  private val rcmNotificationTemplateId: String           = "ecc_rcm_notifications"
 
   private lazy val emailService = new EmailService(appConfig, mockEmailConnector)
 
@@ -79,6 +79,7 @@ class EmailServiceSpec extends BaseSpec {
   private val subscribeOrgName               = "Test Company Name 2"
   private val subscribeServiceName           = "Subscribe Service"
   private val subscribeCompletionDate        = "23 June 2004"
+  private val enrolmentKey                   = "HMRC-ATAR-ORG"
 
   private val subscribeRecipientDetails = RecipientDetails(
     Journey.Subscribe,
@@ -107,23 +108,25 @@ class EmailServiceSpec extends BaseSpec {
 
   private val registerSuccessEmail = Email(
     to = List(registerRecipientEmailAddress),
-    templateId = registerSuccessTemplateId,
+    templateId = eccRegistrationSuccessTemplateId,
     parameters = Map(
       "recipientName_FullName" -> registerRecipientFullName,
       "recipientOrgName"       -> registerOrgName,
       "serviceName"            -> registerServiceName,
-      "completionDate"         -> registerCompletionDate
+      "completionDate"         -> registerCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
   private val registerSuccessEmail_Cy = Email(
     to = List(registerRecipientEmailAddress),
-    templateId = registerSuccessTemplateId_Cy,
+    templateId = eccRegistrationSuccessTemplateId_Cy,
     parameters = Map(
       "recipientName_FullName" -> registerRecipientFullName,
       "recipientOrgName"       -> registerOrgName,
       "serviceName"            -> registerServiceName,
-      "completionDate"         -> registerCompletionDate
+      "completionDate"         -> registerCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
@@ -134,7 +137,8 @@ class EmailServiceSpec extends BaseSpec {
       "recipientName_FullName" -> registerRecipientFullName,
       "recipientOrgName"       -> registerOrgName,
       "serviceName"            -> registerServiceName,
-      "completionDate"         -> registerCompletionDate
+      "completionDate"         -> registerCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
@@ -145,7 +149,8 @@ class EmailServiceSpec extends BaseSpec {
       "recipientName_FullName" -> subscribeRecipientFullName,
       "recipientOrgName"       -> subscribeOrgName,
       "serviceName"            -> subscribeServiceName,
-      "completionDate"         -> subscribeCompletionDate
+      "completionDate"         -> subscribeCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
@@ -156,7 +161,8 @@ class EmailServiceSpec extends BaseSpec {
       "recipientName_FullName" -> subscribeRecipientFullName,
       "recipientOrgName"       -> subscribeOrgName,
       "serviceName"            -> subscribeServiceName,
-      "completionDate"         -> subscribeCompletionDate
+      "completionDate"         -> subscribeCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
@@ -167,7 +173,8 @@ class EmailServiceSpec extends BaseSpec {
       "recipientName_FullName" -> subscribeRecipientFullName,
       "recipientOrgName"       -> subscribeOrgName,
       "serviceName"            -> subscribeServiceName,
-      "completionDate"         -> subscribeCompletionDate
+      "completionDate"         -> subscribeCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 
@@ -178,7 +185,8 @@ class EmailServiceSpec extends BaseSpec {
       "recipientName_FullName" -> subscribeRecipientFullName,
       "recipientOrgName"       -> subscribeOrgName,
       "serviceName"            -> subscribeServiceName,
-      "completionDate"         -> subscribeCompletionDate
+      "completionDate"         -> subscribeCompletionDate,
+      "enrolmentKey"           -> enrolmentKey
     )
   )
 

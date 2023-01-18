@@ -59,6 +59,7 @@ class TaxEnrolmentsService @Inject() (
     saveRecipientDetails().flatMap { _ =>
       taxEnrolmentsConnector.enrol(taxEnrolmentsRequest, formBundleId)
     }
+
   }
 
 }
