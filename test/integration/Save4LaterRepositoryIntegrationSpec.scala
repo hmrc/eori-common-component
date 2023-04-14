@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, _}
+import scala.language.postfixOps
 
 class Save4LaterRepositoryIntegrationSpec
     extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSupport with ScalaFutures {
