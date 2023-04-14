@@ -57,7 +57,7 @@ libraryDependencies ++= Seq(
   "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28"   % "0.72.0"            % Test,
   "org.mockito"            %% "mockito-scala"             % "1.17.14"            % Test,
   "org.scalatest"          %% "scalatest"                 % "3.2.15"             % Test,
-  "com.vladsch.flexmark"    % "flexmark-all"              % "0.64.0"             % "test,it"
+  "com.vladsch.flexmark"    % "flexmark-all"              % "0.64.0"             % "test"
 )
 
 lazy val silencerSettings: Seq[Setting[_]] = {
