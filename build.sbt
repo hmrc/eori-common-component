@@ -54,7 +54,7 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play"        % "5.1.0"             % "test",
   "com.github.tomakehurst"  % "wiremock-standalone"       % "2.27.2"            % "test",
   "org.pegdown"             % "pegdown"                   % "1.6.0",
-  "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28"   % "0.72.0"            % Test,
+  "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28"   % "1.1.0"            % Test,
   "org.mockito"            %% "mockito-scala"             % "1.17.14"            % Test,
   "org.scalatest"          %% "scalatest"                 % "3.2.15"             % Test,
   "com.vladsch.flexmark"    % "flexmark-all"              % "0.64.0"             % "test"
