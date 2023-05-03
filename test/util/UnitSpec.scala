@@ -25,6 +25,7 @@ import play.api.mvc.Result
 import scala.language.implicitConversions
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
+import scala.language.postfixOps
 
 trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
 
