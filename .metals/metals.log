@@ -1,0 +1,377 @@
+2023.05.26 10:26:20 INFO  Started: Metals version 0.11.12 in workspace '/Users/mike.burns/Documents/hmrc/eori-common-component' for client Visual Studio Code 1.78.0.
+May 26, 2023 10:26:20 AM org.flywaydb.core.internal.license.VersionPrinter printVersionOnly
+INFO: Flyway Community Edition 9.16.3 by Redgate
+May 26, 2023 10:26:20 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: See release notes here: https://rd.gt/416ObMi
+May 26, 2023 10:26:20 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: 
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.database.base.BaseDatabaseType createDatabase
+INFO: Database: jdbc:h2:file:/Users/mike.burns/Documents/hmrc/eori-common-component/.metals/metals (H2 2.1)
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory allAppliedMigrations
+INFO: Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbValidate validate
+INFO: Successfully validated 4 migrations (execution time 00:00.019s)
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory create
+INFO: Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFO: Current version of schema "PUBLIC": << Empty Schema >>
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFO: Migrating schema "PUBLIC" to version "1 - Create tables"
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFO: Migrating schema "PUBLIC" to version "2 - Server discovery"
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFO: Migrating schema "PUBLIC" to version "3 - Jar symbols"
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFO: Migrating schema "PUBLIC" to version "4 - Fingerprints"
+May 26, 2023 10:26:21 AM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFO: Successfully applied 4 migrations to schema "PUBLIC", now at version v4 (execution time 00:00.120s)
+2023.05.26 10:26:21 INFO  time: initialize in 0.96s
+2023.05.26 10:26:24 WARN  Build server is not auto-connectable.
+2023.05.26 10:26:24 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/RecipientDetailsStore.scala
+2023.05.26 10:26:29 INFO  no build target found for /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/RecipientDetailsStore.scala. Using presentation compiler with project's scala-library version: 3.2.2
+newlines.source is experimental, will change ignoring edition setting
+2023.05.26 10:26:33 INFO  time: code lens generation in 3.04s
+2023.05.26 10:26:33 INFO  time: code lens generation in 3.16s
+2023.05.26 10:27:08 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/repository/RecipientDetailsRepository.scala
+May 26, 2023 10:48:23 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55
+2023.05.26 10:54:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/RecipientDetailsStore.scala
+2023.05.26 10:55:13 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/repository/RecipientDetailsRepository.scala
+2023.05.26 12:42:39 INFO  Shutting down server
+2023.05.26 12:42:39 INFO  shutting down Metals
+2023.05.26 12:42:39 INFO  Exiting server
+2023.06.01 11:59:14 INFO  Started: Metals version 0.11.12 in workspace '/Users/mike.burns/Documents/hmrc/eori-common-component' for client Visual Studio Code 1.78.0.
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.license.VersionPrinter printVersionOnly
+INFO: Flyway Community Edition 9.16.3 by Redgate
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: See release notes here: https://rd.gt/416ObMi
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: 
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.database.base.BaseDatabaseType createDatabase
+INFO: Database: jdbc:h2:file:/Users/mike.burns/Documents/hmrc/eori-common-component/.metals/metals (H2 2.1)
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.command.DbValidate validate
+INFO: Successfully validated 4 migrations (execution time 00:00.031s)
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFO: Current version of schema "PUBLIC": 4
+Jun 01, 2023 11:59:14 AM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFO: Schema "PUBLIC" is up to date. No migration necessary.
+2023.06.01 11:59:15 INFO  time: initialize in 0.93s
+2023.06.01 11:59:17 WARN  Build server is not auto-connectable.
+2023.06.01 11:59:17 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/HandleSubscriptionController.scala
+2023.06.01 11:59:17 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/repository/RecipientDetailsRepository.scala
+newlines.source is experimental, will change ignoring edition setting
+2023.06.01 11:59:22 INFO  no build target found for /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/HandleSubscriptionController.scala. Using presentation compiler with project's scala-library version: 3.2.2
+2023.06.01 11:59:25 INFO  time: code lens generation in 8.22s
+Jun 01, 2023 11:59:26 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4
+2023.06.01 11:59:26 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 11:59:28 INFO  time: code lens generation in 1.66s
+2023.06.01 11:59:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 11:59:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 11:59:33 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+Jun 01, 2023 11:59:38 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 38
+2023.06.01 12:00:00 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:00 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+Jun 01, 2023 12:00:11 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 72
+2023.06.01 12:00:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:34 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:41 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:41 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:41 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:44 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:44 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:00:46 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:11:22 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:11:22 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:11:22 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:11:22 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.01 12:11:34 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/RecipientDetailsStore.scala
+2023.06.01 12:13:09 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+Jun 01, 2023 12:13:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 312
+2023.06.01 12:13:09 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+Jun 01, 2023 12:13:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 313
+Jun 01, 2023 12:25:59 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Jun 01, 2023 12:26:46 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+2023.06.05 14:47:22 INFO  Shutting down server
+2023.06.05 14:47:22 INFO  shutting down Metals
+2023.06.05 14:47:22 INFO  Exiting server
+2023.06.15 09:12:24 INFO  Started: Metals version 0.11.12 in workspace '/Users/mike.burns/Documents/hmrc/eori-common-component' for client Visual Studio Code 1.78.0.
+Jun 15, 2023 9:12:24 AM org.flywaydb.core.internal.license.VersionPrinter printVersionOnly
+INFO: Flyway Community Edition 9.16.3 by Redgate
+Jun 15, 2023 9:12:24 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: See release notes here: https://rd.gt/416ObMi
+Jun 15, 2023 9:12:24 AM org.flywaydb.core.internal.license.VersionPrinter printVersion
+INFO: 
+Jun 15, 2023 9:12:25 AM org.flywaydb.core.internal.database.base.BaseDatabaseType createDatabase
+INFO: Database: jdbc:h2:file:/Users/mike.burns/Documents/hmrc/eori-common-component/.metals/metals (H2 2.1)
+Jun 15, 2023 9:12:25 AM org.flywaydb.core.internal.command.DbValidate validate
+INFO: Successfully validated 4 migrations (execution time 00:00.073s)
+Jun 15, 2023 9:12:25 AM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFO: Current version of schema "PUBLIC": 4
+Jun 15, 2023 9:12:25 AM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFO: Schema "PUBLIC" is up to date. No migration necessary.
+2023.06.15 09:12:25 INFO  time: initialize in 1.34s
+2023.06.15 09:12:26 WARN  Build server is not auto-connectable.
+2023.06.15 09:12:26 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/HandleSubscriptionController.scala
+2023.06.15 09:12:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/RecipientDetailsStore.scala
+newlines.source is experimental, will change ignoring edition setting
+2023.06.15 09:12:33 INFO  no build target found for /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/HandleSubscriptionController.scala. Using presentation compiler with project's scala-library version: 3.2.2
+2023.06.15 09:12:36 INFO  time: code lens generation in 9.98s
+2023.06.15 09:12:36 INFO  time: code lens generation in 3.14s
+2023.06.15 09:12:36 INFO  time: code lens generation in 5.76s
+2023.06.16 10:36:01 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/repository/RecipientDetailsRepository.scala
+Jun 16, 2023 10:36:02 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45
+Jun 16, 2023 10:38:13 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 145
+2023.06.16 12:14:06 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.16 12:14:24 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.16 12:15:15 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+Jun 16, 2023 12:15:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 273
+2023.06.16 12:15:45 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/connectors/MicroserviceAuthConnector.scala
+2023.06.16 12:15:52 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.16 12:16:26 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+Jun 16, 2023 12:16:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 318
+2023.06.16 12:16:26 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+Exception in thread "pool-5-thread-1" java.lang.Error: java.lang.InterruptedException
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1155)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:195)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	... 2 more
+Exception in thread "pool-5-thread-2" java.lang.Error: java.lang.InterruptedException
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1155)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:195)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	... 2 more
+2023.06.16 12:16:27 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.16 12:18:42 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.16 12:32:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.16 12:32:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.16 12:32:34 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+Exception in thread "pool-5-thread-3" java.lang.Error: java.lang.InterruptedException
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1155)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:195)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	... 2 more
+2023.06.19 11:06:00 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+Jun 19, 2023 11:06:01 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 437
+Jun 19, 2023 11:06:01 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 438
+Jun 19, 2023 11:06:01 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 434
+Jun 19, 2023 11:06:01 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 435
+2023.06.19 11:06:01 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.19 11:06:01 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/ErrorResponses.scala
+2023.06.19 11:06:02 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.06.19 11:06:02 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.06.19 11:06:03 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+Jun 19, 2023 11:06:03 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 466
+Jun 19, 2023 11:06:03 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 467
+Jun 19, 2023 11:06:03 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 468
+2023.06.19 11:06:03 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.06.19 11:06:04 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/TestHelperController.scala
+2023.06.19 11:06:04 INFO  time: code lens generation in 1.54s
+2023.06.19 11:06:04 INFO  time: code lens generation in 2.04s
+2023.06.19 11:06:04 INFO  time: code lens generation in 2.21s
+2023.06.19 11:06:04 INFO  time: code lens generation in 2.24s
+2023.06.19 11:06:04 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.06.19 11:06:04 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.19 11:06:05 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.06.19 11:06:06 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.06.19 11:06:08 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.19 11:06:08 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.19 11:06:08 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.06.19 11:07:19 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.19 11:07:21 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.06.19 11:07:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/TestHelperController.scala
+2023.06.19 11:07:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.06.19 11:07:51 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.19 11:07:51 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.06.19 11:07:52 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.06.19 11:07:53 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.06.19 11:07:56 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.06.19 11:07:56 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.06.19 11:07:57 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.19 11:07:57 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.06.19 11:07:58 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/TestHelperController.scala
+2023.06.19 11:07:58 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.06.19 11:07:58 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.19 11:09:45 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.06.19 11:09:45 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/Save4LaterController.scala
+2023.06.19 11:52:24 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/connectors/SubscriptionDisplayConnector.scala
+2023.06.19 11:53:12 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+2023.06.19 11:53:14 INFO  time: code lens generation in 1.05s
+2023.06.19 11:53:23 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+2023.06.19 11:53:24 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+2023.06.19 11:53:23 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+2023.06.19 13:43:15 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/PayloadCache.scala
+2023.06.19 13:43:17 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/test/unit/connectors/InstrumentableSpec.scala
+Jun 19, 2023 1:43:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 789
+2023.06.19 13:45:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/config/AppConfig.scala
+Jun 19, 2023 1:45:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 797
+Jun 30, 2023 11:33:41 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Jun 30, 2023 12:52:45 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Jul 03, 2023 10:05:42 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Jul 03, 2023 10:20:45 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+2023.07.07 11:58:21 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+2023.07.07 11:58:28 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/SubscriptionCompleteBusinessService.scala
+Jul 07, 2023 11:58:28 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 849
+2023.07.07 11:59:20 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/EmailService.scala
+2023.07.07 11:59:22 INFO  time: code lens generation in 1.17s
+2023.07.07 12:00:04 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/connectors/EmailConnector.scala
+Jul 07, 2023 12:00:47 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 959
+2023.07.07 12:00:47 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/config/AppConfig.scala
+Jul 07, 2023 2:45:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 966
+2023.07.07 14:45:27 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/connectors/EmailConnector.scala
+2023.07.07 14:45:27 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/connectors/EmailConnector.scala
+2023.07.07 14:45:35 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/EmailService.scala
+2023.07.07 14:45:36 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/EmailService.scala
+2023.07.07 14:45:36 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/EmailService.scala
+2023.07.07 14:45:42 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:45:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:45:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:45:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:51:05 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/services/TaxEnrolmentsService.scala
+2023.07.07 14:53:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:53:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:53:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:53:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.07 14:53:32 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.13 16:14:59 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+Exception in thread "pool-5-thread-4" java.lang.Error: java.lang.InterruptedException
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1155)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:195)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	... 2 more
+2023.07.13 16:30:01 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/RcmNotificationController.scala
+2023.07.13 16:30:14 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.07.13 16:30:15 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/CustomsDataStoreController.scala
+2023.07.13 16:30:27 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.07.13 16:30:30 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/SubscriptionResultController.scala
+2023.07.13 16:30:40 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/MessagingHeaderValidator.scala
+2023.07.13 16:30:53 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.07.13 16:46:50 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/build.sbt
+2023.07.13 16:52:26 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.07.13 16:52:29 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+Jul 13, 2023 4:55:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint fallbackResponseError
+SEVERE: Internal error: java.lang.UnsupportedOperationException: tail of empty list
+java.util.concurrent.CompletionException: java.lang.UnsupportedOperationException: tail of empty list
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:292)
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:308)
+	at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:661)
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:646)
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:488)
+	at java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:1990)
+	at scala.meta.internal.metals.CancelTokens$.$anonfun$future$1(CancelTokens.scala:40)
+	at scala.meta.internal.metals.CancelTokens$.$anonfun$future$1$adapted(CancelTokens.scala:38)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.UnsupportedOperationException: tail of empty list
+	at scala.collection.immutable.Nil$.tail(List.scala:664)
+	at scala.collection.immutable.Nil$.tail(List.scala:661)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.$anonfun$endPosOfTree$1(CreateCompanionObjectCodeAction.scala:77)
+	at scala.Option.flatMap(Option.scala:283)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.endPosOfTree(CreateCompanionObjectCodeAction.scala:75)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.$anonfun$contribute$5(CreateCompanionObjectCodeAction.scala:61)
+	at scala.Option.map(Option.scala:242)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.$anonfun$contribute$4(CreateCompanionObjectCodeAction.scala:58)
+	at scala.Option$WithFilter.flatMap(Option.scala:283)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.$anonfun$contribute$2(CreateCompanionObjectCodeAction.scala:56)
+	at scala.Option.flatMap(Option.scala:283)
+	at scala.meta.internal.metals.codeactions.CreateCompanionObjectCodeAction.$anonfun$contribute$1(CreateCompanionObjectCodeAction.scala:55)
+	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:678)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	... 3 more
+
+Jul 13, 2023 4:58:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1856
+Jul 13, 2023 4:59:32 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: 0
+java.lang.IndexOutOfBoundsException: 0
+	at scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	at scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	at scala.collection.immutable.List.apply(List.scala:79)
+	at dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	at dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	at dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	at dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	at scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:21)
+	at scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+
+2023.07.13 16:59:37 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.07.13 17:00:47 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.07.13 17:00:47 WARN  Using indexes to guess the definition of BearerTokenRegex
+2023.07.13 17:00:52 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+Jul 13, 2023 5:01:30 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: 0
+java.lang.IndexOutOfBoundsException: 0
+	at scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	at scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	at scala.collection.immutable.List.apply(List.scala:79)
+	at dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	at dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	at dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	at dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	at scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:21)
+	at scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+
+Jul 13, 2023 5:01:31 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: 0
+java.lang.IndexOutOfBoundsException: 0
+	at scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	at scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	at scala.collection.immutable.List.apply(List.scala:79)
+	at dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	at dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	at dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	at dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	at scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:21)
+	at scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+
+2023.07.13 17:01:34 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
+2023.07.13 17:02:40 WARN  no build target for: /Users/mike.burns/Documents/hmrc/eori-common-component/app/uk/gov/hmrc/customs/managesubscription/controllers/DigitalHeaderValidator.scala
