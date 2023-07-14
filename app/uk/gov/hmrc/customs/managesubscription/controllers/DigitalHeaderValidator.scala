@@ -47,7 +47,7 @@ class DigitalHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit
 
   private val bearerToken: Headers => Boolean = _.get(AUTHORIZATION).fold(false)(checkForBearerToken)
 
-  private def checkForBearerToken(str: String): Boolean = {
+  private def checkForBearerToken(str: String): Boolean =
     str.split(",").exists(_.matches(BearerTokenRegex))
-  }
+
 }
