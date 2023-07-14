@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
+import play.api.i18n.Lang.logger
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, RecipientDetailsWithEori}
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
@@ -41,7 +42,10 @@ class RecipientDetailsStore @Inject() (repository: RecipientDetailsRepository)(i
     repository.recipientDetailsForBundleId(formBundleId).map {
       case Right(recipientDetailsWithEori) => recipientDetailsWithEori
       case Left(_) =>
-        throw new IllegalStateException("Unable to process the recipientDetails, recipientDetailsWithEori expected")
+        val error =
+          "Unable to process the recipientDetails, recipientDetailsWithEori expected. Unable to convert cache element to expected type"
+        logger.error(error)
+        throw new IllegalStateException(error)
     }
 
 }
