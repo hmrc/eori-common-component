@@ -48,22 +48,7 @@ scalastyleConfig := baseDirectory.value / "project" / "scalastyle-config.xml"
 
 Test / javaOptions += "-Dlogger.resource=logback-test.xml"
 
-libraryDependencies ++= Seq(
-  ws exclude ("org.apache.httpcomponents", "httpclient") exclude ("org.apache.httpcomponents", "httpcore"),
-  "uk.gov.hmrc"            %% "bootstrap-backend-play-28" % bootstrapVersion,
-  "uk.gov.hmrc"            %% "http-caching-client"       % "10.0.0-play-28",
-  "uk.gov.hmrc.mongo"      %% "hmrc-mongo-play-28"        % "1.1.0",
-  "com.typesafe.play"      %% "play-json-joda"            % "2.9.4",
-  "com.typesafe.play"      %% "play-test"                 % PlayVersion.current % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play"        % "5.1.0"             % "test",
-  "com.github.tomakehurst"  % "wiremock-standalone"       % "2.27.2"             % "test",
-  "org.pegdown"             % "pegdown"                   % "1.6.0",
-  "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28"   % "1.1.0"            % Test,
-  "org.mockito"            %% "mockito-scala"             % "1.17.14"            % Test,
-  "org.scalatest"          %% "scalatest"                 % "3.2.15"             % Test,
-  "com.vladsch.flexmark"    % "flexmark-all"              % "0.64.0"             % "test",
-  "uk.gov.hmrc"            %% "bootstrap-test-play-28"    % bootstrapVersion % "test"
-)
+libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
 
 lazy val silencerSettings: Seq[Setting[_]] = {
   val silencerVersion = "1.7.12"

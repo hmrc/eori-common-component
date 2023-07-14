@@ -29,6 +29,8 @@ import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import util.UnitSpec
 import util.TestData.HandleSubscription.validHeaders
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,7 +42,12 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
   val validRcmNotifyRequest: Request[RcmNotificationRequest] =
     FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
 
+
+  implicit val cc = stubControllerComponents()
+
   private val mockEmailService = mock[EmailService]
+  private val mockStubBehaviour = mock[StubBehaviour]
+  private val expectedPredicate = Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("rcm-notification")), IAAction("WRITE"))
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
@@ -49,12 +56,14 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
-    new RcmNotificationController(mockEmailService, stubControllerComponents(), mockDigitalHeaderValidator)
+    new RcmNotificationController(mockEmailService, cc, mockDigitalHeaderValidator, BackendAuthComponentsStub(mockStubBehaviour))
 
   override protected def beforeEach(): Unit = {
     reset(mockEmailService)
     when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
       .thenReturn(Future.successful(HttpResponse(status = 200, body = "")))
+    reset(mockStubBehaviour)
+    when(mockStubBehaviour.stubAuth(Some(expectedPredicate), Retrieval.EmptyRetrieval)).thenReturn(Future.unit)
   }
 
   "RcmNotificationController POST" should {
@@ -69,7 +78,7 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
 
   }
 
-  private def testSubmitResult(request: Request[RcmNotificationRequest])(test: Future[Result] => Unit) {
+  private def testSubmitResult(request: Request[RcmNotificationRequest])(test: Future[Result] => Unit) = {
     test(controller.notifyRCM().apply(request))
   }
 

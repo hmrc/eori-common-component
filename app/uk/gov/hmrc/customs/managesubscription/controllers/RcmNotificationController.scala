@@ -21,6 +21,8 @@ import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 
 import scala.concurrent.ExecutionContext
 
@@ -28,11 +30,12 @@ import scala.concurrent.ExecutionContext
 class RcmNotificationController @Inject() (
   emailService: EmailService,
   cc: ControllerComponents,
-  digitalHeaderValidator: DigitalHeaderValidator
+  digitalHeaderValidator: DigitalHeaderValidator,
+  val auth: BackendAuthComponents
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(parse.json[RcmNotificationRequest]).async {
+  def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(parse.json[RcmNotificationRequest]) andThen auth.authorizedAction(internalAuthPermission("rcm-notification")) async {
     implicit request =>
       emailService.sendRcmNotificationEmail(request.body).map(_ => NoContent)
   }

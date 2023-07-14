@@ -30,24 +30,15 @@ class DigitalHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit
 
   override val parser: BodyParser[AnyContent] = bodyParsers.anyContent
 
-  private val BearerTokenRegex = "^Bearer .*"
-
   def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = {
     val headers = request.headers
 
     if (!accept(headers)) Future.successful(ErrorAcceptHeaderInvalid.JsonResult)
     else if (!contentType(headers)) Future.successful(ErrorContentTypeHeaderInvalid.JsonResult)
-    else if (!bearerToken(headers)) Future.successful(ErrorUnauthorized.JsonResult)
     else block(request)
   }
 
   private val accept: Headers => Boolean = _.get(ACCEPT).fold(false)(_ == "application/vnd.hmrc.1.0+json")
 
   private val contentType: Headers => Boolean = _.get(CONTENT_TYPE).fold(false)(_ == MimeTypes.JSON)
-
-  private val bearerToken: Headers => Boolean = _.get(AUTHORIZATION).fold(false)(checkForBearerToken)
-
-  private def checkForBearerToken(str: String): Boolean = {
-    str.split(",").exists(_.matches(BearerTokenRegex))
-  }
 }

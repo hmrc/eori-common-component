@@ -23,6 +23,8 @@ import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest, TaxPayerId}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,11 +33,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class HandleSubscriptionController @Inject() (
   taxEnrolmentsService: TaxEnrolmentsService,
   cc: ControllerComponents,
-  digitalHeaderValidator: DigitalHeaderValidator
+  digitalHeaderValidator: DigitalHeaderValidator,
+  val auth: BackendAuthComponents
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def handle(): Action[AnyContent] = digitalHeaderValidator.async { implicit request =>
+  def handle(): Action[AnyContent] = digitalHeaderValidator andThen auth.authorizedAction(internalAuthPermission("handle-subscription")) async { implicit request =>
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
       js.validate[HandleSubscriptionRequest] match {
         case JsSuccess(subscriptionRequest, _) =>

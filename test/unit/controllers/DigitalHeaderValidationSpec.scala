@@ -64,16 +64,6 @@ class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyCheck
       validHeaders + ACCEPT_HEADER_INVALID,
       ErrorAcceptHeaderInvalid.JsonResult
     ),
-    (
-      "return ErrorUnauthorized result when bearer token is missing",
-      validHeaders - AUTHORIZATION,
-      ErrorUnauthorized.JsonResult
-    ),
-    (
-      "return ErrorUnauthorized result when bearer token is invalid",
-      validHeaders + AUTHORISATION_HEADER_INVALID,
-      ErrorUnauthorized.JsonResult
-    ),
     ("return ErrorAcceptHeaderInvalid result for all headers missing", NoHeaders, ErrorAcceptHeaderInvalid.JsonResult)
   )
 
