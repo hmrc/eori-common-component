@@ -32,7 +32,7 @@ lazy val microservice = (project in file("."))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
   .settings(commonSettings, scoverageSettings, silencerSettings)
 
-lazy val commonSettings: Seq[Setting[_]] = publishingSettings ++ defaultSettings()
+lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.customs.managesubscription.config.*;.*(BuildInfo|Routes).*;.*ConfigModule.*;.*ConfigValidationNelAdaptor.*;.*ErrorResponse.*",

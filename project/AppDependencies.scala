@@ -16,16 +16,14 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "com.typesafe.play"       %% "play-test"                      % PlayVersion.current  % "test,it",
-    "org.scalatestplus.play"  %% "scalatestplus-play"             % "5.1.0"              % "test,it",
-    "com.github.tomakehurst"  %  "wiremock-standalone"            % "2.27.2"             % "test,it",
-    "org.pegdown"             %  "pegdown"                        % "1.6.0"              % "test,it",
-    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28"        % "1.1.0"              % "test,it",
-    "org.mockito"             %% "mockito-scala"                  % "1.17.14"            % "test,it",
-    "org.scalatest"           %% "scalatest"                      % "3.2.15"             % "test,it",
-    "com.vladsch.flexmark"    %  "flexmark-all"                   % "0.64.0"             % "test,it",
-    "uk.gov.hmrc"             %% "bootstrap-test-play-28"         % bootstrapVersion     % "test,it"
+    "com.typesafe.play"       %% "play-test"                      % PlayVersion.current  % "test",
+    "org.scalatestplus.play"  %% "scalatestplus-play"             % "5.1.0"              % "test",
+    "com.github.tomakehurst"  %  "wiremock-standalone"            % "2.27.2"             % "test",
+    "org.pegdown"             %  "pegdown"                        % "1.6.0"              % "test",
+    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28"        % "1.1.0"              % "test",
+    "org.mockito"             %% "mockito-scala"                  % "1.17.14"            % "test",
+    "org.scalatest"           %% "scalatest"                      % "3.2.15"             % "test",
+    "com.vladsch.flexmark"    %  "flexmark-all"                   % "0.64.0"             % "test",
+    "uk.gov.hmrc"             %% "bootstrap-test-play-28"         % bootstrapVersion     % "test"
   )
 }
-
-//Seq(ws exclude ("org.apache.httpcomponents", "httpclient") exclude ("org.apache.httpcomponents", "httpcore"))
