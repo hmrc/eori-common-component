@@ -33,25 +33,28 @@ class Save4LaterController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def put(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async { implicit request =>
-    request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
-      save4LaterRepository.save(id, key, js).map(_ => Created)
-    }
+  def put(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
+    implicit request =>
+      request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
+        save4LaterRepository.save(id, key, js).map(_ => Created)
+      }
   }
 
-  def get(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async { _ =>
-    save4LaterRepository.findByIdAndKey(id, key).map {
-      case Some(js) => Ok(js)
-      case None     => NotFound(s"key:$key | id:$id")
-    }
+  def get(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
+    _ =>
+      save4LaterRepository.findByIdAndKey(id, key).map {
+        case Some(js) => Ok(js)
+        case None     => NotFound(s"key:$key | id:$id")
+      }
   }
 
-  def removeKeyById(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async { _ =>
-    save4LaterRepository.removeKeyById(id, key).map {
-      case true  => NoContent
-      case false => NotFound(s"key:$key | id:$id")
+  def removeKeyById(id: String, key: String): Action[AnyContent] =
+    auth.authorizedAction(internalAuthPermission("save")).async { _ =>
+      save4LaterRepository.removeKeyById(id, key).map {
+        case true  => NoContent
+        case false => NotFound(s"key:$key | id:$id")
+      }
     }
-  }
 
   def delete(id: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async { _ =>
     save4LaterRepository.remove(id).map {

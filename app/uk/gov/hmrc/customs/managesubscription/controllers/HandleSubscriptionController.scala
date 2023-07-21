@@ -38,23 +38,25 @@ class HandleSubscriptionController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def handle(): Action[AnyContent] = digitalHeaderValidator andThen auth.authorizedAction(internalAuthPermission("handle-subscription")) async { implicit request =>
-    request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
-      js.validate[HandleSubscriptionRequest] match {
-        case JsSuccess(subscriptionRequest, _) =>
-          taxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
-            subscriptionRequest.formBundleId,
-            subscriptionRequest.recipientDetails,
-            TaxPayerId(subscriptionRequest.sapNumber),
-            subscriptionRequest.eori.map(Eori(_)),
-            subscriptionRequest.emailVerificationTimestamp,
-            subscriptionRequest.safeId
-          ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
+  def handle(): Action[AnyContent] =
+    digitalHeaderValidator andThen auth.authorizedAction(internalAuthPermission("handle-subscription")) async {
+      implicit request =>
+        request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
+          js.validate[HandleSubscriptionRequest] match {
+            case JsSuccess(subscriptionRequest, _) =>
+              taxEnrolmentsService.saveRecipientDetailsAndCallTaxEnrolment(
+                subscriptionRequest.formBundleId,
+                subscriptionRequest.recipientDetails,
+                TaxPayerId(subscriptionRequest.sapNumber),
+                subscriptionRequest.eori.map(Eori(_)),
+                subscriptionRequest.emailVerificationTimestamp,
+                subscriptionRequest.safeId
+              ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
 
-        case JsError(_) =>
-          Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
-      }
+            case JsError(_) =>
+              Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
+          }
+        }
     }
-  }
 
 }

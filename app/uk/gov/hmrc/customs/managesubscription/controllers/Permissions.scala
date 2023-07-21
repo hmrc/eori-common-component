@@ -21,10 +21,8 @@ import uk.gov.hmrc.internalauth.client._
 object Permissions {
 
   def internalAuthPermission(location: String) = Predicate.Permission(
-    resource = Resource(
-      resourceType = ResourceType("eori-common-component"),
-      resourceLocation = ResourceLocation(location)
-    ),
+    resource =
+      Resource(resourceType = ResourceType("eori-common-component"), resourceLocation = ResourceLocation(location)),
     action = IAAction("WRITE")
   )
 

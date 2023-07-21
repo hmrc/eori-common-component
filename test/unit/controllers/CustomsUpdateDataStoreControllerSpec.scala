@@ -43,18 +43,23 @@ import scala.concurrent.{ExecutionContext, Future}
 class CustomsUpdateDataStoreControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  val dataStoreRequest      = DataStoreRequest("ZZ123456789000", "a@example.com", "2018-07-05T09:08:12Z")
-  val data                  = Json.toJson(dataStoreRequest)
-  val validDataStoreRequest = FakeRequest("POST", "/customs/update/datastore").withJsonBody(data).withHeaders("Authorization" -> "Token some-token")
+  val dataStoreRequest = DataStoreRequest("ZZ123456789000", "a@example.com", "2018-07-05T09:08:12Z")
+  val data             = Json.toJson(dataStoreRequest)
+
+  val validDataStoreRequest = FakeRequest("POST", "/customs/update/datastore").withJsonBody(data).withHeaders(
+    "Authorization" -> "Token some-token"
+  )
 
   private val mockDataStoreConnector   = mock[CustomsDataStoreConnector]
   private val mockAuthConnector        = mock[MicroserviceAuthConnector]
   private val mockControllerComponents = mock[ControllerComponents]
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val cc = stubControllerComponents()
-  private val mockStubBehaviour = mock[StubBehaviour]
-  private val expectedPredicate = Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("cds")), IAAction("WRITE"))
+  implicit val cc                                    = stubControllerComponents()
+  private val mockStubBehaviour                      = mock[StubBehaviour]
+
+  private val expectedPredicate =
+    Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("cds")), IAAction("WRITE"))
 
   override def fakeApplication() = new GuiceApplicationBuilder()
     .overrides(
@@ -90,14 +95,18 @@ class CustomsUpdateDataStoreControllerSpec
     "respond with status 400 for a invalid request" in {
       when(mockDataStoreConnector.updateDataStore(any[DataStoreRequest])(any[HeaderCarrier]))
         .thenReturn(Future.successful(HttpResponse(204, "")))
-      val invalidRequest = FakeRequest("POST", "/customs/update/datastore").withJsonBody(Json.toJson("")).withHeaders("Authorization" -> "Token some-token")
-      val result         = await(route(app, invalidRequest).get)
+      val invalidRequest = FakeRequest("POST", "/customs/update/datastore").withJsonBody(Json.toJson("")).withHeaders(
+        "Authorization" -> "Token some-token"
+      )
+      val result = await(route(app, invalidRequest).get)
       result.header.status mustBe Status.BAD_REQUEST
     }
 
     "respond with status 404 for a invalid request url" in {
-      val invalidRequest = FakeRequest("POST", "/customs/update/datastore-not-found").withJsonBody(Json.toJson("")).withHeaders("Authorization" -> "Token some-token")
-      val result         = await(route(app, invalidRequest).get)
+      val invalidRequest = FakeRequest("POST", "/customs/update/datastore-not-found").withJsonBody(
+        Json.toJson("")
+      ).withHeaders("Authorization" -> "Token some-token")
+      val result = await(route(app, invalidRequest).get)
       result.header.status mustBe Status.NOT_FOUND
     }
   }

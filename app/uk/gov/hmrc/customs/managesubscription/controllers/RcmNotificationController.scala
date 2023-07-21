@@ -35,7 +35,9 @@ class RcmNotificationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(parse.json[RcmNotificationRequest]) andThen auth.authorizedAction(internalAuthPermission("rcm-notification")) async {
+  def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(
+    parse.json[RcmNotificationRequest]
+  ) andThen auth.authorizedAction(internalAuthPermission("rcm-notification")) async {
     implicit request =>
       emailService.sendRcmNotificationEmail(request.body).map(_ => NoContent)
   }

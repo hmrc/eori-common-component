@@ -41,8 +41,12 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val cc = stubControllerComponents()
 
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
-  private val mockStubBehaviour = mock[StubBehaviour]
-  private val expectedPredicate = Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("handle-subscription")), IAAction("WRITE"))
+  private val mockStubBehaviour        = mock[StubBehaviour]
+
+  private val expectedPredicate = Predicate.Permission(
+    Resource(ResourceType("eori-common-component"), ResourceLocation("handle-subscription")),
+    IAAction("WRITE")
+  )
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
@@ -51,7 +55,12 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
-    new HandleSubscriptionController(mockTaxEnrolmentsService, cc, mockDigitalHeaderValidator, BackendAuthComponentsStub(mockStubBehaviour))
+    new HandleSubscriptionController(
+      mockTaxEnrolmentsService,
+      cc,
+      mockDigitalHeaderValidator,
+      BackendAuthComponentsStub(mockStubBehaviour)
+    )
 
   override def beforeEach(): Unit = {
     reset(mockTaxEnrolmentsService)
@@ -133,8 +142,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) = {
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
     test(controller.handle().apply(request))
-  }
 
 }
