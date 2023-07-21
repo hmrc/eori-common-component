@@ -41,4 +41,5 @@ class DigitalHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit
   private val accept: Headers => Boolean = _.get(ACCEPT).fold(false)(_ == "application/vnd.hmrc.1.0+json")
 
   private val contentType: Headers => Boolean = _.get(CONTENT_TYPE).fold(false)(_ == MimeTypes.JSON)
+
 }
