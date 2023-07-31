@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
+import play.api.i18n.Lang.logger
+
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.JsSuccess
+import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.controllers.json.JsonReads._
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionComplete
@@ -41,7 +43,9 @@ class SubscriptionResultController @Inject() (
           subscriptionCompleteBusinessService.onSubscriptionStatus(subscriptionComplete, formBundleId).map(
             _ => NoContent
           )
-        case _ => Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
+        case JsError(e) =>
+          logger.error(s"Received invalid SubscriptionComplete. Validation errors: ${e.mkString}")
+          Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
       }
     }
   }
