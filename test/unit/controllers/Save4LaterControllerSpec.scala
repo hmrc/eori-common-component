@@ -35,6 +35,8 @@ import uk.gov.hmrc.customs.managesubscription.connectors.MicroserviceAuthConnect
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import util.TestData._
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,25 +44,40 @@ import scala.concurrent.{ExecutionContext, Future}
 class Save4LaterControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  val id                       = "id-1"
-  val key1                     = "key-1"
-  val data                     = Json.toJson(recipientDetails)
-  val validPutRequestWithCache = FakeRequest("PUT", "/save4later/id-1/key-1").withJsonBody(data)
-  val validGetRequest          = FakeRequest("GET", "/save4later/id-1/key-1")
-  val validDeleteRequest       = FakeRequest("DELETE", "/save4later/id-1")
-  val validDeleteKeyRequest    = FakeRequest("DELETE", "/save4later/id-1/key-1")
+  val id   = "id-1"
+  val key1 = "key-1"
+  val data = Json.toJson(recipientDetails)
+
+  val validPutRequestWithCache =
+    FakeRequest("PUT", "/save4later/id-1/key-1").withJsonBody(data).withHeaders("Authorization" -> "Token some-token")
+
+  val validGetRequest    = FakeRequest("GET", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
+  val validDeleteRequest = FakeRequest("DELETE", "/save4later/id-1").withHeaders("Authorization" -> "Token some-token")
+
+  val validDeleteKeyRequest =
+    FakeRequest("DELETE", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
 
   private val mockSave4LaterRepository = mock[Save4LaterRepository]
   private val mockAuthConnector        = mock[MicroserviceAuthConnector]
 
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+  implicit val cc                                    = stubControllerComponents()
+  private val mockStubBehaviour                      = mock[StubBehaviour]
+
+  private val expectedPredicate =
+    Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("save")), IAAction("WRITE"))
+
   override def fakeApplication() = new GuiceApplicationBuilder()
     .configure("mongodb.uri" -> ("mongodb://localhost:27017/cds" + UUID.randomUUID().toString))
-    .overrides(bind[MicroserviceAuthConnector].toInstance(mockAuthConnector))
-    .overrides(bind[Save4LaterRepository].toInstance(mockSave4LaterRepository))
+    .overrides(
+      bind[MicroserviceAuthConnector].toInstance(mockAuthConnector),
+      bind[Save4LaterRepository].toInstance(mockSave4LaterRepository),
+      bind[BackendAuthComponents].toInstance(BackendAuthComponentsStub(mockStubBehaviour))
+    )
     .build()
 
   override protected def beforeEach(): Unit = {
-    reset(mockAuthConnector, mockSave4LaterRepository)
+    reset(mockAuthConnector, mockSave4LaterRepository, mockStubBehaviour)
     when(
       mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(
         any[HeaderCarrier],
@@ -68,6 +85,9 @@ class Save4LaterControllerSpec
       )
     )
       .thenReturn(Future.successful(()))
+
+    when(mockStubBehaviour.stubAuth(Some(expectedPredicate), Retrieval.EmptyRetrieval)).thenReturn(Future.unit)
+
   }
 
   "Save4LaterController PUT" should {
@@ -82,16 +102,19 @@ class Save4LaterControllerSpec
     "respond with status 404 for a invalid request update in mongo" in {
       when(mockSave4LaterRepository.save(any(), any(), any()))
         .thenReturn(Future.successful(()))
-      val invalidRequest = FakeRequest("PUT", "/save4later/id").withJsonBody(Json.toJson(""))
-      val result         = await(route(app, invalidRequest).get)
+      val invalidRequest = FakeRequest("PUT", "/save4later/id").withJsonBody(Json.toJson("")).withHeaders(
+        "Authorization" -> "Token some-token"
+      )
+      val result = await(route(app, invalidRequest).get)
       result.header.status mustBe Status.NOT_FOUND
     }
 
     "respond with status 400 for a invalid request update with no body" in {
       when(mockSave4LaterRepository.save(any(), any(), any()))
         .thenReturn(Future.successful(()))
-      val invalidRequestWithNoBody = FakeRequest("PUT", "/save4later/id/key")
-      val result                   = await(route(app, invalidRequestWithNoBody).get)
+      val invalidRequestWithNoBody =
+        FakeRequest("PUT", "/save4later/id/key").withHeaders("Authorization" -> "Token some-token")
+      val result = await(route(app, invalidRequestWithNoBody).get)
       result.header.status mustBe Status.BAD_REQUEST
     }
 

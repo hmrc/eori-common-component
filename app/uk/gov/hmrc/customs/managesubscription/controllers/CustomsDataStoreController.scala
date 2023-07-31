@@ -18,11 +18,11 @@ package uk.gov.hmrc.customs.managesubscription.controllers
 
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core.{AuthProviders, AuthorisedFunctions}
-import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, MicroserviceAuthConnector}
+import uk.gov.hmrc.customs.managesubscription.connectors.CustomsDataStoreConnector
 import uk.gov.hmrc.customs.managesubscription.domain.DataStoreRequest
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,20 +31,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class CustomsDataStoreController @Inject() (
   customsDataStore: CustomsDataStoreConnector,
   cc: ControllerComponents,
-  override val authConnector: MicroserviceAuthConnector
+  val auth: BackendAuthComponents
 )(implicit ec: ExecutionContext)
-    extends BackendController(cc) with AuthorisedFunctions {
+    extends BackendController(cc) {
 
-  def updateCustomsDataStore(): Action[AnyContent] = Action async {
+  def updateCustomsDataStore(): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("cds")).async {
     implicit request =>
-      authorised(AuthProviders(GovernmentGateway)) {
-        request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
-          js.validate[DataStoreRequest] match {
-            case JsSuccess(r, _) =>
-              customsDataStore.updateDataStore(r).map(_ => NoContent)
-            case JsError(_) =>
-              Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
-          }
+      request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
+        js.validate[DataStoreRequest] match {
+          case JsSuccess(r, _) =>
+            customsDataStore.updateDataStore(r).map(_ => NoContent)
+          case JsError(_) =>
+            Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
         }
       }
   }

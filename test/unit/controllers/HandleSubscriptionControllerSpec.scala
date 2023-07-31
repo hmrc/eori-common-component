@@ -23,7 +23,6 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.http.Status._
 import play.api.mvc._
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubPlayBodyParsers
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, HandleSubscriptionController}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,13 +30,23 @@ import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription._
 import util.TestData._
+import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
+import play.api.test.Helpers.{stubControllerComponents, stubPlayBodyParsers}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
+  implicit val cc = stubControllerComponents()
+
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
-  private val mockControllerComponents = mock[ControllerComponents]
+  private val mockStubBehaviour        = mock[StubBehaviour]
+
+  private val expectedPredicate = Predicate.Permission(
+    Resource(ResourceType("eori-common-component"), ResourceLocation("handle-subscription")),
+    IAAction("WRITE")
+  )
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
@@ -46,10 +55,18 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
-    new HandleSubscriptionController(mockTaxEnrolmentsService, mockControllerComponents, mockDigitalHeaderValidator)
+    new HandleSubscriptionController(
+      mockTaxEnrolmentsService,
+      cc,
+      mockDigitalHeaderValidator,
+      BackendAuthComponentsStub(mockStubBehaviour)
+    )
 
-  override def beforeEach(): Unit =
+  override def beforeEach(): Unit = {
     reset(mockTaxEnrolmentsService)
+    reset(mockStubBehaviour)
+    when(mockStubBehaviour.stubAuth(Some(expectedPredicate), Retrieval.EmptyRetrieval)).thenReturn(Future.unit)
+  }
 
   "HandleSubscriptionController" should {
     "respond with status 204 (No Content) if the request is valid and status SUCCEEDED" in {
@@ -125,8 +142,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) {
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
     test(controller.handle().apply(request))
-  }
 
 }

@@ -157,8 +157,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) {
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
     test(controller.updateStatus(formBundleId).apply(request))
-  }
 
 }
