@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
+import play.api.i18n.Lang.logger
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.CustomsDataStoreConnector
@@ -41,7 +42,8 @@ class CustomsDataStoreController @Inject() (
         js.validate[DataStoreRequest] match {
           case JsSuccess(r, _) =>
             customsDataStore.updateDataStore(r).map(_ => NoContent)
-          case JsError(_) =>
+          case JsError(e) =>
+            logger.error(s"Received invalid DataStoreRequest. Validation errors: ${e.mkString}")
             Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
         }
       }

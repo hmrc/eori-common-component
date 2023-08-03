@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
+import play.api.i18n.Lang.logger
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.HttpStatusCheck
@@ -52,10 +53,10 @@ class HandleSubscriptionController @Inject() (
                   subscriptionRequest.emailVerificationTimestamp,
                   subscriptionRequest.safeId
                 ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
+            case JsError(e) =>
+              logger.error(s"Received invalid HandleSubscriptionRequest. Validation errors: ${e.mkString}")
+              Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
 
-              case JsError(_) =>
-                Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
-            }
           }
         }  
     }

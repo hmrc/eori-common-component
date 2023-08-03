@@ -16,28 +16,22 @@
 
 package uk.gov.hmrc.customs.managesubscription.connectors
 
-import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
-import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
-import uk.gov.hmrc.customs.managesubscription.services.PayloadCache
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TaxEnrolmentsConnector @Inject() (
-  buildUrl: BuildUrl,
-  httpClient: HttpClient,
-  audit: Auditable,
-  appConfig: AppConfig
-)(implicit ec: ExecutionContext)
-    extends Instrumentable {
+class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient, audit: Auditable)(implicit
+  ec: ExecutionContext
+) {
 
   private val logger = Logger(this.getClass)
 
@@ -50,8 +44,6 @@ class TaxEnrolmentsConnector @Inject() (
     logger.info(s"putUrl: $url")
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
-
-    if (appConfig.samplePayloads) sampleData(PayloadCache.SubscriberCall, request)
 
     httpClient.PUT[TaxEnrolmentsRequest, HttpResponse](url, request) map {
       response =>
