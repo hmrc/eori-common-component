@@ -57,12 +57,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
-    new HandleSubscriptionController(
-      mockTaxEnrolmentsService,
-      cc,
-      mockDigitalHeaderValidator,
-      mockAuthConnector
-    )
+    new HandleSubscriptionController(mockTaxEnrolmentsService, cc, mockDigitalHeaderValidator, mockAuthConnector)
 
   override def beforeEach(): Unit = {
     reset(mockTaxEnrolmentsService)
