@@ -33,6 +33,7 @@ import util.TestData._
 import uk.gov.hmrc.internalauth.client._
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 import play.api.test.Helpers.{stubControllerComponents, stubPlayBodyParsers}
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,6 +43,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
 
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
   private val mockStubBehaviour        = mock[StubBehaviour]
+  private val mockAuthConnector        = mock[AuthConnector]
 
   private val expectedPredicate = Predicate.Permission(
     Resource(ResourceType("eori-common-component"), ResourceLocation("handle-subscription")),
@@ -55,17 +57,12 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val controller =
-    new HandleSubscriptionController(
-      mockTaxEnrolmentsService,
-      cc,
-      mockDigitalHeaderValidator,
-      BackendAuthComponentsStub(mockStubBehaviour)
-    )
+    new HandleSubscriptionController(mockTaxEnrolmentsService, cc, mockDigitalHeaderValidator, mockAuthConnector)
 
   override def beforeEach(): Unit = {
     reset(mockTaxEnrolmentsService)
-    reset(mockStubBehaviour)
-    when(mockStubBehaviour.stubAuth(Some(expectedPredicate), Retrieval.EmptyRetrieval)).thenReturn(Future.unit)
+    reset(mockAuthConnector)
+    when(mockAuthConnector.authorise[Unit](any, any)(any, any)).thenReturn(Future.successful(()))
   }
 
   "HandleSubscriptionController" should {
