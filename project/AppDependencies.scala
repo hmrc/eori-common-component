@@ -9,7 +9,6 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc"             %% "bootstrap-backend-play-28"      % bootstrapVersion,
-    "uk.gov.hmrc"             %% "http-caching-client"            % "10.0.0-play-28",
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-play-28"             % "1.1.0",
     "com.typesafe.play"       %% "play-json-joda"                 % "2.9.4",
     "uk.gov.hmrc"             %% "internal-auth-client-play-28"   % "1.3.0"
