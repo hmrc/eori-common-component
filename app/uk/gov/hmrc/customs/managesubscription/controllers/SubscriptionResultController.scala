@@ -23,7 +23,7 @@ import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.controllers.json.JsonReads._
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionComplete
-import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusinessService
+import uk.gov.hmrc.customs.managesubscription.services.{GetVatCustomerInformationService, SubscriptionCompleteBusinessService}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,12 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SubscriptionResultController @Inject() (
   subscriptionCompleteBusinessService: SubscriptionCompleteBusinessService,
+  service: GetVatCustomerInformationService,
   cc: ControllerComponents,
   messagingHeaderValidator: MessagingHeaderValidator
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
   def updateStatus(formBundleId: String): Action[AnyContent] = messagingHeaderValidator.async { implicit request =>
+    val testing = service.getVatCustomerInformation("123456789")
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
       js.validate[SubscriptionComplete] match {
         case JsSuccess(subscriptionComplete, _) =>
