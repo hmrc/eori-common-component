@@ -19,11 +19,13 @@ package uk.gov.hmrc.customs.managesubscription.controllers
 import com.google.inject.Inject
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 
-class GetVatCustomerInformationController @Inject() (getVatCustomerInformationService: GetVatCustomerInformationService) {
+class GetVatCustomerInformationController @Inject() (
+  getVatCustomerInformationService: GetVatCustomerInformationService
+) {
 
 //  def get(): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("cds")).async {
 //    implicit request => = {
 //    getVatCustomerInformationService.getVatCustomerInformation("123456789")
 //  }
- // will call the service
+  // will call the service
 }

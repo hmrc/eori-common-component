@@ -29,12 +29,17 @@ import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetVatCustomerInformationConnector @Inject()(buildUrl: BuildUrl, httpClient: HttpClientV2)(implicit ec: ExecutionContext) extends Logging {
+class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClientV2)(implicit
+  ec: ExecutionContext
+) extends Logging {
 
   val serviceName: String = "integration-framework"
 
   private val baseUrl = buildUrl(serviceName)
-  def getVatCustomerInformation(vrn: String)(implicit hc: HeaderCarrier): EitherT[Future, HttpResponse, VatCustomerInformation] = EitherT{
+
+  def getVatCustomerInformation(
+    vrn: String
+  )(implicit hc: HeaderCarrier): EitherT[Future, HttpResponse, VatCustomerInformation] = EitherT {
 
     val vatUrl: URL = url"$baseUrl/vat/customer/vrn/$vrn/information"
 
@@ -45,9 +50,10 @@ class GetVatCustomerInformationConnector @Inject()(buildUrl: BuildUrl, httpClien
       response =>
         logger.debug(s"getVatCustomerInformation successful. url: $vatUrl")
         response.status match {
-          case OK        => Right(response.json.as[VatCustomerInformation])
-          case _         => Left(response)
+          case OK => Right(response.json.as[VatCustomerInformation])
+          case _  => Left(response)
         }
     }
   }
+
 }

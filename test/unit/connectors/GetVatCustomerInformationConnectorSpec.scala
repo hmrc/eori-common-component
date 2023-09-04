@@ -25,7 +25,7 @@ import scala.concurrent.Future
 class GetVatCustomerInformationConnectorSpec extends BaseSpec {
 
   private val testConnector = new GetVatCustomerInformationConnector()
-  private val validVrn = "123456789"
+  private val validVrn      = "123456789"
 
   "GetVatCustomerInformationConnector" should {
 
@@ -34,7 +34,6 @@ class GetVatCustomerInformationConnectorSpec extends BaseSpec {
       val responseBody = Json.parse("""{"response": {"responseDetail": {"EORINo": "123456789"}}}""")
 
       await(testConnector.getVatCustomerInformation(validVrn)) shouldBe responseBody
-
 
     }
 

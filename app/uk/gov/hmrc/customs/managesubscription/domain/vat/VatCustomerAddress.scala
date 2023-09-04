@@ -20,6 +20,6 @@ import play.api.libs.json.Json
 
 case class VatCustomerAddress(postCode: Option[String])
 
-  object VatCustomerAddress {
-    implicit val vatCustomerAddressFormat = Json.format[VatCustomerAddress]
-  }
+object VatCustomerAddress {
+  implicit val vatCustomerAddressFormat = Json.format[VatCustomerAddress]
+}

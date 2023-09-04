@@ -21,6 +21,5 @@ import play.api.libs.json.Json
 case class VatApprovedInformation(effectiveRegistrationDate: String, PPOB: VatCustomerInformationPPOB)
 
 object VatApprovedInformation {
-    implicit val vatApprovedInformationFormat = Json.format[VatApprovedInformation]
-  }
-
+  implicit val vatApprovedInformationFormat = Json.format[VatApprovedInformation]
+}

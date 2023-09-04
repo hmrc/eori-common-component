@@ -20,7 +20,6 @@ import play.api.libs.json.Json
 
 case class VatCustomerInformationPPOB(address: Option[VatCustomerAddress])
 
-  object VatCustomerInformationPPOB {
-    implicit val vatCustomerInformationPPOBFormat = Json.format[VatCustomerInformationPPOB]
-  }
-
+object VatCustomerInformationPPOB {
+  implicit val vatCustomerInformationPPOBFormat = Json.format[VatCustomerInformationPPOB]
+}
