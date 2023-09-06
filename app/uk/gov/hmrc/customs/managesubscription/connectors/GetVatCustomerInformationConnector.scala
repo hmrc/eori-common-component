@@ -18,12 +18,13 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import cats.data.EitherT
 import com.google.inject.{Inject, Singleton}
-import play.api.Logging
+import play.api.{Application, Logging}
 import play.api.http.Status.OK
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClientV2)(implicit
   ec: ExecutionContext
-) extends Logging {
+) extends Logging with HandleResponses {
 
   val serviceName: String = "integration-framework"
 
@@ -39,7 +40,7 @@ class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClie
 
   def getVatCustomerInformation(
     vrn: String
-  )(implicit hc: HeaderCarrier): EitherT[Future, HttpResponse, VatCustomerInformation] = EitherT {
+  )(implicit hc: HeaderCarrier): EitherT[Future, ResponseError, VatCustomerInformation] = EitherT {
 
     val vatUrl: URL = url"$baseUrl/vat/customer/vrn/$vrn/information"
 
@@ -48,10 +49,13 @@ class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClie
     httpClient.get(vatUrl)
       .execute map {
       response =>
-        logger.debug(s"getVatCustomerInformation successful. url: $vatUrl")
+        logger.info(s"getVatCustomerInformation successful. response: ${response.status}")
         response.status match {
-          case OK => Right(response.json.as[VatCustomerInformation])
-          case _  => Left(response)
+          case OK => handleResponse[VatCustomerInformation](response)
+          case _ =>
+            val error = s"Unexpected status from getVatCustomerInformation: ${response.status} body: ${response.body}"
+            logger.warn(error)
+            Left(ResponseError(response.status, error))
         }
     }
   }

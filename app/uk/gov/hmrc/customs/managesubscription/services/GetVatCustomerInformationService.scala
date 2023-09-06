@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
+import cats.data.EitherT
 import com.google.inject.Inject
-import play.api.Logging
-import uk.gov.hmrc.customs.managesubscription.connectors.GetVatCustomerInformationConnector
+import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
 import uk.gov.hmrc.http.HeaderCarrier
 
-class GetVatCustomerInformationService @Inject() (getVatCustomerInformationConnector: GetVatCustomerInformationConnector) extends Logging {
-// this will be calling connector
-  // function to make sure we only passe what we need for front-end
+import scala.concurrent.Future
 
-  def getVatCustomerInformation(vrn: String)(implicit hc: HeaderCarrier)  =
-    getVatCustomerInformationConnector.getVatCustomerInformation(vrn) map  { p =>
-      case Right(p): VatCustomerInformation => logger.warn(p.approvedInformation)
-      case _ =>   logger.warn("dsfojdfgi")
-    }
+class GetVatCustomerInformationService @Inject() (
+  getVatCustomerInformationConnector: GetVatCustomerInformationConnector
+) {
+
+  def getVatCustomerInformation(
+    vrn: String
+  )(implicit hc: HeaderCarrier): EitherT[Future, ResponseError, VatCustomerInformation] =
+    getVatCustomerInformationConnector.getVatCustomerInformation(vrn)
+
+}

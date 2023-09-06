@@ -18,8 +18,10 @@ package uk.gov.hmrc.customs.managesubscription.domain.vat
 
 import play.api.libs.json.Json
 
-case class VatApprovedInformation(customerDetails: VatCustomerDetails, PPOB: VatCustomerInformationPPOB)
+import java.util.Date
 
-object VatApprovedInformation {
-  implicit val vatApprovedInformationFormat = Json.format[VatApprovedInformation]
+case class VatCustomerDetails(effectiveRegistrationDate: Option[Date])
+
+object VatCustomerDetails {
+  implicit val vatCustomerDetailsFormat = Json.format[VatCustomerDetails]
 }

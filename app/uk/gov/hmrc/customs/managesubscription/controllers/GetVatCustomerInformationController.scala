@@ -17,15 +17,32 @@
 package uk.gov.hmrc.customs.managesubscription.controllers
 
 import com.google.inject.Inject
+import play.api.http.MimeTypes
+import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent, ControllerComponents, Results}
+import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
+import uk.gov.hmrc.internalauth.client.BackendAuthComponents
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+
+@Singleton
 class GetVatCustomerInformationController @Inject() (
-  getVatCustomerInformationService: GetVatCustomerInformationService
-) {
+  getVatCustomerInformationService: GetVatCustomerInformationService,
+  auth: BackendAuthComponents,
+  cc: ControllerComponents
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc) {
 
-//  def get(): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("cds")).async {
-//    implicit request => = {
-//    getVatCustomerInformationService.getVatCustomerInformation("123456789")
-//  }
-  // will call the service
+  def getVatCustomerInformation(vrn: String): Action[AnyContent] =
+    auth.authorizedAction(internalAuthPermission("vat")).async {
+      implicit request =>
+        getVatCustomerInformationService.getVatCustomerInformation(vrn).fold(
+          responseError => Results.Status(INTERNAL_SERVER_ERROR)(Json.toJson(responseError)).as(MimeTypes.JSON),
+          vatInfo => Results.Status(OK)(Json.toJson(vatInfo.toResponse)).as(MimeTypes.JSON)
+        )
+    }
+
 }

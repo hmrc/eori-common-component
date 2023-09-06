@@ -40,12 +40,6 @@ class Save4LaterController @Inject() (
 
   def put(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
     implicit request =>
-
-      val testing = service.getVatCustomerInformation("123456789")
-
-      }
-      logger.warn(s"val is: ${testing}")
-
       request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
         save4LaterRepository.save(id, key, js).map(_ => Created)
       }
