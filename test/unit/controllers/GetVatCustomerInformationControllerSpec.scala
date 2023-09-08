@@ -22,7 +22,7 @@ import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.http.MimeTypes
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
@@ -98,7 +98,7 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
     }
   }
 
-  "return INTERNAL_SERVER_ERROR for getVatCustomerInformation service call with ResponseError as NOT_FOUND" in {
+  "return NOT_FOUND for getVatCustomerInformation service call with ResponseError as NOT_FOUND" in {
     val responseError: Either[ResponseError, VatCustomerInformation] =
       Left(ResponseError(NOT_FOUND, "an error message"))
 
@@ -107,7 +107,7 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
     })
 
     val result = controller.getVatCustomerInformation(vrn)(fakeRequest)
-    status(result) shouldBe INTERNAL_SERVER_ERROR
+    status(result) shouldBe NOT_FOUND
     contentType(result)(defaultTimeout) shouldBe Some(MimeTypes.JSON)
     contentAsJson(result)(defaultTimeout) shouldBe Json.parse(""" {"status":404,"error":"an error message"} """)
   }

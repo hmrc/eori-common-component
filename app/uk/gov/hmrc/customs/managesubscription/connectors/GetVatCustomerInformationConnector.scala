@@ -18,9 +18,8 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import cats.data.EitherT
 import com.google.inject.{Inject, Singleton}
-import play.api.{Application, Logging}
+import play.api.Logging
 import play.api.http.Status.OK
-import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
 import uk.gov.hmrc.http.client.HttpClientV2

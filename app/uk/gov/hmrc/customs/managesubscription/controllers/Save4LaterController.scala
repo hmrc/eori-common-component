@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
-import play.api.Logging
-
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.internalauth.client._
 import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
-import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +33,7 @@ class Save4LaterController @Inject() (
   service: GetVatCustomerInformationService,
   val auth: BackendAuthComponents
 )(implicit ec: ExecutionContext)
-    extends BackendController(cc) with Logging {
+    extends BackendController(cc) {
 
   def put(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
     implicit request =>
