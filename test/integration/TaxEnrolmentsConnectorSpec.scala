@@ -35,10 +35,10 @@ class TaxEnrolmentsConnectorSpec extends IntegrationTestsWithDbSpec with TaxEnro
 
   private val taxEnrolmentsRequest = validRequestJson.as[TaxEnrolmentsRequest]
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     startMockServer()
 
-  override def afterAll: Unit =
+  override def afterAll(): Unit =
     stopMockServer()
 
   "TaxEnrolmentConnector" should {

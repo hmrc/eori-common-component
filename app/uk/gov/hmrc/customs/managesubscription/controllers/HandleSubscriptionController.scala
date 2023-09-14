@@ -24,7 +24,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
 import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest, TaxPayerId}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthProviders, AuthorisedFunctions}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

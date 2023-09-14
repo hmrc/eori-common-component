@@ -17,6 +17,7 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import play.api.Logger
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import play.api.http.HeaderNames._
 import play.api.http.MimeTypes
 import play.api.http.Status.OK
@@ -44,7 +45,7 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
     val url     = appConfig.subscriptionDisplayUrl + makeQueryString(queryParams)
     val headers = generateHeadersWithBearerToken
     auditRequestHeaders(headers, url)
-    httpClient.GET(url, Seq(), headers) map { response =>
+    httpClient.GET[HttpResponse](url, Seq(), headers) map { response =>
       auditResponse(response, url)
       logResponse(response.status)
       extractEoriNumber(Json.parse(response.body))

@@ -40,10 +40,10 @@ class SubscriptionDisplayIntegrationSpec
 
   private lazy val subscriptionDisplayConnector = app.injector.instanceOf[SubscriptionDisplayConnector]
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     startMockServer()
 
-  override def afterAll: Unit =
+  override def afterAll(): Unit =
     stopMockServer()
 
   "SubscriptionDisplayConnector" should {

@@ -31,14 +31,13 @@ class EmailConnectorSpec extends IntegrationTestsWithDbSpec with MDTPEmailServic
     Map("microservice.services.email.host" -> Host, "microservice.services.email.port" -> Port)
   ).build()
 
-  override def beforeAll {
+  override def beforeAll(): Unit = {
     startMockServer()
     mdtpEmailServiceIsRunning()
   }
 
-  override def afterAll {
+  override def afterAll(): Unit =
     stopMockServer()
-  }
 
   private def emailConnector = app.injector.instanceOf[EmailConnector]
 

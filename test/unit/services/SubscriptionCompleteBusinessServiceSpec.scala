@@ -255,7 +255,10 @@ class SubscriptionCompleteBusinessServiceSpec
     }
   }
 
-  private def mockSubscriptionComplete(status: SubscriptionCompleteStatus, errorResponse: Option[String] = None) {
+  private def mockSubscriptionComplete(
+    status: SubscriptionCompleteStatus,
+    errorResponse: Option[String] = None
+  ): Unit = {
     when(mockSubscriptionComplete.state).thenReturn(status)
     when(mockSubscriptionComplete.errorResponse).thenReturn(errorResponse)
   }

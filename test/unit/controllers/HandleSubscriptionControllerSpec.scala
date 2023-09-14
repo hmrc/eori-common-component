@@ -30,8 +30,6 @@ import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription._
 import util.TestData._
-import uk.gov.hmrc.internalauth.client._
-import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 import play.api.test.Helpers.{stubControllerComponents, stubPlayBodyParsers}
 import uk.gov.hmrc.auth.core.AuthConnector
 
@@ -42,13 +40,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
   implicit val cc = stubControllerComponents()
 
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
-  private val mockStubBehaviour        = mock[StubBehaviour]
   private val mockAuthConnector        = mock[AuthConnector]
-
-  private val expectedPredicate = Predicate.Permission(
-    Resource(ResourceType("eori-common-component"), ResourceLocation("handle-subscription")),
-    IAAction("WRITE")
-  )
 
   private val mockDigitalHeaderValidator = new DigitalHeaderValidator(stubPlayBodyParsers(NoMaterializer))(
     ExecutionContext.global
