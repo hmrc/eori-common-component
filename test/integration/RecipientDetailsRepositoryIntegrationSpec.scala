@@ -16,12 +16,9 @@
 
 package integration
 
-import akka.util.Timeout
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.play.ConfiguredApp
-import play.api.test.DefaultAwaitTimeout
+import org.scalatest.concurrent.ScalaFutures
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
 import uk.gov.hmrc.mongo.CurrentTimestampSupport
@@ -59,9 +56,10 @@ class RecipientDetailsRepositoryIntegrationSpec
         )
       )
 
-      val Some(cache) = repository.findById(formBundleId).futureValue
+      val cacheItem =
+        repository.findById(formBundleId).futureValue.getOrElse(throw new IllegalStateException("Cache returned None"))
 
-      val cacheValue = cache.data
+      val cacheValue = cacheItem.data
       (cacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
         Some(eori.value),
         recipientDetails,
@@ -85,8 +83,9 @@ class RecipientDetailsRepositoryIntegrationSpec
         )
       )
 
-      val Some(updatedCache) = repository.findById(formBundleId).futureValue
-      val updatedCacheValue  = updatedCache.data
+      val updatedCacheItem =
+        repository.findById(formBundleId).futureValue.getOrElse(throw new IllegalStateException("Cache returned None"))
+      val updatedCacheValue = updatedCacheItem.data
 
       (updatedCacheValue \ "recipientDetailsWithEori").as[RecipientDetailsWithEori] shouldBe RecipientDetailsWithEori(
         Some(eori.value),
@@ -98,7 +97,7 @@ class RecipientDetailsRepositoryIntegrationSpec
 
     "expect no data when Recipient Details not available in cache" in {
       val result = recipientDetailsRepository.recipientDetailsForBundleId("not-there").futureValue
-      result.left.get.toString should include("No data is saved for the formBundleId: not-there")
+      result.swap.getOrElse("").toString should include("No data is saved for the formBundleId: not-there")
     }
   }
 }

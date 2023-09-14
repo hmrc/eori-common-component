@@ -50,9 +50,8 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
 
   private val emulatedFailure = new UnsupportedOperationException("Emulated service call failure.")
 
-  override protected def beforeEach() {
+  override protected def beforeEach(): Unit =
     reset(mockContactDetailsStore, mockTaxEnrolmentConnector)
-  }
 
   "SubscriptionTaxEnrolmentIntegrationService" should {
 

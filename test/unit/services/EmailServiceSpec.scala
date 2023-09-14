@@ -202,9 +202,8 @@ class EmailServiceSpec extends BaseSpec {
     )
   )
 
-  override def beforeEach() {
+  override def beforeEach(): Unit =
     reset(mockEmailConnector)
-  }
 
   "EmailService" should {
     "call emailConnector with proper content for Register success email" in {

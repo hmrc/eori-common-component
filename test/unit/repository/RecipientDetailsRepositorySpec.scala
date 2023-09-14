@@ -54,7 +54,7 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
-      result.left.get shouldBe JsError("Data saved in db is invalid for formBundleId: some-id")
+      result.swap.getOrElse("") shouldBe JsError("Data saved in db is invalid for formBundleId: some-id")
     }
 
     "return JsError when no data found" in {
@@ -62,7 +62,7 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
-      result.left.get shouldBe JsError("No data is saved for the formBundleId: some-id")
+      result.swap.getOrElse("") shouldBe JsError("No data is saved for the formBundleId: some-id")
     }
 
     "return error when data not found for recipientDetailsWithEori" in {
@@ -81,7 +81,7 @@ class RecipientDetailsRepositorySpec extends UnitSpec with MockitoSugar with Bef
 
       val result = await(recipientDetailsCache.recipientDetailsForBundleId(idAsString))
 
-      result.left.get shouldBe JsError("Data saved in db is invalid for formBundleId: some-id")
+      result.swap.getOrElse("") shouldBe JsError("Data saved in db is invalid for formBundleId: some-id")
     }
   }
 

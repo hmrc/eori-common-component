@@ -49,7 +49,7 @@ trait IntegrationTestsWithDbSpec
     .overrides(bind[MongoComponent].toInstance(mongoComponent))
     .build()
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     await(dropDatabase())
 
 }

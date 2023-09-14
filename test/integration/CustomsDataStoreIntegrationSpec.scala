@@ -42,10 +42,10 @@ class CustomsDataStoreIntegrationSpec
                                         |  "timestamp" : "${emailVerificationTimestamp}"
                                         |}""".stripMargin
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     startMockServer()
 
-  override def afterAll: Unit =
+  override def afterAll(): Unit =
     stopMockServer()
 
   "CustomsDataStoreConnector" should {

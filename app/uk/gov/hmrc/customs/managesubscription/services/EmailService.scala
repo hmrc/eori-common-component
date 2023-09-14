@@ -33,12 +33,14 @@ class EmailService @Inject() (appConfig: AppConfig, emailConnector: EmailConnect
     recipient.journey match {
       case Journey.Register  => sendEmail(appConfig.emailEccRegistrationSuccessTemplateId, recipient)
       case Journey.Subscribe => sendEmail(appConfig.emailSubscribeSuccessTemplateId, recipient)
+      case _                 => Future.failed(new Exception("Email was not sent to recipient"))
     }
 
   def sendFailureEmail(recipient: RecipientDetails)(implicit hc: HeaderCarrier): Future[HttpResponse] =
     recipient.journey match {
       case Journey.Register  => sendEmail(appConfig.emailRegisterNotSuccessTemplateId, recipient)
       case Journey.Subscribe => sendEmail(appConfig.emailSubscribeNotSuccessTemplateId, recipient)
+      case _                 => Future.failed(new Exception("Failure email was not sent to recipient"))
     }
 
   def sendRcmNotificationEmail(request: RcmNotificationRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
