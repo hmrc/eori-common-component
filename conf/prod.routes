@@ -6,6 +6,8 @@ POST        /:formBundleId                  @uk.gov.hmrc.customs.managesubscript
 
 GET         /admin/metrics                  @com.kenshoo.play.metrics.MetricsController.metrics
 
+GET         /vat-customer-information/:vrn @uk.gov.hmrc.customs.managesubscription.controllers.GetVatCustomerInformationController.getVatCustomerInformation(vrn)
+
 PUT         /save4later/:id/:key           @uk.gov.hmrc.customs.managesubscription.controllers.Save4LaterController.put(id,key)
 
 GET         /save4later/:id/:key           @uk.gov.hmrc.customs.managesubscription.controllers.Save4LaterController.get(id,key)
