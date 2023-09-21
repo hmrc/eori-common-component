@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.client.{MappingBuilder, ResponseDefinitionBuilder}
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import okhttp3.ResponseBody
 import play.api.test.Helpers._
 import play.mvc.Http.HeaderNames.CONTENT_TYPE
 import play.mvc.Http.MimeTypes.JSON
@@ -92,6 +93,21 @@ trait SubscriptionDisplayService extends WireMockRunner {
   private val responseBody = """{"subscriptionDisplayResponse": {"responseDetail": {"EORINo": "ZZ123456789000"}}}"""
 
   def returnSubscriptionDisplayResponse(url: String, status: Int): Unit =
+    stubFor(
+      get(urlEqualTo(url))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withHeader(CONTENT_TYPE, JSON)
+            .withBody(responseBody)
+        )
+    )
+
+}
+
+trait IntegrationFrameworkService extends WireMockRunner {
+
+  def returnGetVatCustomerInformationResponse(url: String, status: Int, responseBody: String): Unit =
     stubFor(
       get(urlEqualTo(url))
         .willReturn(

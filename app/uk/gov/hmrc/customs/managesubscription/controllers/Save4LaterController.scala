@@ -22,6 +22,7 @@ import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.internalauth.client._
 import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
+import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,6 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class Save4LaterController @Inject() (
   save4LaterRepository: Save4LaterRepository,
   cc: ControllerComponents,
+  service: GetVatCustomerInformationService,
   val auth: BackendAuthComponents
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
