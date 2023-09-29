@@ -25,7 +25,6 @@ import play.mvc.Http.Status.{BAD_REQUEST, NOT_ACCEPTABLE, _}
 trait HttpStatusCodeShortDescriptions {
   // 4XX
   val BadRequestCode           = "BAD_REQUEST"
-  val UnauthorizedCode         = "UNAUTHORIZED"
   val NotAcceptableCode        = "ACCEPT_HEADER_INVALID"
   val UnsupportedMediaTypeCode = "UNSUPPORTED_MEDIA_TYPE"
   // 5XX
@@ -50,9 +49,6 @@ case class ErrorResponse(httpStatusCode: Int, errorCode: String, message: String
 }
 
 object ErrorResponse extends HttpStatusCodeShortDescriptions {
-
-  val ErrorUnauthorized: ErrorResponse =
-    ErrorResponse(UNAUTHORIZED, UnauthorizedCode, "Bearer token is missing or not authorized")
 
   private def errorBadRequest(errorMessage: String, errorCode: String = BadRequestCode): ErrorResponse =
     ErrorResponse(BAD_REQUEST, errorCode, errorMessage)
