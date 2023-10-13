@@ -22,16 +22,14 @@ import play.api.http.Status.NOT_FOUND
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
-import uk.gov.hmrc.http.HeaderCarrier
 import util.BaseSpec
 
 import scala.concurrent.Future
 
 class GetVatCustomerInformationServiceSpec extends BaseSpec {
-  private val mockConnector              = mock[GetVatCustomerInformationConnector]
-  private val service                    = new GetVatCustomerInformationService(mockConnector)
-  private val vrn                        = "123456789"
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private val mockConnector = mock[GetVatCustomerInformationConnector]
+  private val service       = new GetVatCustomerInformationService(mockConnector)
+  private val vrn           = "123456789"
 
   "getVatCustomerInformation" should {
 
@@ -68,6 +66,6 @@ class GetVatCustomerInformationServiceSpec extends BaseSpec {
   }
 
   def mockGetVatCustomerInformationConnector(response: EitherT[Future, ResponseError, VatCustomerInformation]): Unit =
-    when(mockConnector.getVatCustomerInformation(any())(any[HeaderCarrier])) thenReturn response
+    when(mockConnector.getVatCustomerInformation(any())) thenReturn response
 
 }

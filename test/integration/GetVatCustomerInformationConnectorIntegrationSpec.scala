@@ -23,7 +23,7 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers.{await, OK}
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import uk.gov.hmrc.http.BadRequestException
 import util.IntegrationFrameworkService
 
 import scala.concurrent.Await
@@ -31,15 +31,14 @@ import scala.concurrent.Await
 class GetVatCustomerInformationConnectorIntegrationSpec
     extends IntegrationTestsWithDbSpec with IntegrationFrameworkService {
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private lazy val connector             = app.injector.instanceOf[GetVatCustomerInformationConnector]
-  private val vrn                        = "123456789"
-  private val url                        = s"/vat/customer/vrn/$vrn/information"
+  private lazy val connector = app.injector.instanceOf[GetVatCustomerInformationConnector]
+  private val vrn            = "123456789"
+  private val url            = s"/vat/customer/vrn/$vrn/information"
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     startMockServer()
 
-  override def afterAll: Unit =
+  override def afterAll(): Unit =
     stopMockServer()
 
   private val failedResponseBody =
@@ -91,8 +90,10 @@ class GetVatCustomerInformationConnectorIntegrationSpec
 
     "return failed VatCustomerInformation call with 400 status and ResponseError" in {
       returnGetVatCustomerInformationResponse(url, BAD_REQUEST, "some other failure")
-      val result = intercept[BadRequestException](await(connector.getVatCustomerInformation(vrn).value))
-      result.getMessage shouldBe "GET of 'http://localhost:11111/vat/customer/vrn/123456789/information' returned 400 (Bad Request). Response body 'some other failure'"
+      val result = await(connector.getVatCustomerInformation(vrn).value)
+      result shouldBe Left(
+        ResponseError(400, "Unexpected status from getVatCustomerInformation: 400 body: some other failure")
+      )
     }
   }
 }

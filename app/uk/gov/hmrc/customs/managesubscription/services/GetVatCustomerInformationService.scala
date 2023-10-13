@@ -20,7 +20,6 @@ import cats.data.EitherT
 import com.google.inject.Inject
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -28,9 +27,7 @@ class GetVatCustomerInformationService @Inject() (
   getVatCustomerInformationConnector: GetVatCustomerInformationConnector
 ) {
 
-  def getVatCustomerInformation(
-    vrn: String
-  )(implicit hc: HeaderCarrier): EitherT[Future, ResponseError, VatCustomerInformation] =
+  def getVatCustomerInformation(vrn: String): EitherT[Future, ResponseError, VatCustomerInformation] =
     getVatCustomerInformationConnector.getVatCustomerInformation(vrn)
 
 }

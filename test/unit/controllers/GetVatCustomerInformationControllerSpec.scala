@@ -31,7 +31,6 @@ import uk.gov.hmrc.customs.managesubscription.connectors.ResponseError
 import uk.gov.hmrc.customs.managesubscription.controllers.GetVatCustomerInformationController
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 import uk.gov.hmrc.internalauth.client._
 import util.UnitSpec
@@ -107,6 +106,6 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
   }
 
   def mockGetVatCustomerInformationService(response: EitherT[Future, ResponseError, VatCustomerInformation]): Unit =
-    when(mockService.getVatCustomerInformation(any())(any[HeaderCarrier])) thenReturn response
+    when(mockService.getVatCustomerInformation(any())) thenReturn response
 
 }

@@ -33,6 +33,7 @@ import java.time.format.DateTimeFormatter
 import java.time.{Clock, ZoneId, ZonedDateTime}
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 @Singleton
 class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClientV2, appConfig: AppConfig)(
@@ -43,15 +44,13 @@ class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClie
 
   private val baseUrl = buildUrl(serviceName)
 
-  def getVatCustomerInformation(
-    vrn: String
-  )(implicit hc: HeaderCarrier): EitherT[Future, ResponseError, VatCustomerInformation] = EitherT {
+  def getVatCustomerInformation(vrn: String): EitherT[Future, ResponseError, VatCustomerInformation] = EitherT {
 
     val vatUrl: URL = url"$baseUrl/vat/customer/vrn/$vrn/information"
 
     logger.info(s"[$serviceName][Connector] GET url: $vatUrl")
 
-    implicit val hc = HeaderCarrier(extraHeaders = generateHeadersWithBearerToken)
+    implicit val hc: HeaderCarrier = HeaderCarrier(extraHeaders = generateHeadersWithBearerToken)
 
     httpClient.get(vatUrl)
       .execute map {

@@ -34,7 +34,7 @@ lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.customs.managesubscription.config.*;.*(BuildInfo|Routes).*;.*ConfigModule.*;.*ConfigValidationNelAdaptor.*;.*ErrorResponse.*",
-  coverageMinimumStmtTotal := 93, // TODO Increase to 95%
+  coverageMinimumStmtTotal := 95,
   coverageFailOnMinimum := false,
   coverageHighlighting := true,
   Test / parallelExecution := false

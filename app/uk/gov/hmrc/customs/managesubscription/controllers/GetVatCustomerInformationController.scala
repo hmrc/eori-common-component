@@ -38,11 +38,10 @@ class GetVatCustomerInformationController @Inject() (
 
   def getVatCustomerInformation(vrn: String): Action[AnyContent] =
     auth.authorizedAction(internalAuthPermission("vat")).async {
-      implicit request =>
-        getVatCustomerInformationService.getVatCustomerInformation(vrn).fold(
-          responseError => Results.Status(responseError.status)(Json.toJson(responseError)).as(MimeTypes.JSON),
-          vatInfo => Ok(Json.toJson(vatInfo.toResponse))
-        )
+      getVatCustomerInformationService.getVatCustomerInformation(vrn).fold(
+        responseError => Results.Status(responseError.status)(Json.toJson(responseError)).as(MimeTypes.JSON),
+        vatInfo => Ok(Json.toJson(vatInfo.toResponse))
+      )
     }
 
 }
