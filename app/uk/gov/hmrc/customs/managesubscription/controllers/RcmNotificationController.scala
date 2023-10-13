@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, ControllerComponents}
+import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.internalauth.client._
-import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton

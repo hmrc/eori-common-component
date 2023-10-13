@@ -25,10 +25,10 @@ import play.api.test.Helpers.{await, stubPlayBodyParsers}
 import play.mvc.Http.HeaderNames._
 import uk.gov.hmrc.customs.managesubscription.controllers.DigitalHeaderValidator
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
-import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription.validHeaders
 import util.TestData._
+import util.UnitSpec
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future

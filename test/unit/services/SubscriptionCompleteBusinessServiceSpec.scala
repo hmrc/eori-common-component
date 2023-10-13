@@ -27,9 +27,9 @@ import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.
 import uk.gov.hmrc.customs.managesubscription.domain._
 import uk.gov.hmrc.customs.managesubscription.services._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import util.UnitSpec
 import util.TestData.SubscriptionResult._
 import util.TestData._
+import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 

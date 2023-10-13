@@ -20,13 +20,7 @@ import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.NOT_FOUND
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
-import uk.gov.hmrc.customs.managesubscription.domain.vat.{
-  VatApprovedInformation,
-  VatCustomerAddress,
-  VatCustomerDetails,
-  VatCustomerInformation,
-  VatCustomerInformationPPOB
-}
+import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 import uk.gov.hmrc.http.HeaderCarrier
 import util.BaseSpec

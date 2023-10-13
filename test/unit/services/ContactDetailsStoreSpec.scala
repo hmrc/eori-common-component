@@ -23,8 +23,8 @@ import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
 import uk.gov.hmrc.customs.managesubscription.repository.RecipientDetailsRepository
 import uk.gov.hmrc.customs.managesubscription.services.RecipientDetailsStore
-import util.UnitSpec
 import util.TestData._
+import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 

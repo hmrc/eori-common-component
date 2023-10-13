@@ -1,10 +1,8 @@
-import com.typesafe.sbt.packager.MappingsHelper._
-import play.core.PlayVersion
-import sbt.Keys._
-import sbt._
+import com.typesafe.sbt.packager.MappingsHelper.*
+import sbt.*
+import sbt.Keys.*
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, targetJvm}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 import scala.language.postfixOps
 

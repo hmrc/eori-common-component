@@ -16,7 +16,6 @@
 
 package unit.controllers
 
-import akka.actor.TypedProps.defaultTimeout
 import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.reset
@@ -30,17 +29,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsJson, contentType, status, stubControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.ResponseError
 import uk.gov.hmrc.customs.managesubscription.controllers.GetVatCustomerInformationController
-import uk.gov.hmrc.customs.managesubscription.domain.vat.{
-  VatApprovedInformation,
-  VatCustomerAddress,
-  VatCustomerDetails,
-  VatCustomerInformation,
-  VatCustomerInformationPPOB
-}
+import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.internalauth.client.{IAAction, Predicate, Resource, ResourceLocation, ResourceType, Retrieval}
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
+import uk.gov.hmrc.internalauth.client._
 import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}

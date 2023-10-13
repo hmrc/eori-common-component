@@ -24,9 +24,9 @@ import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames.CONTENT_TYPE
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
 import uk.gov.hmrc.customs.managesubscription.controllers.MessagingHeaderValidator
-import util.{AsyncTest, UnitSpec}
 import util.RequestHeaders._
 import util.TestData.HandleSubscription.validHeaders
+import util.{AsyncTest, UnitSpec}
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future

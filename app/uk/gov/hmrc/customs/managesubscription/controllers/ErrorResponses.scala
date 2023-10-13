@@ -20,7 +20,7 @@ import play.api.http.ContentTypes
 import play.api.libs.json._
 import play.api.mvc.Result
 import play.api.mvc.Results._
-import play.mvc.Http.Status.{BAD_REQUEST, NOT_ACCEPTABLE, _}
+import play.mvc.Http.Status._
 
 trait HttpStatusCodeShortDescriptions {
   // 4XX

@@ -23,15 +23,15 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.http.Status._
 import play.api.mvc._
 import play.api.test.FakeRequest
+import play.api.test.Helpers.{await, status, stubControllerComponents, stubPlayBodyParsers}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, HandleSubscriptionController}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.http.HeaderCarrier
-import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription._
 import util.TestData._
-import play.api.test.Helpers.{await, status, stubControllerComponents, stubPlayBodyParsers}
-import uk.gov.hmrc.auth.core.AuthConnector
+import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -17,13 +17,13 @@
 package uk.gov.hmrc.customs.managesubscription.services
 
 import com.google.inject.Singleton
-import javax.inject.Inject
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
 import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RcmNotificationRequest, RecipientDetails}
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
 @Singleton

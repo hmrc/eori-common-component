@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.connectors.TaxEnrolmentsConnector
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Eori, TaxEnrolmentsRequest}
 import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, TaxPayerId}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

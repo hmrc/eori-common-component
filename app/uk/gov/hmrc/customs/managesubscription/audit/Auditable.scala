@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.audit
 
-import javax.inject.{Inject, Named, Singleton}
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.{Audit, DataEvent, ExtendedDataEvent}
 
+import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton

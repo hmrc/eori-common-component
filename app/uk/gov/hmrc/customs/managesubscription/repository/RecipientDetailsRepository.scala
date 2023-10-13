@@ -23,10 +23,10 @@ import uk.gov.hmrc.customs.managesubscription.domain.{RecipientDetails, Recipien
 import uk.gov.hmrc.mongo.cache.{CacheIdType, CacheItem, DataKey, MongoCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 
 @Singleton
 class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepository)(implicit ec: ExecutionContext) {
