@@ -21,7 +21,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubPlayBodyParsers
+import play.api.test.Helpers.{await, stubPlayBodyParsers}
 import play.mvc.Http.HeaderNames._
 import uk.gov.hmrc.customs.managesubscription.controllers.DigitalHeaderValidator
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
@@ -31,6 +31,7 @@ import util.TestData.HandleSubscription.validHeaders
 import util.TestData._
 
 import scala.concurrent.ExecutionContext.global
+import scala.concurrent.Future
 
 class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyChecks {
 
@@ -38,7 +39,7 @@ class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyCheck
   private val expectedResult = Ok("as expected")
 
   val action: Action[AnyContent] = validator async {
-    expectedResult
+    Future.successful(expectedResult)
   }
 
   val headersTable = Table(

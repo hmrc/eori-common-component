@@ -64,9 +64,9 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
           anyString,
           anyString
         )
-      ).thenReturn(())
+      ).thenReturn(Future.unit)
       when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
-        NO_CONTENT
+        Future.successful(NO_CONTENT)
       )
 
       await(
@@ -99,9 +99,9 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
           anyString,
           anyString
         )
-      ).thenReturn(())
+      ).thenReturn(Future.unit)
       when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
-        NO_CONTENT
+        Future.successful(NO_CONTENT)
       )
 
       await(
@@ -160,7 +160,7 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
           anyString,
           anyString
         )
-      ).thenReturn(())
+      ).thenReturn(Future.unit)
 
       when(mockTaxEnrolmentConnector.enrol(any[TaxEnrolmentsRequest], anyString)(any[HeaderCarrier])).thenReturn(
         Future.failed(emulatedFailure)

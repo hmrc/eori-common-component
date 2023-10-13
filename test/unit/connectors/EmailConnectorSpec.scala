@@ -17,6 +17,7 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers.any
+import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email

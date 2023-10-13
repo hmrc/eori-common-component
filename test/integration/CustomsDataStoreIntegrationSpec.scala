@@ -16,6 +16,7 @@
 
 package integration
 
+import akka.dispatch.ThreadPoolConfig.defaultTimeout
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{equalToJson, postRequestedFor, urlEqualTo}
 import org.scalatest.concurrent.ScalaFutures

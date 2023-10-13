@@ -29,6 +29,7 @@ import util.RequestHeaders._
 import util.TestData.HandleSubscription.validHeaders
 
 import scala.concurrent.ExecutionContext.global
+import scala.concurrent.Future
 
 class MessagingHeaderValidatorSpec extends UnitSpec with AsyncTest {
 
@@ -36,7 +37,7 @@ class MessagingHeaderValidatorSpec extends UnitSpec with AsyncTest {
   val expectedResult    = Ok("as expected")
 
   val action: Action[AnyContent] = validator async {
-    expectedResult
+    Future.successful(expectedResult)
   }
 
   private def requestWithHeaders(headers: Map[String, String]) =

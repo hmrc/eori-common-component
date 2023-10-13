@@ -20,6 +20,7 @@ import org.mockito.ArgumentMatchers.{eq => meq}
 import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheRepository, RecipientDetailsRepository}
 import uk.gov.hmrc.mongo.cache.CacheItem
 import util.UnitSpec

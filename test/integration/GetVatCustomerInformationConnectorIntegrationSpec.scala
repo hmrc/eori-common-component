@@ -16,10 +16,11 @@
 
 package integration
 
+import akka.dispatch.ThreadPoolConfig.defaultTimeout
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqualTo}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
-import play.api.test.Helpers.OK
+import play.api.test.Helpers.{await, OK}
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat.{
   VatApprovedInformation,
@@ -30,6 +31,8 @@ import uk.gov.hmrc.customs.managesubscription.domain.vat.{
 }
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 import util.IntegrationFrameworkService
+
+import scala.concurrent.Await
 
 class GetVatCustomerInformationConnectorIntegrationSpec
     extends IntegrationTestsWithDbSpec with IntegrationFrameworkService {
@@ -55,7 +58,7 @@ class GetVatCustomerInformationConnectorIntegrationSpec
 
   "GetVatCustomerInformationConnector" should {
     "call vatCustomerInformation with correct url successfully" in {
-      scala.concurrent.Await.ready(connector.getVatCustomerInformation(vrn), defaultTimeout)
+      Await.ready(connector.getVatCustomerInformation(vrn).value, defaultTimeout)
       WireMock.verify(getRequestedFor(urlEqualTo(url)))
     }
 

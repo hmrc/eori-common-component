@@ -30,7 +30,7 @@ import util.UnitSpec
 import util.RequestHeaders._
 import util.TestData.HandleSubscription._
 import util.TestData._
-import play.api.test.Helpers.{stubControllerComponents, stubPlayBodyParsers}
+import play.api.test.Helpers.{await, status, stubControllerComponents, stubPlayBodyParsers}
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
