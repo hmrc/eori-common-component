@@ -18,8 +18,6 @@ package uk.gov.hmrc.customs.managesubscription.domain.vat
 
 import play.api.libs.json.{Json, OFormat}
 
-import scala.language.implicitConversions
-
 case class VatCustomerInformation(approvedInformation: VatApprovedInformation) {
 
   def toResponse: GetVatInformationResponse =

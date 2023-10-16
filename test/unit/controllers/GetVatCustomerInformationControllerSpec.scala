@@ -26,20 +26,13 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsJson, contentType, stubControllerComponents}
+import play.api.test.Helpers.{contentAsJson, contentType, status, stubControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.ResponseError
 import uk.gov.hmrc.customs.managesubscription.controllers.GetVatCustomerInformationController
-import uk.gov.hmrc.customs.managesubscription.domain.vat.{
-  VatApprovedInformation,
-  VatCustomerAddress,
-  VatCustomerDetails,
-  VatCustomerInformation,
-  VatCustomerInformationPPOB
-}
+import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.internalauth.client.{IAAction, Predicate, Resource, ResourceLocation, ResourceType, Retrieval}
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
+import uk.gov.hmrc.internalauth.client._
 import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -91,8 +84,8 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
 
       val result = controller.getVatCustomerInformation(vrn)(fakeRequest)
       status(result) shouldBe OK
-      contentType(result)(defaultTimeout) shouldBe Some(MimeTypes.JSON)
-      contentAsJson(result)(defaultTimeout) shouldBe Json.parse(
+      contentType(result) shouldBe Some(MimeTypes.JSON)
+      contentAsJson(result) shouldBe Json.parse(
         """ {"effectiveRegistrationDate":978307200000,"postCode":"SW1A 2BQ"} """
       )
     }
@@ -108,11 +101,11 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
 
     val result = controller.getVatCustomerInformation(vrn)(fakeRequest)
     status(result) shouldBe NOT_FOUND
-    contentType(result)(defaultTimeout) shouldBe Some(MimeTypes.JSON)
-    contentAsJson(result)(defaultTimeout) shouldBe Json.parse(""" {"status":404,"error":"an error message"} """)
+    contentType(result) shouldBe Some(MimeTypes.JSON)
+    contentAsJson(result) shouldBe Json.parse(""" {"status":404,"error":"an error message"} """)
   }
 
   def mockGetVatCustomerInformationService(response: EitherT[Future, ResponseError, VatCustomerInformation]): Unit =
-    when(mockService.getVatCustomerInformation(any())(any[HeaderCarrier])) thenReturn response
+    when(mockService.getVatCustomerInformation(any())) thenReturn response
 
 }

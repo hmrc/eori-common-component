@@ -18,6 +18,7 @@ package unit.connectors
 
 import org.mockito.ArgumentMatchers._
 import play.api.libs.json.{JsString, Json}
+import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.SubscriptionDisplayConnector
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}

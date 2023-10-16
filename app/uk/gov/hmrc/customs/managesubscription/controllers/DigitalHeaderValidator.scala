@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.customs.managesubscription.controllers
 
-import javax.inject.Inject
 import play.api.http.HeaderNames._
 import play.api.mvc._
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.customs.managesubscription.controllers.ErrorResponse._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DigitalHeaderValidator @Inject() (bodyParsers: PlayBodyParsers)(implicit

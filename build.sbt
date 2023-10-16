@@ -1,10 +1,8 @@
-import com.typesafe.sbt.packager.MappingsHelper._
-import play.core.PlayVersion
-import sbt.Keys._
-import sbt._
+import com.typesafe.sbt.packager.MappingsHelper.*
+import sbt.*
+import sbt.Keys.*
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, targetJvm}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 import scala.language.postfixOps
 
@@ -36,7 +34,7 @@ lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.customs.managesubscription.config.*;.*(BuildInfo|Routes).*;.*ConfigModule.*;.*ConfigValidationNelAdaptor.*;.*ErrorResponse.*",
-  coverageMinimumStmtTotal := 93, // TODO Increase to 95%
+  coverageMinimumStmtTotal := 95,
   coverageFailOnMinimum := false,
   coverageHighlighting := true,
   Test / parallelExecution := false

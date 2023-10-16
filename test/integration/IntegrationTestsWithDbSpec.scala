@@ -52,6 +52,6 @@ trait IntegrationTestsWithDbSpec
     .build()
 
   override def beforeAll(): Unit =
-    await(dropDatabase())
+    dropDatabase()
 
 }

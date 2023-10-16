@@ -17,13 +17,13 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import play.api.Logger
-import uk.gov.hmrc.http.HttpReads.Implicits._
 import play.api.http.HeaderNames._
 import play.api.http.MimeTypes
 import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import java.net.URLEncoder

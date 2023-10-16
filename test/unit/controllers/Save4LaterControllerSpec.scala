@@ -34,9 +34,9 @@ import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.customs.managesubscription.connectors.MicroserviceAuthConnector
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import util.TestData._
 import uk.gov.hmrc.internalauth.client._
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
+import util.TestData._
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}

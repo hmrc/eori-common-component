@@ -17,8 +17,6 @@
 package uk.gov.hmrc.customs.managesubscription.controllers
 
 import play.api.i18n.Lang.logger
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.controllers.json.JsonReads._
@@ -26,6 +24,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionComplete
 import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusinessService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

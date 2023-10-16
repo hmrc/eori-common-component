@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.customs.managesubscription.services
 
-import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.{CustomsDataStoreConnector, SubscriptionDisplayConnector}
@@ -30,6 +29,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.{
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import java.util.UUID
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

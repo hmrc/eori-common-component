@@ -17,11 +17,11 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers.any
+import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import util.BaseSpec
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -23,7 +23,7 @@ import play.mvc.Http.HeaderNames._
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
-import uk.gov.hmrc.customs.managesubscription.domain.{HandleSubscriptionRequest, _}
+import uk.gov.hmrc.customs.managesubscription.domain._
 
 object TestData {
   val formBundleId = "dummy-bundle-id-1"

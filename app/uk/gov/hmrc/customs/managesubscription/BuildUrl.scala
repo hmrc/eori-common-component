@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.customs.managesubscription
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class BuildUrl @Inject() (config: ServicesConfig) {

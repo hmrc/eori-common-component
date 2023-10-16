@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.customs.managesubscription.connectors
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig, override val http: HttpClient)
