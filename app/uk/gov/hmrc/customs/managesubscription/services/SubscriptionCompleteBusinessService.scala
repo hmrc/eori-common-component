@@ -27,6 +27,9 @@ import uk.gov.hmrc.customs.managesubscription.domain.{
   SubscriptionCompleteStatus
 }
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import play.api.mvc.Results._
+import play.api.mvc.Result
+import uk.gov.hmrc.customs.managesubscription.connectors.HttpStatusCheck
 
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
@@ -45,7 +48,7 @@ class SubscriptionCompleteBusinessService @Inject() (
 
   def onSubscriptionStatus(subscriptionComplete: SubscriptionComplete, formBundleId: String)(implicit
     hc: HeaderCarrier
-  ): Future[Unit] =
+  ): Future[Result] =
     subscriptionComplete.state match {
       case status @ SubscriptionCompleteStatus.SUCCEEDED =>
         auditStatus(status, formBundleId, subscriptionComplete.errorResponse)
@@ -58,24 +61,31 @@ class SubscriptionCompleteBusinessService @Inject() (
         triggerEnrolmentStateIssueAlert(subscriptionComplete)
     }
 
-  private def triggerEnrolmentStateIssueAlert(subscriptionComplete: SubscriptionComplete): Future[Unit] = {
+  def toResponse(httpResponse: HttpResponse): Result =
+    if (HttpStatusCheck.is2xx(httpResponse.status))
+      NoContent
+    else
+      InternalServerError(s"sendEmail: request is failed with status ${httpResponse.status}")
+
+  private def triggerEnrolmentStateIssueAlert(subscriptionComplete: SubscriptionComplete): Future[Result] = {
     val messageThatTriggersPagerDutyAlert = s"TAX_ENROLMENT_STATE_ISSUE - $subscriptionComplete"
-    Future.successful(logger.error(messageThatTriggersPagerDutyAlert))
+    logger.error(messageThatTriggersPagerDutyAlert)
+    Future.successful(NoContent)
   }
 
-  private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
+  private def sendAndStoreSuccessEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Result] =
     for {
       recipient  <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _          <- emailService.sendSuccessEmail(recipient.recipientDetails)
+      response   <- emailService.sendSuccessEmail(recipient.recipientDetails)
       eoriNumber <- retrieveEori(recipient)
       _          <- Future.sequence(eoriNumber.map(dataStoreEmailRequest(recipient)).toList)
-    } yield (): Unit
+    } yield toResponse(response)
 
-  private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Unit] =
+  private def sendFailureEmail(formBundleId: String)(implicit hc: HeaderCarrier): Future[Result] =
     for {
       recipient <- recipientDetailsStore.recipientDetailsForBundleId(formBundleId)
-      _         <- emailService.sendFailureEmail(recipient.recipientDetails)
-    } yield (): Unit
+      response  <- emailService.sendFailureEmail(recipient.recipientDetails)
+    } yield toResponse(response)
 
   private def dataStoreEmailRequest(
     recipient: RecipientDetailsWithEori

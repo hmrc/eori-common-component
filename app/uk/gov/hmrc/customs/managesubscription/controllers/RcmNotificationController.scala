@@ -22,6 +22,7 @@ import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.internalauth.client._
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.customs.managesubscription.connectors.HttpStatusCheck
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -39,7 +40,12 @@ class RcmNotificationController @Inject() (
     parse.json[RcmNotificationRequest]
   ) andThen auth.authorizedAction(internalAuthPermission("rcm-notification")) async {
     implicit request =>
-      emailService.sendRcmNotificationEmail(request.body).map(_ => NoContent)
+      emailService.sendRcmNotificationEmail(request.body).map { response =>
+        if (HttpStatusCheck.is2xx(response.status))
+          NoContent
+        else
+          InternalServerError(s"sendEmail: request is failed with status ${response.status}")
+      }
   }
 
 }

@@ -61,7 +61,8 @@ class GetVatCustomerInformationControllerSpec extends UnitSpec with BeforeAndAft
   }
 
   override protected def afterEach(): Unit = {
-    reset(mockService, mockStubBehaviour)
+    reset(mockService)
+    reset(mockStubBehaviour)
     super.afterEach()
   }
 

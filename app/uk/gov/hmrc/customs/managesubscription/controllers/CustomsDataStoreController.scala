@@ -41,7 +41,10 @@ class CustomsDataStoreController @Inject() (
       request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
         js.validate[DataStoreRequest] match {
           case JsSuccess(r, _) =>
-            customsDataStore.updateDataStore(r).map(_ => NoContent)
+            customsDataStore.updateDataStore(r).map(_.status match {
+              case OK | NO_CONTENT => NoContent
+              case status          => InternalServerError(s"Failure returned from CDS with status ${status}")
+            })
           case JsError(e) =>
             logger.error(s"Received invalid DataStoreRequest. Validation errors: ${e.mkString}")
             Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
