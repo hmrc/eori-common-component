@@ -25,23 +25,20 @@ import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusin
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class SubscriptionResultController @Inject() (
   subscriptionCompleteBusinessService: SubscriptionCompleteBusinessService,
   cc: ControllerComponents,
   messagingHeaderValidator: MessagingHeaderValidator
-)(implicit ec: ExecutionContext)
-    extends BackendController(cc) {
+) extends BackendController(cc) {
 
   def updateStatus(formBundleId: String): Action[AnyContent] = messagingHeaderValidator.async { implicit request =>
     request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
       js.validate[SubscriptionComplete] match {
         case JsSuccess(subscriptionComplete, _) =>
-          subscriptionCompleteBusinessService.onSubscriptionStatus(subscriptionComplete, formBundleId).map(
-            _ => NoContent
-          )
+          subscriptionCompleteBusinessService.onSubscriptionStatus(subscriptionComplete, formBundleId)
         case JsError(e) =>
           logger.error(s"Received invalid SubscriptionComplete. Validation errors: ${e.mkString}")
           Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)

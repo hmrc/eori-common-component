@@ -85,11 +85,24 @@ class CustomsUpdateDataStoreControllerSpec
   "CustomsUpdateDataStoreController POST" should {
 
     "respond with status 204 for a valid request" in {
-
       when(mockDataStoreConnector.updateDataStore(any[DataStoreRequest])(any[HeaderCarrier]))
         .thenReturn(Future.successful(HttpResponse(204, "")))
       val result = await(route(app, validDataStoreRequest).get)
       result.header.status mustBe Status.NO_CONTENT
+    }
+
+    "respond with status 500 when 400 is returned from the connector" in {
+      when(mockDataStoreConnector.updateDataStore(any[DataStoreRequest])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(HttpResponse(400, "")))
+      val result = await(route(app, validDataStoreRequest).get)
+      result.header.status mustBe Status.INTERNAL_SERVER_ERROR
+    }
+
+    "respond with status 500 when 500 is returned from the connector" in {
+      when(mockDataStoreConnector.updateDataStore(any[DataStoreRequest])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(HttpResponse(500, "")))
+      val result = await(route(app, validDataStoreRequest).get)
+      result.header.status mustBe Status.INTERNAL_SERVER_ERROR
     }
 
     "respond with status 400 for a invalid request" in {

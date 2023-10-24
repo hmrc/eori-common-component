@@ -23,7 +23,6 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers.{await, OK}
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
-import uk.gov.hmrc.http.BadRequestException
 import util.IntegrationFrameworkService
 
 import scala.concurrent.Await

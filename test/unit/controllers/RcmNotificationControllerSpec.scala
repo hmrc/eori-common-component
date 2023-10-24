@@ -68,8 +68,6 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
 
   override protected def beforeEach(): Unit = {
     reset(mockEmailService)
-    when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
-      .thenReturn(Future.successful(HttpResponse(status = 200, body = "")))
     reset(mockStubBehaviour)
     when(mockStubBehaviour.stubAuth(Some(expectedPredicate), Retrieval.EmptyRetrieval)).thenReturn(Future.unit)
   }
@@ -77,10 +75,35 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
   "RcmNotificationController POST" should {
 
     "respond with status 204 for a valid request" in {
+      when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(HttpResponse(status = 200, body = "")))
+
       testSubmitResult(
         FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
       ) { result =>
         status(result) shouldBe NO_CONTENT
+      }
+    }
+
+    "respond with status 500 where a 400 is returned" in {
+      when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(HttpResponse(status = 400, body = "")))
+
+      testSubmitResult(
+        FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
+      ) { result =>
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "respond with status 500 where a 500 is returned" in {
+      when(mockEmailService.sendRcmNotificationEmail(any[RcmNotificationRequest])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(HttpResponse(status = 500, body = "")))
+
+      testSubmitResult(
+        FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
+      ) { result =>
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 

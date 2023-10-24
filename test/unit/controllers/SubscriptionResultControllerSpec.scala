@@ -30,6 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.TestData.SubscriptionResult._
 import util.TestData._
 import util.{RequestHeaders, UnitSpec}
+import play.api.mvc.Results._
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,7 +55,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
           any[HeaderCarrier]
         )
       )
-        .thenReturn(Future.successful(()))
+        .thenReturn(Future.successful(NoContent))
 
       testSubmitResult(validSucceededRequest) { result =>
         status(result) shouldBe NO_CONTENT
@@ -67,7 +68,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
       when(
         mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
       )
-        .thenReturn(Future.successful(()))
+        .thenReturn(Future.successful(NoContent))
 
       testSubmitResult(validErrorRequest) { result =>
         status(result) shouldBe NO_CONTENT
@@ -112,7 +113,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
           any[HeaderCarrier]
         )
       )
-        .thenReturn(Future.successful(()))
+        .thenReturn(Future.successful(NoContent))
       testSubmitResult(mkRequest(validSucceededModel)) {
         result =>
           status(result) shouldBe NO_CONTENT
@@ -123,7 +124,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
       when(
         mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
       )
-        .thenReturn(Future.successful(()))
+        .thenReturn(Future.successful(NoContent))
       testSubmitResult(mkRequest(validErrorModel)) {
         result =>
           status(result) shouldBe NO_CONTENT
