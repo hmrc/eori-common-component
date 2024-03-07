@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain.vat
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class VatCustomerInformationPPOB(address: Option[VatCustomerAddress])
 
 object VatCustomerInformationPPOB {
-  implicit val vatCustomerInformationPPOBFormat = Json.format[VatCustomerInformationPPOB]
+  implicit val vatCustomerInformationPPOBFormat: OFormat[VatCustomerInformationPPOB] = Json.format[VatCustomerInformationPPOB]
 }

@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.models.events
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 
 case class SubscriberRequest(serviceName: String, callback: String, etmpId: String, confidenceLevel: Option[String])
 
 object SubscriberRequest {
-  implicit val format = Json.format[SubscriberRequest]
+  implicit val format: OFormat[SubscriberRequest] = Json.format[SubscriberRequest]
 
   def apply(request: TaxEnrolmentsRequest): SubscriberRequest =
     SubscriberRequest(

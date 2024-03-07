@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RecipientDetails(
   journey: Journey.Value,
@@ -30,5 +30,5 @@ case class RecipientDetails(
 )
 
 object RecipientDetails {
-  implicit val format = Json.format[RecipientDetails]
+  implicit val format: OFormat[RecipientDetails] = Json.format[RecipientDetails]
 }

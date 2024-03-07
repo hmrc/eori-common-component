@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.customs.managesubscription.models.events
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.http.HttpResponse
 
 case class SubscriberResponse(status: String, body: String)
 
 object SubscriberResponse {
-  implicit val format = Json.format[SubscriberResponse]
+  implicit val format: OFormat[SubscriberResponse] = Json.format[SubscriberResponse]
 
   def apply(response: HttpResponse): SubscriberResponse =
     SubscriberResponse(status = response.status.toString, body = response.body)

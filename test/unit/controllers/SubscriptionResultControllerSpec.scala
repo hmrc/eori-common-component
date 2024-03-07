@@ -16,11 +16,12 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.{ArgumentMatchers, MockitoSugar}
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.JsValue
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,7 +31,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.TestData.SubscriptionResult._
 import util.TestData._
 import util.{RequestHeaders, UnitSpec}
-import play.api.mvc.Results._
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}

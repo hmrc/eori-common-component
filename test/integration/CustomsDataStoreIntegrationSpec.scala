@@ -16,9 +16,9 @@
 
 package integration
 
-import akka.dispatch.ThreadPoolConfig.defaultTimeout
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{equalToJson, postRequestedFor, urlEqualTo}
+import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.NO_CONTENT
 import uk.gov.hmrc.customs.managesubscription.connectors.CustomsDataStoreConnector

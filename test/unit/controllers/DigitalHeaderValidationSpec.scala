@@ -16,7 +16,7 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.scalatest.prop.TableDrivenPropertyChecks
 import play.api.mvc.Results.Ok
 import play.api.mvc._

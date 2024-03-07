@@ -16,9 +16,9 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import play.api.mvc.Results._
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubPlayBodyParsers
 import play.mvc.Http.HeaderNames.CONTENT_TYPE
@@ -33,8 +33,8 @@ import scala.concurrent.Future
 
 class MessagingHeaderValidatorSpec extends UnitSpec with AsyncTest {
 
-  private val validator = new MessagingHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
-  val expectedResult    = Ok("as expected")
+  private val validator      = new MessagingHeaderValidator(stubPlayBodyParsers(NoMaterializer))(global)
+  val expectedResult: Result = Ok("as expected")
 
   val action: Action[AnyContent] = validator async {
     Future.successful(expectedResult)

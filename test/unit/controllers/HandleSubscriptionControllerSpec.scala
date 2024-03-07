@@ -16,7 +16,7 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  implicit val cc = stubControllerComponents()
+  implicit val cc: ControllerComponents = stubControllerComponents()
 
   private val mockTaxEnrolmentsService = mock[TaxEnrolmentsService]
   private val mockAuthConnector        = mock[AuthConnector]
@@ -131,7 +131,7 @@ class HandleSubscriptionControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit): Unit =
     test(controller.handle().apply(request))
 
 }

@@ -16,9 +16,9 @@
 
 package integration
 
-import akka.dispatch.ThreadPoolConfig.defaultTimeout
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqualTo}
+import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers.{await, OK}
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}

@@ -16,12 +16,15 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain.vat
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.util.Date
 
 case class GetVatInformationResponse(effectiveRegistrationDate: Option[Date], postCode: Option[String])
 
 object GetVatInformationResponse {
-  implicit val getVatInformationResponseFormat = Json.format[GetVatInformationResponse]
+
+  implicit val getVatInformationResponseFormat: OFormat[GetVatInformationResponse] =
+    Json.format[GetVatInformationResponse]
+
 }

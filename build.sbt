@@ -1,7 +1,7 @@
 import com.typesafe.sbt.packager.MappingsHelper.*
 import sbt.*
 import sbt.Keys.*
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, targetJvm}
+import uk.gov.hmrc.DefaultBuildSettings.defaultSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
 import scala.language.postfixOps
@@ -17,13 +17,9 @@ PlayKeys.devSettings := Seq("play.server.http.port" -> "6752")
 
 majorVersion := 0
 
-targetJvm := "jvm-11"
+scalaVersion := "2.13.13"
 
-scalaVersion := "2.13.8"
-
-val bootstrapVersion = "7.15.0"
-
-  Test / fork := false
+Test / fork := false
 
 lazy val microservice = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -40,8 +36,6 @@ lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   Test / parallelExecution := false
 )
 
-
-
 scalastyleConfig := baseDirectory.value / "project" / "scalastyle-config.xml"
 
 Test / javaOptions += "-Dlogger.resource=logback-test.xml"
@@ -49,7 +43,7 @@ Test / javaOptions += "-Dlogger.resource=logback-test.xml"
 libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
 
 lazy val silencerSettings: Seq[Setting[_]] = {
-  val silencerVersion = "1.7.12"
+  val silencerVersion = "1.7.16"
   Seq(
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full)

@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.customs.managesubscription.models.events
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 
 case class EmailCall(request: Email, response: EmailResponse)
 
 object EmailCall {
-  implicit val format = Json.format[EmailCall]
+  implicit val format: OFormat[EmailCall] = Json.format[EmailCall]
 }
