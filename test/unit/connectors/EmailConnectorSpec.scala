@@ -27,9 +27,9 @@ import util.BaseSpec
 import scala.concurrent.{ExecutionContext, Future}
 
 class EmailConnectorSpec extends BaseSpec {
-  val mockHttp: HttpClient = mock[HttpClient]
-  val mockAuditable: Auditable = mock[Auditable]
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  val mockHttp: HttpClient          = mock[HttpClient]
+  val mockAuditable: Auditable      = mock[Auditable]
+  implicit val hc: HeaderCarrier    = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   val testConnector                 = new EmailConnector(appConfig, mockHttp, mockAuditable)
 

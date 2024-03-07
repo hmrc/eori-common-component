@@ -141,7 +141,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
   private def passMandatoryCheck(from: JsValue, fieldName: String)(
     modelFieldModifier: (RequestModel, Option[String]) => RequestModel
-  ) = {
+  ): Unit = {
     "be mandatory" in {
       testSubmitResult(mkRequest(pruneField(from, fieldName))) {
         result =>
@@ -157,7 +157,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit): Unit =
     test(controller.updateStatus(formBundleId).apply(request))
 
 }
