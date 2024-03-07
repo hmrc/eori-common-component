@@ -36,7 +36,7 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
 
   private val service = new TaxEnrolmentsService(appConfig, mockTaxEnrolmentConnector, mockContactDetailsStore)
 
-  private implicit val headerCarrier = HeaderCarrier()
+  private implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   private val formBundleId: String = "Form-Bundle-Id-123"
   private val taxPayerId           = TaxPayerId("sap-number")

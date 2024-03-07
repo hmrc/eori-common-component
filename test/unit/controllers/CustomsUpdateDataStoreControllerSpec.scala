@@ -22,11 +22,12 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.mvc.ControllerComponents
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AnyContentAsJson, ControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -43,25 +44,26 @@ import scala.concurrent.{ExecutionContext, Future}
 class CustomsUpdateDataStoreControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  val dataStoreRequest = DataStoreRequest("ZZ123456789000", "a@example.com", "2018-07-05T09:08:12Z")
-  val data             = Json.toJson(dataStoreRequest)
+  val dataStoreRequest: DataStoreRequest = DataStoreRequest("ZZ123456789000", "a@example.com", "2018-07-05T09:08:12Z")
+  val data: JsValue                      = Json.toJson(dataStoreRequest)
 
-  val validDataStoreRequest = FakeRequest("POST", "/customs/update/datastore").withJsonBody(data).withHeaders(
-    "Authorization" -> "Token some-token"
-  )
+  val validDataStoreRequest: FakeRequest[AnyContentAsJson] =
+    FakeRequest("POST", "/customs/update/datastore").withJsonBody(data).withHeaders(
+      "Authorization" -> "Token some-token"
+    )
 
   private val mockDataStoreConnector   = mock[CustomsDataStoreConnector]
   private val mockAuthConnector        = mock[MicroserviceAuthConnector]
   private val mockControllerComponents = mock[ControllerComponents]
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val cc                                    = stubControllerComponents()
+  implicit val cc: ControllerComponents              = stubControllerComponents()
   private val mockStubBehaviour                      = mock[StubBehaviour]
 
   private val expectedPredicate =
     Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("cds")), IAAction("WRITE"))
 
-  override def fakeApplication() = new GuiceApplicationBuilder()
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(
       bind[MicroserviceAuthConnector].toInstance(mockAuthConnector),
       bind[CustomsDataStoreConnector].toInstance(mockDataStoreConnector),

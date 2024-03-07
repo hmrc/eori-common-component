@@ -19,8 +19,6 @@ object AppDependencies {
     "org.scalatestplus.play" %% "scalatestplus-play"                 % "7.0.1",
     "uk.gov.hmrc.mongo"      %% s"hmrc-mongo-test-play-$playVersion" % mongoDbVersion,
     "org.mockito"            %% "mockito-scala"                      % "1.17.30",
-    "org.scalatest"          %% "scalatest"                          % "3.2.17",
-    "com.vladsch.flexmark"    % "flexmark-all"                       % "0.64.8",
     "uk.gov.hmrc"            %% s"bootstrap-test-play-$playVersion"  % bootstrapVersion
   ).map(_ % Test)
 
