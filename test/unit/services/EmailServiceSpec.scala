@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 class EmailServiceSpec extends BaseSpec {
 
-  private implicit val hc = mock[HeaderCarrier]
+  private implicit val hc: HeaderCarrier = mock[HeaderCarrier]
 
   private val mockEmailConnector = mock[EmailConnector]
 

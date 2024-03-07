@@ -30,9 +30,9 @@ import scala.concurrent.Future
 
 class CustomsDataStoreConnectorSpec extends BaseSpec {
 
-  val mockHttp      = mock[HttpClient]
-  val mockAuditable = mock[Auditable]
-  implicit val hc   = new HeaderCarrier()
+  val mockHttp: HttpClient = mock[HttpClient]
+  val mockAuditable: Auditable = mock[Auditable]
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   val testConnector = new CustomsDataStoreConnector(appConfig, mockHttp, mockAuditable)
 

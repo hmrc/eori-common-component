@@ -1,6 +1,7 @@
 import com.typesafe.sbt.packager.MappingsHelper.*
 import sbt.*
 import sbt.Keys.*
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.DefaultBuildSettings.defaultSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
@@ -15,9 +16,9 @@ name := "eori-common-component"
 
 PlayKeys.devSettings := Seq("play.server.http.port" -> "6752")
 
-majorVersion := 0
+ThisBuild / majorVersion := 0
 
-scalaVersion := "2.13.13"
+ThisBuild / scalaVersion := "2.13.13"
 
 Test / fork := false
 
@@ -54,3 +55,9 @@ lazy val silencerSettings: Seq[Setting[_]] = {
     scalacOptions += s"-P:silencer:sourceRoots=${baseDirectory.value.getCanonicalPath}"
   )
 }
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings())
+  .settings(libraryDependencies ++= AppDependencies.test)

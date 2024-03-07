@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqualTo}
+import integration.IntegrationTestsWithDbSpec
 import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
-import play.api.test.Helpers.{await, OK}
+import play.api.test.Helpers.{OK, await}
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import util.IntegrationFrameworkService

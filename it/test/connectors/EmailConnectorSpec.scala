@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
+import integration.IntegrationTestsWithDbSpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
