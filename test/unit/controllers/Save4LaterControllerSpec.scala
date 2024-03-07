@@ -46,15 +46,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class Save4LaterControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  val id   = "id-1"
-  val key1 = "key-1"
+  val id            = "id-1"
+  val key1          = "key-1"
   val data: JsValue = Json.toJson(recipientDetails)
 
   val validPutRequestWithCache: FakeRequest[AnyContentAsJson] =
     FakeRequest("PUT", "/save4later/id-1/key-1").withJsonBody(data).withHeaders("Authorization" -> "Token some-token")
 
-  val validGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
-  val validDeleteRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("DELETE", "/save4later/id-1").withHeaders("Authorization" -> "Token some-token")
+  val validGetRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("GET", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
+
+  val validDeleteRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("DELETE", "/save4later/id-1").withHeaders("Authorization" -> "Token some-token")
 
   val validDeleteKeyRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("DELETE", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
@@ -63,7 +66,7 @@ class Save4LaterControllerSpec
   private val mockAuthConnector        = mock[MicroserviceAuthConnector]
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val cc: ControllerComponents = stubControllerComponents()
+  implicit val cc: ControllerComponents              = stubControllerComponents()
   private val mockStubBehaviour                      = mock[StubBehaviour]
 
   private val expectedPredicate =
