@@ -16,7 +16,7 @@
 
 package connectors
 
-import integration.IntegrationTestsWithDbSpec
+import base.IntegrationTestsWithDbSpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json

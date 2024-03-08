@@ -67,12 +67,12 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
             case d: JsSuccess[RecipientDetailsWithEori] =>
               Right(d.value)
             case _: JsError =>
-              logger.error(s"Data saved in db is invalid for formBundleId: ${formBundleId}")
-              Left(JsError(s"Data saved in db is invalid for formBundleId: ${formBundleId}"))
+              logger.error(s"Data saved in db is invalid for formBundleId: $formBundleId")
+              Left(JsError(s"Data saved in db is invalid for formBundleId: $formBundleId"))
           }
         case _ =>
-          logger.error(s"No data is saved for the formBundleId: ${formBundleId}")
-          Left(JsError(s"No data is saved for the formBundleId: ${formBundleId}"))
+          logger.error(s"No data is saved for the formBundleId: $formBundleId")
+          Left(JsError(s"No data is saved for the formBundleId: $formBundleId"))
       }
     }
 

@@ -16,9 +16,9 @@
 
 package connectors
 
+import base.IntegrationTestsWithDbSpec
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqualTo}
-import integration.IntegrationTestsWithDbSpec
 import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers.{OK, await}

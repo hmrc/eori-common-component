@@ -16,9 +16,9 @@
 
 package connectors
 
+import base.IntegrationTestsWithDbSpec
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{equalToJson, putRequestedFor, urlEqualTo}
-import integration.IntegrationTestsWithDbSpec
 import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers._
