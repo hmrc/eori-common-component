@@ -16,8 +16,8 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
-import org.scalatest.prop.TableDrivenPropertyChecks
+import org.apache.pekko.stream.testkit.NoMaterializer
+import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test.FakeRequest
@@ -42,7 +42,7 @@ class DigitalHeaderValidationSpec extends UnitSpec with TableDrivenPropertyCheck
     Future.successful(expectedResult)
   }
 
-  val headersTable = Table(
+  val headersTable: TableFor3[String, Map[String, String], Result] = Table(
     ("description", "Headers", "Expected response"),
     ("return OK result for valid headers", validHeaders, expectedResult),
     (

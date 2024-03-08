@@ -68,7 +68,7 @@ You can run unit test suite with
 
 To run integration test suit execute
 
-    sbt it:test
+    sbt it/test
 
 To run all test suites together with Scoverage and ScalaFMT code formatting execute script
 
@@ -80,7 +80,7 @@ We're using Scoverage to check the code coverage of our test suites.
 
 You can run this on the command line with
 
-    sbt clean coverage test it:test coverageReport
+    sbt clean coverage test it/test coverageReport
 
 Adjust the following in `build.sbt` to configure Scoverage
 

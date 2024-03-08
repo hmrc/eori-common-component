@@ -22,10 +22,12 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsJson, ControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -44,30 +46,33 @@ import scala.concurrent.{ExecutionContext, Future}
 class Save4LaterControllerSpec
     extends PlaySpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with GuiceOneAppPerSuite {
 
-  val id   = "id-1"
-  val key1 = "key-1"
-  val data = Json.toJson(recipientDetails)
+  val id            = "id-1"
+  val key1          = "key-1"
+  val data: JsValue = Json.toJson(recipientDetails)
 
-  val validPutRequestWithCache =
+  val validPutRequestWithCache: FakeRequest[AnyContentAsJson] =
     FakeRequest("PUT", "/save4later/id-1/key-1").withJsonBody(data).withHeaders("Authorization" -> "Token some-token")
 
-  val validGetRequest    = FakeRequest("GET", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
-  val validDeleteRequest = FakeRequest("DELETE", "/save4later/id-1").withHeaders("Authorization" -> "Token some-token")
+  val validGetRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("GET", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
 
-  val validDeleteKeyRequest =
+  val validDeleteRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("DELETE", "/save4later/id-1").withHeaders("Authorization" -> "Token some-token")
+
+  val validDeleteKeyRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("DELETE", "/save4later/id-1/key-1").withHeaders("Authorization" -> "Token some-token")
 
   private val mockSave4LaterRepository = mock[Save4LaterRepository]
   private val mockAuthConnector        = mock[MicroserviceAuthConnector]
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val cc                                    = stubControllerComponents()
+  implicit val cc: ControllerComponents              = stubControllerComponents()
   private val mockStubBehaviour                      = mock[StubBehaviour]
 
   private val expectedPredicate =
     Predicate.Permission(Resource(ResourceType("eori-common-component"), ResourceLocation("save")), IAAction("WRITE"))
 
-  override def fakeApplication() = new GuiceApplicationBuilder()
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .configure("mongodb.uri" -> ("mongodb://localhost:27017/cds" + UUID.randomUUID().toString))
     .overrides(
       bind[MicroserviceAuthConnector].toInstance(mockAuthConnector),

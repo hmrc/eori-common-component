@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
-import akka.dispatch.ThreadPoolConfig.defaultTimeout
+import base.IntegrationTestsWithDbSpec
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{equalToJson, postRequestedFor, urlEqualTo}
+import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.NO_CONTENT
 import uk.gov.hmrc.customs.managesubscription.connectors.CustomsDataStoreConnector
@@ -40,7 +41,7 @@ class CustomsDataStoreIntegrationSpec
   private val dataStoreRequestQuery = s"""{
                                         |  "eori" : "${eori.value}",
                                         |  "address" : "${recipientDetails.recipientEmailAddress}",
-                                        |  "timestamp" : "${emailVerificationTimestamp}"
+                                        |  "timestamp" : "$emailVerificationTimestamp"
                                         |}""".stripMargin
 
   override def beforeAll(): Unit =

@@ -16,11 +16,11 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{ControllerComponents, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, RcmNotificationController}
@@ -36,13 +36,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val rcmNotifyRequest =
+  val rcmNotifyRequest: RcmNotificationRequest =
     RcmNotificationRequest("a@b.com", "fullname", "GBXXXXXXXXX000", "Some Service", "2018-07-05T09:08:12.831Z")
 
   val validRcmNotifyRequest: Request[RcmNotificationRequest] =
     FakeRequest("POST", "/notify/rcm").withHeaders(validHeaders.toSeq: _*).withBody(rcmNotifyRequest)
 
-  implicit val cc = stubControllerComponents()
+  implicit val cc: ControllerComponents = stubControllerComponents()
 
   private val mockEmailService  = mock[EmailService]
   private val mockStubBehaviour = mock[StubBehaviour]
@@ -109,7 +109,7 @@ class RcmNotificationControllerSpec extends UnitSpec with MockitoSugar with Befo
 
   }
 
-  private def testSubmitResult(request: Request[RcmNotificationRequest])(test: Future[Result] => Unit) =
+  private def testSubmitResult(request: Request[RcmNotificationRequest])(test: Future[Result] => Unit): Unit =
     test(controller.notifyRCM().apply(request))
 
 }

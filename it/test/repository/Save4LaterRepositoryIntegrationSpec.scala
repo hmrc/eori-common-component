@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package integration
+package repository
 
+import base.IntegrationTestsWithDbSpec
 import org.mockito.ArgumentMatchers.any
 import org.mockito.{Mockito, MockitoSugar}
 import org.scalatest.concurrent.ScalaFutures
-import play.api.libs.json.{JsNull, Json}
+import play.api.libs.json.{JsNull, JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Email, Eori}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.mongo.CurrentTimestampSupport
@@ -36,18 +37,18 @@ import scala.language.postfixOps
 class Save4LaterRepositoryIntegrationSpec
     extends IntegrationTestsWithDbSpec with MockitoSugar with MongoSupport with ScalaFutures {
 
-  override implicit val patienceConfig = PatienceConfig(timeout = scaled(200 millis), interval = scaled(100 millis))
+  override implicit val patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(200 millis), interval = scaled(100 millis))
 
-  val mockServiceConfig = mock[ServicesConfig]
+  val mockServiceConfig: ServicesConfig = mock[ServicesConfig]
 
-  val email                = Email("john.doe@digital.hmrc.gov.uk")
-  val eori                 = Eori("GB0123456789")
+  val email: Email = Email("john.doe@digital.hmrc.gov.uk")
+  val eori: Eori = Eori("GB0123456789")
   val mockTimeStampSupport = new CurrentTimestampSupport()
   when(mockServiceConfig.getDuration(any[String])).thenReturn(Duration(5000, TimeUnit.SECONDS))
   val repository = new Save4LaterRepository(mockServiceConfig, mongoComponent, mockTimeStampSupport)
   val id         = "id-1"
   val key1       = "key-1"
-  val data       = Json.toJson(eori)
+  val data: JsValue = Json.toJson(eori)
 
   "recipient details repository" should {
     "save  the details" in {

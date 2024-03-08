@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
-import akka.dispatch.ThreadPoolConfig.defaultTimeout
+import base.IntegrationTestsWithDbSpec
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{equalToJson, putRequestedFor, urlEqualTo}
+import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.connectors.TaxEnrolmentsConnector
@@ -29,7 +30,7 @@ import util.TestData.TaxEnrolment.validRequestJson
 
 class TaxEnrolmentsConnectorSpec extends IntegrationTestsWithDbSpec with TaxEnrolmentService with ScalaFutures {
 
-  private implicit val hc                 = HeaderCarrier()
+  private implicit val hc: HeaderCarrier  = HeaderCarrier()
   private val formBundleId                = "bundle-id"
   private val expectedPutUrl              = s"/tax-enrolments/subscriptions/$formBundleId/subscriber"
   private lazy val taxEnrolmentsConnector = app.injector.instanceOf[TaxEnrolmentsConnector]

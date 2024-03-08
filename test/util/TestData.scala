@@ -23,13 +23,13 @@ import play.mvc.Http.HeaderNames._
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.customs.managesubscription.domain.SubscriptionCompleteStatus.SubscriptionCompleteStatus
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.Eori
-import uk.gov.hmrc.customs.managesubscription.domain._
+import uk.gov.hmrc.customs.managesubscription.domain.{Journey, _}
 
 object TestData {
-  val formBundleId = "dummy-bundle-id-1"
-  val sapNumber    = "0123456789"
-  val taxPayerId   = TaxPayerId(sapNumber)
-  val eori         = Eori("GB0123456789")
+  val formBundleId           = "dummy-bundle-id-1"
+  val sapNumber              = "0123456789"
+  val taxPayerId: TaxPayerId = TaxPayerId(sapNumber)
+  val eori: Eori             = Eori("GB0123456789")
 
   val emailVerificationTimestamp = "timestamp"
   val safeId                     = "SAFEID"
@@ -42,15 +42,15 @@ object TestData {
   val MdtpBearerToken: String = "Bearer ValidBearerToken"
   val AcceptHmrcJson: String  = "application/vnd.hmrc.1.0+xml"
 
-  val Register       = Journey.Register
-  val EnrolmentKey   = "HMRC-ATAR-ORG"
-  val ServiceName    = "Advance Tariff Rulings"
-  val FullName       = "Full Name"
-  val Email          = "john.doe@digital.hmrc.gov.uk"
-  val OrgName        = "Test Company Name"
-  val CompletionDate = "5 May 2017"
+  val Register: Journey.Value = Journey.Register
+  val EnrolmentKey            = "HMRC-ATAR-ORG"
+  val ServiceName             = "Advance Tariff Rulings"
+  val FullName                = "Full Name"
+  val Email                   = "john.doe@digital.hmrc.gov.uk"
+  val OrgName                 = "Test Company Name"
+  val CompletionDate          = "5 May 2017"
 
-  val recipientDetails =
+  val recipientDetails: RecipientDetails =
     RecipientDetails(Register, EnrolmentKey, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)
 
   val NoHeaders: Map[String, String] = Map[String, String]()
@@ -80,9 +80,10 @@ object TestData {
 
     lazy val url = s"http://test:8080/tax-enrolments/subscriptions/$formBundleId"
 
-    val validSucceededModel = RequestModel(url = Some(url), state = Some("SUCCEEDED"), errorResponse = None)
+    val validSucceededModel: RequestModel =
+      RequestModel(url = Some(url), state = Some("SUCCEEDED"), errorResponse = None)
 
-    val validErrorModel =
+    val validErrorModel: RequestModel =
       RequestModel(url = Some(url), state = Some("ERROR"), errorResponse = Some(errorResponseString))
 
     val validSucceededJsonBody: JsValue = mkJson(validSucceededModel)
@@ -104,7 +105,7 @@ object TestData {
 
     val validHeaders: Map[String, String] = Map(AUTHORISATION_HEADER, CONTENT_TYPE_HEADER, ACCEPT_HEADER)
 
-    val handleSubscriptionRequest = HandleSubscriptionRequest(
+    val handleSubscriptionRequest: HandleSubscriptionRequest = HandleSubscriptionRequest(
       formBundleId,
       recipientDetails,
       sapNumber,

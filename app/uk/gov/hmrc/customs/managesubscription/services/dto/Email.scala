@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.customs.managesubscription.services.dto
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Email(to: List[String], templateId: String, parameters: Map[String, String], force: Boolean = false)
 
 object Email {
-  implicit val format = Json.format[Email]
+  implicit val format: OFormat[Email] = Json.format[Email]
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package integration
+package base
 
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

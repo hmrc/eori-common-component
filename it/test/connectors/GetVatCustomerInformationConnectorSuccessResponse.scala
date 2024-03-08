@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
 object GetVatCustomerInformationConnectorSuccessResponse {
 
-  val successResponseBody =
+  val successResponseBody: String =
     """{
       |  "approvedInformation": {
       |    "customerDetails": {

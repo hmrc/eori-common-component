@@ -52,7 +52,9 @@ class HandleSubscriptionController @Inject() (
                   subscriptionRequest.eori.map(Eori(_)),
                   subscriptionRequest.emailVerificationTimestamp,
                   subscriptionRequest.safeId
-                ).map(status => if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError)
+                ).map(status =>
+                  if (HttpStatusCheck.is2xx(status)) NoContent else InternalServerError
+                )
               case JsError(e) =>
                 logger.error(s"Received invalid HandleSubscriptionRequest. Validation errors: ${e.mkString}")
                 Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)

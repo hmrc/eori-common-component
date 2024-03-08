@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package integration
+package base
 
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}

@@ -1,7 +1,8 @@
 import com.typesafe.sbt.packager.MappingsHelper.*
 import sbt.*
 import sbt.Keys.*
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, targetJvm}
+import uk.gov.hmrc.DefaultBuildSettings
+import uk.gov.hmrc.DefaultBuildSettings.defaultSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
 import scala.language.postfixOps
@@ -15,15 +16,11 @@ name := "eori-common-component"
 
 PlayKeys.devSettings := Seq("play.server.http.port" -> "6752")
 
-majorVersion := 0
+ThisBuild / majorVersion := 0
 
-targetJvm := "jvm-11"
+ThisBuild / scalaVersion := "2.13.13"
 
-scalaVersion := "2.13.8"
-
-val bootstrapVersion = "7.15.0"
-
-  Test / fork := false
+Test / fork := false
 
 lazy val microservice = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -35,12 +32,10 @@ lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.customs.managesubscription.config.*;.*(BuildInfo|Routes).*;.*ConfigModule.*;.*ConfigValidationNelAdaptor.*;.*ErrorResponse.*",
   coverageMinimumStmtTotal := 95,
-  coverageFailOnMinimum := false,
-  coverageHighlighting := true,
+  coverageFailOnMinimum    := false,
+  coverageHighlighting     := true,
   Test / parallelExecution := false
 )
-
-
 
 scalastyleConfig := baseDirectory.value / "project" / "scalastyle-config.xml"
 
@@ -49,7 +44,7 @@ Test / javaOptions += "-Dlogger.resource=logback-test.xml"
 libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
 
 lazy val silencerSettings: Seq[Setting[_]] = {
-  val silencerVersion = "1.7.12"
+  val silencerVersion = "1.7.16"
   Seq(
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full)
@@ -60,3 +55,9 @@ lazy val silencerSettings: Seq[Setting[_]] = {
     scalacOptions += s"-P:silencer:sourceRoots=${baseDirectory.value.getCanonicalPath}"
   )
 }
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings())
+  .settings(libraryDependencies ++= AppDependencies.test)

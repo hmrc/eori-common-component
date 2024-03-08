@@ -3,25 +3,23 @@ import sbt.*
 
 object AppDependencies {
 
-  val bootstrapVersion = "7.22.0"
+  val mongoDbVersion   = "1.7.0"
+  val bootstrapVersion = "8.4.0"
+  val playVersion      = 30
 
-  val compile = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-backend-play-28"      % bootstrapVersion,
-    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-play-28"             % "1.3.0",
-    "com.typesafe.play"       %% "play-json-joda"                 % "2.9.4",
-    "uk.gov.hmrc"             %% "internal-auth-client-play-28"   % "1.6.0",
-    "org.typelevel"           %% "cats-core"                      % "2.8.0"
+  val compile: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"       %% s"bootstrap-backend-play-$playVersion"    % bootstrapVersion,
+    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-play-$playVersion"           % mongoDbVersion,
+    "uk.gov.hmrc"       %% s"internal-auth-client-play-$playVersion" % "1.10.0",
+    "org.typelevel"     %% "cats-core"                               % "2.10.0"
   )
 
-  val test = Seq(
-    "com.typesafe.play"       %% "play-test"                      % PlayVersion.current  % "test",
-    "org.scalatestplus.play"  %% "scalatestplus-play"             % "5.1.0"              % "test",
-    "com.github.tomakehurst"  %  "wiremock-standalone"            % "2.27.2"             % "test",
-    "org.pegdown"             %  "pegdown"                        % "1.6.0"              % "test",
-    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28"        % "1.3.0"              % "test",
-    "org.mockito"             %% "mockito-scala"                  % "1.17.14"            % "test",
-    "org.scalatest"           %% "scalatest"                      % "3.2.15"             % "test",
-    "com.vladsch.flexmark"    %  "flexmark-all"                   % "0.64.6"             % "test",
-    "uk.gov.hmrc"             %% "bootstrap-test-play-28"         % bootstrapVersion     % "test"
-  )
+  val test: Seq[ModuleID] = Seq(
+    "org.playframework"      %% "play-test"                          % PlayVersion.current,
+    "org.scalatestplus.play" %% "scalatestplus-play"                 % "7.0.1",
+    "uk.gov.hmrc.mongo"      %% s"hmrc-mongo-test-play-$playVersion" % mongoDbVersion,
+    "org.mockito"            %% "mockito-scala"                      % "1.17.30",
+    "uk.gov.hmrc"            %% s"bootstrap-test-play-$playVersion"  % bootstrapVersion
+  ).map(_ % Test)
+
 }

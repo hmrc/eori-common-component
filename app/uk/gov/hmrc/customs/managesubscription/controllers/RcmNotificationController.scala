@@ -38,7 +38,9 @@ class RcmNotificationController @Inject() (
 
   def notifyRCM(): Action[RcmNotificationRequest] = digitalHeaderValidator(
     parse.json[RcmNotificationRequest]
-  ) andThen auth.authorizedAction(internalAuthPermission("rcm-notification")) async {
+  ) andThen auth.authorizedAction(
+    internalAuthPermission("rcm-notification")
+  ) async {
     implicit request =>
       emailService.sendRcmNotificationEmail(request.body).map { response =>
         if (HttpStatusCheck.is2xx(response.status))

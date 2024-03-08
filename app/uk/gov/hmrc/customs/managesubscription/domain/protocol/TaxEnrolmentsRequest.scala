@@ -32,11 +32,11 @@ object TaxEnrolmentsRequest {
 case class Email(value: String)
 
 object Email {
-  implicit val jsonFormat = Json.format[Email]
+  implicit val jsonFormat: OFormat[Email] = Json.format[Email]
 }
 
 case class Eori(value: String)
 
 object Eori {
-  implicit val jsonFormat = Json.format[Eori]
+  implicit val jsonFormat: OFormat[Eori] = Json.format[Eori]
 }

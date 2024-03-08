@@ -16,11 +16,12 @@
 
 package unit.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.{ArgumentMatchers, MockitoSugar}
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.JsValue
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,7 +31,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.TestData.SubscriptionResult._
 import util.TestData._
 import util.{RequestHeaders, UnitSpec}
-import play.api.mvc.Results._
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -66,7 +66,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
     "respond with status 204 if the request is valid and status FAILED" in {
       when(
-        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
       )
         .thenReturn(Future.successful(NoContent))
 
@@ -122,7 +124,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
     "accept FAILED" in {
       when(
-        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
       )
         .thenReturn(Future.successful(NoContent))
       testSubmitResult(mkRequest(validErrorModel)) {
@@ -141,7 +145,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
   private def passMandatoryCheck(from: JsValue, fieldName: String)(
     modelFieldModifier: (RequestModel, Option[String]) => RequestModel
-  ) = {
+  ): Unit = {
     "be mandatory" in {
       testSubmitResult(mkRequest(pruneField(from, fieldName))) {
         result =>
@@ -157,7 +161,7 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
     }
   }
 
-  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit) =
+  private def testSubmitResult(request: Request[AnyContent])(test: Future[Result] => Unit): Unit =
     test(controller.updateStatus(formBundleId).apply(request))
 
 }

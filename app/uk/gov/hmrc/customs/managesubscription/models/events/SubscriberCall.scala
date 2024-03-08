@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.customs.managesubscription.models.events
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SubscriberCall(request: SubscriberRequest, response: SubscriberResponse)
 
 object SubscriberCall {
-  implicit val format = Json.format[SubscriberCall]
+  implicit val format: OFormat[SubscriberCall] = Json.format[SubscriberCall]
 }

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package integration
+package connectors
 
-import akka.dispatch.ThreadPoolConfig.defaultTimeout
+import base.IntegrationTestsWithDbSpec
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqualTo}
+import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.OK
 import uk.gov.hmrc.customs.managesubscription.connectors.SubscriptionDisplayConnector

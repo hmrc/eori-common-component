@@ -16,6 +16,7 @@
 
 package integration
 
+import base.IntegrationTestsWithDbSpec
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.ScalaFutures
