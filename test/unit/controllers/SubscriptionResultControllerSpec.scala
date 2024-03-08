@@ -66,7 +66,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
     "respond with status 204 if the request is valid and status FAILED" in {
       when(
-        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
       )
         .thenReturn(Future.successful(NoContent))
 
@@ -122,7 +124,9 @@ class SubscriptionResultControllerSpec extends UnitSpec with MockitoSugar with B
 
     "accept FAILED" in {
       when(
-        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(any[HeaderCarrier])
+        mockBusinessService.onSubscriptionStatus(meq(failedSubscriptionComplete), meq(formBundleId))(
+          any[HeaderCarrier]
+        )
       )
         .thenReturn(Future.successful(NoContent))
       testSubmitResult(mkRequest(validErrorModel)) {

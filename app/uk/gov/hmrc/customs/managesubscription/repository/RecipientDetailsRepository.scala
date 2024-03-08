@@ -45,8 +45,12 @@ class RecipientDetailsRepository @Inject() (cacheRepo: RecipientDetailsCacheRepo
     preservingMdc {
       cacheRepo.put(formBundleId)(
         DataKey(recipientDetailsKey),
-        Json.toJson(RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId))
-      ).map(_ => (): Unit)
+        Json.toJson(
+          RecipientDetailsWithEori(eori.map(_.value), recipientDetails, emailVerificationTimestamp, safeId)
+        )
+      ).map(_ =>
+        (): Unit
+      )
     }
 
   def recipientDetailsForBundleId(formBundleId: String)(implicit

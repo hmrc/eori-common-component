@@ -71,7 +71,11 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
           any(),
           any()
         )
-      ).thenReturn(Future.successful(HttpResponse(status = 400, json = JsString("error message"), headers = Map.empty)))
+      ).thenReturn(Future.successful(HttpResponse(
+        status = 400,
+        json = JsString("error message"),
+        headers = Map.empty
+      )))
       doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(testConnector.callSubscriptionDisplay(Nil)) shouldBe None
     }
