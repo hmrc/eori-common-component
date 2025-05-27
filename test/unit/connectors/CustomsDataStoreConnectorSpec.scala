@@ -53,7 +53,10 @@ class CustomsDataStoreConnectorSpec extends BaseSpec {
       val mockRequestBuilder = mock[RequestBuilder]
       when(mockHttp.post(any())(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.withBody(any())(any, any, any)).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(500, "InternalServerError")))
+      when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(
+        500,
+        "InternalServerError"
+      )))
 
       doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       val result = await(testConnector.updateDataStore(DataStoreRequest("", "", "")))
