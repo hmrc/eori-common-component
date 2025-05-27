@@ -18,7 +18,7 @@ PlayKeys.devSettings := Seq("play.server.http.port" -> "6752")
 
 ThisBuild / majorVersion := 0
 
-ThisBuild / scalaVersion := "2.13.13"
+ThisBuild / scalaVersion := "2.13.16"
 
 Test / fork := false
 
@@ -44,7 +44,7 @@ Test / javaOptions += "-Dlogger.resource=logback-test.xml"
 libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
 
 lazy val silencerSettings: Seq[Setting[_]] = {
-  val silencerVersion = "1.7.16"
+  val silencerVersion = "1.7.19"
   Seq(
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full)
@@ -59,5 +59,4 @@ lazy val silencerSettings: Seq[Setting[_]] = {
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
-  .settings(DefaultBuildSettings.itSettings())
   .settings(libraryDependencies ++= AppDependencies.test)

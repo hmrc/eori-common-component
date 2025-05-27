@@ -23,13 +23,15 @@ import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.models.events.{EmailCall, EmailResponse}
 import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
+import java.net.URI
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit
   ec: ExecutionContext
 ) {
 
@@ -43,12 +45,16 @@ class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, au
     logger.debug(s"SendEmail: $url, body: $email and headers: $hc")
     // $COVERAGE-ON
 
-    httpClient.POST[Email, HttpResponse](url, email, Seq("Content-Type" -> "application/json")).map {
-      response =>
+    httpClient
+      .post(new URI(url).toURL)
+      .setHeader("Content-Type" -> "application/json")
+      .withBody(Json.toJson(email))
+      .execute[HttpResponse]
+      .map { response =>
         audit(email, response, appConfig.emailServiceUrl)
         logResponse(email.templateId, response)
         response
-    }
+      }
   }
 
   private def logResponse(templateId: String, response: HttpResponse): Unit =

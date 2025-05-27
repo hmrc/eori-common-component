@@ -24,16 +24,17 @@ import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-import java.net.URLEncoder
+import java.net.{URI, URLEncoder}
 import java.time.format.DateTimeFormatter
 import java.time.{Clock, ZoneId, ZonedDateTime}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit
   ec: ExecutionContext
 ) {
 
@@ -45,11 +46,15 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
     val url     = appConfig.subscriptionDisplayUrl + makeQueryString(queryParams)
     val headers = generateHeadersWithBearerToken
     auditRequestHeaders(headers, url)
-    httpClient.GET[HttpResponse](url, Seq(), headers) map { response =>
-      auditResponse(response, url)
-      logResponse(response.status)
-      extractEoriNumber(Json.parse(response.body))
-    }
+    httpClient
+      .get(new URI(url).toURL)
+      .setHeader(generateHeadersWithBearerToken: _*)
+      .execute[HttpResponse]
+      .map { response =>
+        auditResponse(response, url)
+        logResponse(response.status)
+        extractEoriNumber(Json.parse(response.body))
+      }
   }
 
   private def extractEoriNumber: JsValue => Option[String] = json =>

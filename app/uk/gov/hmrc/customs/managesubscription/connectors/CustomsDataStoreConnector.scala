@@ -18,17 +18,20 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 
 import play.api.Logger
 import play.api.http.Status._
+import play.api.libs.json.Json
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.domain.DataStoreRequest
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
+import java.net.URI
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: HttpClient, audit: Auditable)(implicit
+class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit
   ec: ExecutionContext
 ) {
 
@@ -38,7 +41,10 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
 
     auditRequest(dataStoreRequest, appConfig.customDataStoreUrl)
 
-    httpClient.POST[DataStoreRequest, HttpResponse](appConfig.customDataStoreUrl, dataStoreRequest)
+    httpClient
+      .post(new URI(appConfig.customDataStoreUrl).toURL)
+      .withBody(Json.toJson(dataStoreRequest))
+      .execute[HttpResponse]
       .map { response =>
         auditResponse(response, appConfig.customDataStoreUrl)
         logResponse(response.status)

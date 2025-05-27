@@ -23,13 +23,15 @@ import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.TaxEnrolmentsRequest
 import uk.gov.hmrc.customs.managesubscription.models.events.{SubscriberCall, SubscriberRequest, SubscriberResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
+import java.net.URI
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClient, audit: Auditable)(implicit
+class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClientV2, audit: Auditable)(implicit
   ec: ExecutionContext
 ) {
 
@@ -45,12 +47,16 @@ class TaxEnrolmentsConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClie
     logger.debug(s"Tax enrolment: $url, body: $request and headers: $hc")
     // $COVERAGE-ON
 
-    httpClient.PUT[TaxEnrolmentsRequest, HttpResponse](url, request) map {
-      response =>
-        logResponse(response)
-        auditCall(url, request, response)
-        response.status
-    }
+    httpClient
+      .put(new URI(url).toURL)
+      .withBody(Json.toJson(request))
+      .execute[HttpResponse]
+      .map {
+        response =>
+          logResponse(response)
+          auditCall(url, request, response)
+          response.status
+      }
   }
 
   private def auditCall(url: String, request: TaxEnrolmentsRequest, response: HttpResponse)(implicit
