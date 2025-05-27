@@ -31,7 +31,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailConnector @Inject()(appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit ec: ExecutionContext) {
+class EmailConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit
+  ec: ExecutionContext
+) {
 
   private val logger = Logger(this.getClass)
 
@@ -52,7 +54,7 @@ class EmailConnector @Inject()(appConfig: AppConfig, httpClient: HttpClientV2, a
         audit(email, response, appConfig.emailServiceUrl)
         logResponse(email.templateId, response)
         response
-    }
+      }
   }
 
   private def logResponse(templateId: String, response: HttpResponse): Unit =
