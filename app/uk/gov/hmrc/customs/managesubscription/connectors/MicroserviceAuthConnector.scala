@@ -17,13 +17,15 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig, override val http: HttpClient)
+class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig, val http: HttpClientV2)
     extends PlayAuthConnector {
   override lazy val serviceUrl: String = servicesConfig.baseUrl("auth")
+
+  override def httpClientV2: HttpClientV2 = http
 }
