@@ -25,7 +25,7 @@ import uk.gov.hmrc.customs.managesubscription.services.dto.Email
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import java.net.URI
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

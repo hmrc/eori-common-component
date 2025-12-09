@@ -16,7 +16,8 @@
 
 package unit.services
 
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.JsError
 import play.api.test.Helpers.await

@@ -17,20 +17,21 @@
 package unit.controllers
 
 import org.apache.pekko.stream.testkit.NoMaterializer
-import org.mockito.ArgumentMatchers.{eq => meq, _}
-import org.mockito.MockitoSugar
+import org.mockito.ArgumentMatchers.{eq as meq, *}
+import org.mockito.Mockito.*
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
-import play.api.http.Status._
-import play.api.mvc._
+import play.api.http.Status.*
+import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, status, stubControllerComponents, stubPlayBodyParsers}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, HandleSubscriptionController}
 import uk.gov.hmrc.customs.managesubscription.services.TaxEnrolmentsService
 import uk.gov.hmrc.http.HeaderCarrier
-import util.RequestHeaders._
-import util.TestData.HandleSubscription._
-import util.TestData._
+import util.RequestHeaders.*
+import util.TestData.HandleSubscription.*
+import util.TestData.*
 import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -17,6 +17,7 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
@@ -40,7 +41,7 @@ class EmailConnectorSpec extends BaseSpec {
       val mockRequestBuilder = mock[RequestBuilder]
       when(mockHttp.post(any())(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.withBody(any())(any, any, any)).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader((any, any))).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.setHeader(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(200, "")))
 
       val result = await(testConnector.sendEmail(Email(List("toEmail"), "templateId", Map.empty)))

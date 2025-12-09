@@ -17,19 +17,21 @@
 package unit.controllers
 
 import org.apache.pekko.stream.testkit.NoMaterializer
-import org.mockito.ArgumentMatchers.{any, eq => meq}
-import org.mockito.{ArgumentMatchers, MockitoSugar}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{any, eq as meq}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.JsValue
-import play.api.mvc.Results._
-import play.api.mvc._
+import play.api.mvc.Results.*
+import play.api.mvc.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.customs.managesubscription.controllers.{MessagingHeaderValidator, SubscriptionResultController}
 import uk.gov.hmrc.customs.managesubscription.services.SubscriptionCompleteBusinessService
 import uk.gov.hmrc.http.HeaderCarrier
-import util.TestData.SubscriptionResult._
-import util.TestData._
+import util.TestData.SubscriptionResult.*
+import util.TestData.*
 import util.{RequestHeaders, UnitSpec}
 
 import scala.concurrent.ExecutionContext.global

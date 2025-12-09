@@ -17,7 +17,8 @@
 package unit.services
 
 import org.mockito.ArgumentMatchers.{eq => meq, _}
-import org.mockito.MockitoSugar
+import org.mockito.Mockito.*
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.await
@@ -133,7 +134,7 @@ class SubscriptionCompleteBusinessServiceSpec
       doNothing.when(mockAuditable).sendDataEvent(any(), any(), any(), any())(any[HeaderCarrier])
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
       verify(mockAuditable).sendDataEvent(transactionName, path, tagsBadState, auditType)
-      verifyZeroInteractions(mockEmailService)
+      verifyNoInteractions(mockEmailService)
     }
 
     "send success email to recipient on successful SubscriptionComplete" in {
@@ -229,19 +230,19 @@ class SubscriptionCompleteBusinessServiceSpec
     "Do not send any email to recipient for EnrolmentError" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.EnrolmentError)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verifyZeroInteractions(mockEmailService)
+      verifyNoInteractions(mockEmailService)
     }
 
     "Do not send any email to recipient for AuthRefreshed" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.AuthRefreshed)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verifyZeroInteractions(mockEmailService)
+      verifyNoInteractions(mockEmailService)
     }
 
     "Do not send any email to recipient for Enrolled" in {
       mockSubscriptionComplete(SubscriptionCompleteStatus.Enrolled)
       await(service.onSubscriptionStatus(mockSubscriptionComplete, formBundleId))
-      verifyZeroInteractions(mockEmailService)
+      verifyNoInteractions(mockEmailService)
     }
 
     "propagate error when email service fails" in {

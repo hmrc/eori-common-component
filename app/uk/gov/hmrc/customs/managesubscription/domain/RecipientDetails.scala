@@ -19,7 +19,7 @@ package uk.gov.hmrc.customs.managesubscription.domain
 import play.api.libs.json.{Json, OFormat}
 
 case class RecipientDetails(
-  journey: Journey.Value,
+  journey: Journey,
   enrolmentKey: String,
   serviceName: String,
   recipientEmailAddress: String,

@@ -16,13 +16,18 @@
 
 package uk.gov.hmrc.customs.managesubscription.domain
 
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.*
 
-object Journey extends Enumeration {
+enum Journey:
+  case Register, Subscribe
 
-  val Register, Subscribe = Value
+object Journey:
 
-  implicit val reads: Reads[Journey.Value]   = Reads.enumNameReads(Journey)
-  implicit val writes: Writes[Journey.Value] = Writes.enumNameWrites
-
-}
+  given format: Format[Journey] = Format(
+    {
+      case JsString("Register")  => JsSuccess(Journey.Register)
+      case JsString("Subscribe") => JsSuccess(Journey.Subscribe)
+      case other                 => JsError(s"Invalid Journey value: $other")
+    },
+    j => JsString(j.toString)
+  )

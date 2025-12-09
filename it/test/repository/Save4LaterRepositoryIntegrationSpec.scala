@@ -18,8 +18,10 @@ package repository
 
 import base.IntegrationTestsWithDbSpec
 import org.mockito.ArgumentMatchers.any
-import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.Mockito
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsNull, JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Email, Eori}
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
@@ -31,7 +33,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.duration.{Duration, *}
 import scala.language.postfixOps
 
 class Save4LaterRepositoryIntegrationSpec

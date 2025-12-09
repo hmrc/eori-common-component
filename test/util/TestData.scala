@@ -42,13 +42,13 @@ object TestData {
   val MdtpBearerToken: String = "Bearer ValidBearerToken"
   val AcceptHmrcJson: String  = "application/vnd.hmrc.1.0+xml"
 
-  val Register: Journey.Value = Journey.Register
-  val EnrolmentKey            = "HMRC-ATAR-ORG"
-  val ServiceName             = "Advance Tariff Rulings"
-  val FullName                = "Full Name"
-  val Email                   = "john.doe@digital.hmrc.gov.uk"
-  val OrgName                 = "Test Company Name"
-  val CompletionDate          = "5 May 2017"
+  val Register: Journey = Journey.Register
+  val EnrolmentKey      = "HMRC-ATAR-ORG"
+  val ServiceName       = "Advance Tariff Rulings"
+  val FullName          = "Full Name"
+  val Email             = "john.doe@digital.hmrc.gov.uk"
+  val OrgName           = "Test Company Name"
+  val CompletionDate    = "5 May 2017"
 
   val recipientDetails: RecipientDetails =
     RecipientDetails(Register, EnrolmentKey, ServiceName, Email, FullName, Some(OrgName), Some(CompletionDate), None)

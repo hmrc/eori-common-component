@@ -18,6 +18,7 @@ package unit.services
 
 import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.*
 import play.api.http.Status.NOT_FOUND
 import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._

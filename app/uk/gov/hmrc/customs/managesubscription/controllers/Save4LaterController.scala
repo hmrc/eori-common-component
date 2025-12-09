@@ -20,7 +20,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.controllers.Permissions.internalAuthPermission
 import uk.gov.hmrc.customs.managesubscription.repository.Save4LaterRepository
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
-import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
@@ -35,12 +35,13 @@ class Save4LaterController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def put(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
-    implicit request =>
-      request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
-        save4LaterRepository.save(id, key, js).map(_ => Created)
-      }
-  }
+  def put(id: String, key: String): Action[AnyContent] =
+    auth.authorizedAction(internalAuthPermission("save")).async(parse.default) {
+      implicit request =>
+        request.body.asJson.fold(ifEmpty = Future.successful(BadRequest)) { js =>
+          save4LaterRepository.save(id, key, js).map(_ => Created)
+        }
+    }
 
   def get(id: String, key: String): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("save")).async {
     _ =>

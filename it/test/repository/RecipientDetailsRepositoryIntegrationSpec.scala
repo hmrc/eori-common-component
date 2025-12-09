@@ -18,7 +18,8 @@ package integration
 
 import base.IntegrationTestsWithDbSpec
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.domain.RecipientDetailsWithEori
@@ -26,7 +27,7 @@ import uk.gov.hmrc.customs.managesubscription.repository.{RecipientDetailsCacheR
 import uk.gov.hmrc.mongo.CurrentTimestampSupport
 import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import util.TestData._
+import util.TestData.*
 
 import java.util.UUID
 import java.util.concurrent.TimeUnit

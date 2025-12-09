@@ -18,16 +18,17 @@ package unit.controllers
 
 import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{ControllerComponents, Request, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.customs.managesubscription.controllers.{DigitalHeaderValidator, RcmNotificationController}
 import uk.gov.hmrc.customs.managesubscription.domain.RcmNotificationRequest
 import uk.gov.hmrc.customs.managesubscription.services.EmailService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.*
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
 import util.TestData.HandleSubscription.validHeaders
 import util.UnitSpec

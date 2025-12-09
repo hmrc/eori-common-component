@@ -17,6 +17,7 @@
 package unit.connectors
 
 import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito.{doNothing, when}
 import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
@@ -45,13 +46,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
       val mockRequestBuilder = mock[RequestBuilder]
       when(mockHttp.get(any())(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.withBody(any())(any, any, any)).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader(
-        ("Date", any),
-        ("X-Correlation-ID", any),
-        ("X-Forwarded-Host", any),
-        ("Accept", any),
-        ("Authorization", any)
-      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.setHeader(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(
         status = 200,
         json = responseBody,
@@ -68,13 +63,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
       val mockRequestBuilder = mock[RequestBuilder]
       when(mockHttp.get(any())(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.withBody(any())(any, any, any)).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader(
-        ("Date", any),
-        ("X-Correlation-ID", any),
-        ("X-Forwarded-Host", any),
-        ("Accept", any),
-        ("Authorization", any)
-      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.setHeader(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(
         status = 200,
         json = responseBody,
@@ -89,13 +78,7 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
       val mockRequestBuilder = mock[RequestBuilder]
       when(mockHttp.get(any())(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.withBody(any())(any, any, any)).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader(
-        ("Date", any),
-        ("X-Correlation-ID", any),
-        ("X-Forwarded-Host", any),
-        ("Accept", any),
-        ("Authorization", any)
-      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.setHeader(any())).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any, any)).thenReturn(Future.successful(HttpResponse(
         status = 400,
         json = JsString("error message"),

@@ -18,21 +18,21 @@ package unit.controllers
 
 import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.reset
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.MimeTypes
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsJson, contentType, status, stubControllerComponents}
 import uk.gov.hmrc.customs.managesubscription.connectors.ResponseError
 import uk.gov.hmrc.customs.managesubscription.controllers.GetVatCustomerInformationController
-import uk.gov.hmrc.customs.managesubscription.domain.vat._
+import uk.gov.hmrc.customs.managesubscription.domain.vat.*
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 import uk.gov.hmrc.internalauth.client.test.{BackendAuthComponentsStub, StubBehaviour}
-import uk.gov.hmrc.internalauth.client._
+import uk.gov.hmrc.internalauth.client.*
 import util.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
