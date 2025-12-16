@@ -80,7 +80,7 @@ class GetVatCustomerInformationConnectorIntegrationSpec
       val expected = Left(
         ResponseError(
           INTERNAL_SERVER_ERROR,
-          """Invalid JSON returned: List((/approvedInformation,List(JsonValidationError(List(error.path.missing),List()))))"""
+          """Invalid JSON returned: List((/approvedInformation,List(JsonValidationError(List(error.path.missing),ArraySeq()))))"""
         )
       )
       val result: Either[ResponseError, VatCustomerInformation] = await(connector.getVatCustomerInformation(vrn).value)

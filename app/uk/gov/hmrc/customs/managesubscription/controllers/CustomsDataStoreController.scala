@@ -36,20 +36,21 @@ class CustomsDataStoreController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc) {
 
-  def updateCustomsDataStore(): Action[AnyContent] = auth.authorizedAction(internalAuthPermission("cds")).async {
-    implicit request =>
-      request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
-        js.validate[DataStoreRequest] match {
-          case JsSuccess(r, _) =>
-            customsDataStore.updateDataStore(r).map(_.status match {
-              case OK | NO_CONTENT => NoContent
-              case status          => InternalServerError(s"Failure returned from customs data store with status ${status}")
-            })
-          case JsError(e) =>
-            logger.error(s"Received invalid DataStoreRequest. Validation errors: ${e.mkString}")
-            Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
+  def updateCustomsDataStore(): Action[AnyContent] =
+    auth.authorizedAction(internalAuthPermission("cds")).async(parse.default) {
+      implicit request =>
+        request.body.asJson.fold(ifEmpty = Future.successful(ErrorResponse.ErrorGenericBadRequest.JsonResult)) { js =>
+          js.validate[DataStoreRequest] match {
+            case JsSuccess(r, _) =>
+              customsDataStore.updateDataStore(r).map(_.status match {
+                case OK | NO_CONTENT => NoContent
+                case status          => InternalServerError(s"Failure returned from customs data store with status ${status}")
+              })
+            case JsError(e) =>
+              logger.error(s"Received invalid DataStoreRequest. Validation errors: ${e.mkString}")
+              Future.successful(ErrorResponse.ErrorInvalidPayload.JsonResult)
+          }
         }
-      }
-  }
+    }
 
 }

@@ -17,6 +17,7 @@
 package unit.services
 
 import org.mockito.ArgumentMatchers.{any, eq => meq}
+import org.mockito.Mockito.*
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.connectors.EmailConnector
 import uk.gov.hmrc.customs.managesubscription.domain.{Journey, RcmNotificationRequest, RecipientDetails}

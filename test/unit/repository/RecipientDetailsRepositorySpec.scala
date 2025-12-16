@@ -16,8 +16,9 @@
 
 package unit.repository
 
-import org.mockito.ArgumentMatchers.{eq => meq}
-import org.mockito.MockitoSugar
+import org.mockito.ArgumentMatchers.eq as meq
+import org.mockito.Mockito.*
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import play.api.test.Helpers.await

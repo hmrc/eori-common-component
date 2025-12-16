@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig, val http: HttpClientV2)
     extends PlayAuthConnector {
-  override lazy val serviceUrl: String = servicesConfig.baseUrl("auth")
+  override val serviceUrl: String = servicesConfig.baseUrl("auth")
 
   override def httpClientV2: HttpClientV2 = http
 }

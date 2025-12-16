@@ -16,7 +16,8 @@
 
 package unit.connectors
 
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.{doNothing, when}
 import play.api.http.Status.NO_CONTENT
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable

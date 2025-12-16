@@ -17,6 +17,7 @@
 package unit.services
 
 import org.mockito.ArgumentMatchers.{any, anyString, eq => meq}
+import org.mockito.Mockito.*
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.managesubscription.connectors.TaxEnrolmentsConnector
 import uk.gov.hmrc.customs.managesubscription.domain.protocol.{Eori, TaxEnrolmentsRequest}
@@ -148,7 +149,7 @@ class TaxEnrolmentsServiceSpec extends BaseSpec {
           )
         )
       } shouldBe emulatedFailure
-      verifyZeroInteractions(mockTaxEnrolmentConnector)
+      verifyNoInteractions(mockTaxEnrolmentConnector)
     }
 
     "fail when calling tax-enrolments fails" in {
