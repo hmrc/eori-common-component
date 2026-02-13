@@ -25,7 +25,7 @@ Test / fork := false
 lazy val microservice = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
-  .settings(commonSettings, scoverageSettings)
+  .settings(commonSettings, scoverageSettings, excludeDependencies += ExclusionRule("org.lz4", "lz4-java"))
 
 lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
 
