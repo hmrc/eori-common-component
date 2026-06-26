@@ -16,12 +16,12 @@
 
 package unit.connectors
 
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.{doNothing, when}
 import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers.await
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
-import uk.gov.hmrc.customs.managesubscription.connectors.SubscriptionDisplayConnector
+import uk.gov.hmrc.customs.managesubscription.connectors.{DesHeaderProvider, SubscriptionDisplayConnector}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import util.BaseSpec
@@ -35,9 +35,10 @@ class SubscriptionDisplayConnectorSpec extends BaseSpec {
   private val validHeaders: Seq[(String, String)] = Seq(AUTHORISATION_HEADER, CONTENT_TYPE_HEADER, ACCEPT_HEADER)
   private val mockHttp                            = mock[HttpClientV2]
   private val mockAuditable                       = mock[Auditable]
+  private val mockHeaderProvider                  = mock[DesHeaderProvider]
   implicit val hc: HeaderCarrier                  = HeaderCarrier().withExtraHeaders(validHeaders: _*)
 
-  private val testConnector = new SubscriptionDisplayConnector(appConfig, mockHttp, mockAuditable)
+  private val testConnector = new SubscriptionDisplayConnector(appConfig, mockHttp, mockAuditable, mockHeaderProvider)
 
   "SubscriptionDisplayConnector" should {
     "return EORINo when a request to subscription display is successful" in {

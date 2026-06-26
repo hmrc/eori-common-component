@@ -19,26 +19,25 @@ package uk.gov.hmrc.customs.managesubscription.connectors
 import cats.data.EitherT
 import com.google.inject.{Inject, Singleton}
 import play.api.Logging
-import play.api.http.HeaderNames.{ACCEPT, AUTHORIZATION, DATE, X_FORWARDED_HOST}
-import play.api.http.MimeTypes
 import play.api.http.Status.OK
 import uk.gov.hmrc.customs.managesubscription.BuildUrl
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
+import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import java.net.URL
-import java.time.format.DateTimeFormatter
-import java.time.{Clock, ZoneId, ZonedDateTime}
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 @Singleton
-class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClient: HttpClientV2, appConfig: AppConfig)(
-  implicit ec: ExecutionContext
-) extends Logging with HandleResponses {
+class GetVatCustomerInformationConnector @Inject() (
+  buildUrl: BuildUrl,
+  httpClient: HttpClientV2,
+  appConfig: AppConfig,
+  headerProvider: DesHeaderProvider
+)(implicit ec: ExecutionContext)
+    extends Logging with HandleResponses {
 
   val serviceName: String = "integration-framework"
 
@@ -50,7 +49,11 @@ class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClie
 
     logger.info(s"[$serviceName][Connector] GET url: $vatUrl")
 
-    implicit val hc: HeaderCarrier = HeaderCarrier(extraHeaders = generateHeadersWithBearerToken)
+    val headers = headerProvider.generateHeadersWithBearerToken(appConfig.integrationFrameworkBearerToken)
+
+    implicit val hc: HeaderCarrier = HeaderCarrier(extraHeaders = headers)
+
+    val correlationId = hc.extraHeaders.find((key, _) => key == "X-Correlation-ID")
 
     httpClient.get(vatUrl)
       .execute map {
@@ -59,22 +62,12 @@ class GetVatCustomerInformationConnector @Inject() (buildUrl: BuildUrl, httpClie
         response.status match {
           case OK => handleResponse[VatCustomerInformation](response)
           case _ =>
-            val error = s"Unexpected status from getVatCustomerInformation: ${response.status} body: ${response.body}"
-            logger.warn(error)
+            val error =
+              s"Unexpected status from getVatCustomerInformation: ${response.status} body: ${response.body}"
+            logger.warn(s"$error X-Correlation-ID: $correlationId")
             Left(ResponseError(response.status, error))
         }
     }
-  }
-
-  private def generateHeadersWithBearerToken: Seq[(String, String)] = {
-    val clock = Clock.systemDefaultZone()
-    Seq(
-      DATE               -> DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock.withZone(ZoneId.of("GMT")))),
-      "X-Correlation-ID" -> UUID.randomUUID().toString,
-      X_FORWARDED_HOST   -> "MDTP",
-      ACCEPT             -> MimeTypes.JSON,
-      AUTHORIZATION      -> s"Bearer ${appConfig.integrationFrameworkBearerToken}"
-    )
   }
 
 }
