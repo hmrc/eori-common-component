@@ -17,38 +17,38 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import play.api.Logger
-import play.api.http.HeaderNames._
-import play.api.http.MimeTypes
 import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.customs.managesubscription.audit.Auditable
 import uk.gov.hmrc.customs.managesubscription.config.AppConfig
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import java.net.{URI, URLEncoder}
-import java.time.format.DateTimeFormatter
-import java.time.{Clock, ZoneId, ZonedDateTime}
-import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2, audit: Auditable)(implicit
-  ec: ExecutionContext
-) {
+class SubscriptionDisplayConnector @Inject() (
+  appConfig: AppConfig,
+  httpClient: HttpClientV2,
+  audit: Auditable,
+  headerProvider: DesHeaderProvider
+)(implicit ec: ExecutionContext) {
 
   private val logger = Logger(this.getClass)
 
-  def callSubscriptionDisplay(
-    queryParams: Seq[(String, String)]
-  )(implicit hc: HeaderCarrier): Future[Option[String]] = {
+  def callSubscriptionDisplay(queryParams: Seq[(String, String)])(implicit
+    hc: HeaderCarrier
+  ): Future[Option[String]] = {
     val url     = appConfig.subscriptionDisplayUrl + makeQueryString(queryParams)
-    val headers = generateHeadersWithBearerToken
+    val headers = headerProvider.generateHeadersWithBearerToken(appConfig.subscriptionDisplayBearerToken)
+
     auditRequestHeaders(headers, url)
+
     httpClient
       .get(new URI(url).toURL)
-      .setHeader(generateHeadersWithBearerToken: _*)
+      .setHeader(headers: _*)
       .execute[HttpResponse]
       .map { response =>
         auditResponse(response, url)
@@ -60,25 +60,16 @@ class SubscriptionDisplayConnector @Inject() (appConfig: AppConfig, httpClient: 
   private def extractEoriNumber: JsValue => Option[String] = json =>
     (json \ "subscriptionDisplayResponse" \ "responseDetail" \ "EORINo").asOpt[String]
 
+  // $COVERAGE-OFF$Loggers
   private def logResponse: Int => Unit = {
     case OK     => logger.info("Subscription display request is successful")
     case status => logger.warn(s"Subscription display request is failed with status $status")
   }
+  // $COVERAGE-ON
 
   private def makeQueryString(queryParams: Seq[(String, String)]): String = {
     val params: String = queryParams map Function.tupled((k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}") mkString "&"
     if (params.isEmpty) "" else s"?$params"
-  }
-
-  private def generateHeadersWithBearerToken: Seq[(String, String)] = {
-    val clock = Clock.systemDefaultZone()
-    Seq(
-      DATE               -> DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock.withZone(ZoneId.of("GMT")))),
-      "X-Correlation-ID" -> UUID.randomUUID().toString,
-      X_FORWARDED_HOST   -> "MDTP",
-      ACCEPT             -> MimeTypes.JSON,
-      AUTHORIZATION      -> s"Bearer ${appConfig.subscriptionDisplayBearerToken}"
-    )
   }
 
   private def auditRequestHeaders(headers: Seq[(String, String)], url: String)(implicit hc: HeaderCarrier): Unit =

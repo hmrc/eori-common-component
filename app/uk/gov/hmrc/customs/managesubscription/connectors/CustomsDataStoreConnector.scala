@@ -52,10 +52,12 @@ class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: Htt
       }
   }
 
+  // $COVERAGE-OFF$Loggers
   private def logResponse: Int => Unit = {
     case NO_CONTENT => logger.info("CustomsDataStore: data store request is successful")
     case status     => logger.warn(s"CustomsDataStore: data store request is failed with status $status")
   }
+  // $COVERAGE-ON
 
   private def auditRequest(request: DataStoreRequest, url: String)(implicit hc: HeaderCarrier): Unit =
     audit.sendDataEvent(
