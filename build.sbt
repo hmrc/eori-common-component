@@ -1,8 +1,6 @@
 import com.typesafe.sbt.packager.MappingsHelper.*
 import sbt.*
 import sbt.Keys.*
-import uk.gov.hmrc.DefaultBuildSettings
-import uk.gov.hmrc.DefaultBuildSettings.defaultSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
 import scala.language.postfixOps
@@ -25,9 +23,7 @@ Test / fork := false
 lazy val microservice = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
-  .settings(commonSettings, scoverageSettings, excludeDependencies += ExclusionRule("org.lz4", "lz4-java"))
-
-lazy val commonSettings: Seq[Setting[_]] = defaultSettings()
+  .settings(scoverageSettings, excludeDependencies += ExclusionRule("org.lz4", "lz4-java"))
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
   coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.customs.managesubscription.config.*;.*(BuildInfo|Routes).*;.*ConfigModule.*;.*ConfigValidationNelAdaptor.*;.*ErrorResponse.*",
