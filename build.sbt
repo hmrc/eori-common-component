@@ -1,7 +1,6 @@
 import com.typesafe.sbt.packager.MappingsHelper.*
 import sbt.*
 import sbt.Keys.*
-import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.DefaultBuildSettings.defaultSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
