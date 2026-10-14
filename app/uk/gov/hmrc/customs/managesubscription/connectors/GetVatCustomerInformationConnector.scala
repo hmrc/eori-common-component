@@ -17,57 +17,12 @@
 package uk.gov.hmrc.customs.managesubscription.connectors
 
 import cats.data.EitherT
-import com.google.inject.{Inject, Singleton}
-import play.api.Logging
-import play.api.http.Status.OK
-import uk.gov.hmrc.customs.managesubscription.BuildUrl
-import uk.gov.hmrc.customs.managesubscription.config.AppConfig
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
-import java.net.URL
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-@Singleton
-class GetVatCustomerInformationConnector @Inject() (
-  buildUrl: BuildUrl,
-  httpClient: HttpClientV2,
-  appConfig: AppConfig,
-  headerProvider: DesHeaderProvider
-)(implicit ec: ExecutionContext)
-    extends Logging with HandleResponses {
+trait GetVatCustomerInformationConnector {
 
-  val serviceName: String = "integration-framework"
-
-  private val baseUrl = buildUrl(serviceName)
-
-  def getVatCustomerInformation(vrn: String): EitherT[Future, ResponseError, VatCustomerInformation] = EitherT {
-
-    val vatUrl: URL = url"$baseUrl/vat/customer/vrn/$vrn/information"
-
-    logger.info(s"[$serviceName][Connector] GET url: $vatUrl")
-
-    val headers = headerProvider.generateHeadersWithBearerToken(appConfig.integrationFrameworkBearerToken)
-
-    implicit val hc: HeaderCarrier = HeaderCarrier(extraHeaders = headers)
-
-    val correlationId = hc.extraHeaders.find((key, _) => key == "X-Correlation-ID")
-
-    httpClient.get(vatUrl)
-      .execute map {
-      response =>
-        logger.info(s"getVatCustomerInformation successful. response: ${response.status}")
-        response.status match {
-          case OK => handleResponse[VatCustomerInformation](response)
-          case _ =>
-            val error =
-              s"Unexpected status from getVatCustomerInformation: ${response.status} body: ${response.body}"
-            logger.warn(s"$error X-Correlation-ID: $correlationId")
-            Left(ResponseError(response.status, error))
-        }
-    }
-  }
+  def getVatCustomerInformation(vrn: String): EitherT[Future, ResponseError, VatCustomerInformation]
 
 }

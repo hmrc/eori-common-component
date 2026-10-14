@@ -20,17 +20,24 @@ import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import play.api.http.Status.NOT_FOUND
-import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
-import uk.gov.hmrc.customs.managesubscription.domain.vat._
+import uk.gov.hmrc.customs.managesubscription.config.AppConfig
+import uk.gov.hmrc.customs.managesubscription.connectors.{
+  HipGetVatCustomerInformationConnector,
+  IfGetVatCustomerInformationConnector,
+  ResponseError
+}
+import uk.gov.hmrc.customs.managesubscription.domain.vat.*
 import uk.gov.hmrc.customs.managesubscription.services.GetVatCustomerInformationService
 import util.BaseSpec
 
 import scala.concurrent.Future
 
 class GetVatCustomerInformationServiceSpec extends BaseSpec {
-  private val mockConnector = mock[GetVatCustomerInformationConnector]
-  private val service       = new GetVatCustomerInformationService(mockConnector)
-  private val vrn           = "123456789"
+  private val mockIfConnector  = mock[IfGetVatCustomerInformationConnector]
+  private val mockHipConnector = mock[HipGetVatCustomerInformationConnector]
+  private val mockAppConfig    = mock[AppConfig]
+  private val service          = new GetVatCustomerInformationService(mockIfConnector, mockHipConnector, mockAppConfig)
+  private val vrn              = "123456789"
 
   "getVatCustomerInformation" should {
 
@@ -67,6 +74,10 @@ class GetVatCustomerInformationServiceSpec extends BaseSpec {
   }
 
   def mockGetVatCustomerInformationConnector(response: EitherT[Future, ResponseError, VatCustomerInformation]): Unit =
-    when(mockConnector.getVatCustomerInformation(any())) thenReturn response
+    if (mockAppConfig.useHipVat === false) {
+      when(mockIfConnector.getVatCustomerInformation(any())) thenReturn response
+    } else {
+      when(mockHipConnector.getVatCustomerInformation(any())) thenReturn response
+    }
 
 }

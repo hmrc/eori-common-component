@@ -22,16 +22,16 @@ import com.github.tomakehurst.wiremock.client.WireMock.{getRequestedFor, urlEqua
 import org.apache.pekko.dispatch.ThreadPoolConfig.defaultTimeout
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.test.Helpers.{OK, await}
-import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
+import uk.gov.hmrc.customs.managesubscription.connectors.{IfGetVatCustomerInformationConnector, ResponseError}
 import uk.gov.hmrc.customs.managesubscription.domain.vat._
 import util.IntegrationFrameworkService
 
 import scala.concurrent.Await
 
-class GetVatCustomerInformationConnectorIntegrationSpec
+class IfGetVatCustomerInformationConnectorIntegrationSpec
     extends IntegrationTestsWithDbSpec with IntegrationFrameworkService {
 
-  private lazy val connector = app.injector.instanceOf[GetVatCustomerInformationConnector]
+  private lazy val connector = app.injector.instanceOf[IfGetVatCustomerInformationConnector]
   private val vrn            = "123456789"
   private val url            = s"/vat/customer/vrn/$vrn/information"
 

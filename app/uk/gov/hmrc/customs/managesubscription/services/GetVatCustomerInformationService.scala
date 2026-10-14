@@ -18,14 +18,24 @@ package uk.gov.hmrc.customs.managesubscription.services
 
 import cats.data.EitherT
 import com.google.inject.Inject
-import uk.gov.hmrc.customs.managesubscription.connectors.{GetVatCustomerInformationConnector, ResponseError}
+import uk.gov.hmrc.customs.managesubscription.config.AppConfig
+import uk.gov.hmrc.customs.managesubscription.connectors.{
+  HipGetVatCustomerInformationConnector,
+  IfGetVatCustomerInformationConnector,
+  ResponseError
+}
 import uk.gov.hmrc.customs.managesubscription.domain.vat.VatCustomerInformation
 
 import scala.concurrent.Future
 
 class GetVatCustomerInformationService @Inject() (
-  getVatCustomerInformationConnector: GetVatCustomerInformationConnector
+  val ifGetVatCustomerInformationConnector: IfGetVatCustomerInformationConnector,
+  val hipGetVatCustomerInformationConnector: HipGetVatCustomerInformationConnector,
+  config: AppConfig
 ) {
+
+  private lazy val getVatCustomerInformationConnector =
+    if (config.useHipVat) hipGetVatCustomerInformationConnector else ifGetVatCustomerInformationConnector
 
   def getVatCustomerInformation(vrn: String): EitherT[Future, ResponseError, VatCustomerInformation] =
     getVatCustomerInformationConnector.getVatCustomerInformation(vrn)

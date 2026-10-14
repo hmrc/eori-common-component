@@ -20,6 +20,8 @@ import com.google.inject.Inject
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import java.util.Base64
+
 class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
 
   private val subscriptionDisplayBaseUrl: String = servicesConfig.baseUrl("subscription-display")
@@ -32,6 +34,11 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val integrationFrameworkBearerToken: String =
     config.get[String]("microservice.services.integration-framework.bearer-token")
+
+  val useHipVat: Boolean            = servicesConfig.getBoolean("features.hip.vat")
+  private val hipClientIdV1: String = config.get[String]("microservice.services.hip.clientId")
+  private val hipSecretV1: String   = config.get[String]("microservice.services.hip.secret")
+  def hipAuthorizationToken: String = Base64.getEncoder.encodeToString(s"$hipClientIdV1:$hipSecretV1".getBytes("UTF-8"))
 
   private val customDataStoreBaseUrl: String = servicesConfig.baseUrl("customs-data-store")
 
