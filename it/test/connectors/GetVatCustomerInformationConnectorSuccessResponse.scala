@@ -16,7 +16,15 @@
 
 package connectors
 
+import play.api.libs.json.{JsString, Json}
+
 object GetVatCustomerInformationConnectorSuccessResponse {
+
+  lazy val hipSuccessResponse = Json.stringify(
+    Json.obj(
+      "success" -> Json.parse(successResponseBody)
+    )
+  )
 
   val successResponseBody: String =
     """{

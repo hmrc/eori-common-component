@@ -43,6 +43,9 @@ trait IntegrationTestsWithDbSpec
         "microservice.services.subscription-display.context" -> "/subscriptions/subscriptiondisplay/v1",
         "microservice.services.integration-framework.host"   -> Host,
         "microservice.services.integration-framework.port"   -> Port,
+        "microservice.services.hip.host"                     -> Host,
+        "microservice.services.hip.port"                     -> Port,
+        "features.hip.vat"                                   -> false,
         "auditing.enabled"                                   -> false,
         "auditing.consumer.baseUri.host"                     -> Host,
         "auditing.consumer.baseUri.port"                     -> Port
